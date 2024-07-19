@@ -16,6 +16,7 @@ työtuntivaatimuksien seuraamista varten.
 | :--------:|:-----------------------:|:-----------|:--------|
 | 18.7.2024 | 00.06 - 02.44 (158 min) | 2 h 38 min | Npm/vite/typescript/cargo/docker/ym. järjestelyä |
 | 18.7.2024 | 22.17 - 23.40 (83 min)  | 4 h 1 min  | Sovelluksen ydintoimintojen suunnittelua |
+| 19.7.2024 | 01.04 - 03.29 (145 min) | 6 h 26 min | Kunnon readme:n kirjoittaminen, tietokantayhteyksien lisääminen backendiin |
 
 ## Linkki ja ohjeet
 
