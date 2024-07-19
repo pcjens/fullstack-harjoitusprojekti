@@ -12,11 +12,12 @@ puolelta Axumilla, Sqlx:llä ja Rustilla.
 Alla kirjanpito tähän projektiin käyttämistäni tunneista, kurssin
 työtuntivaatimuksien seuraamista varten.
 
-|   Päivä   |        Aikaväli         |  Yhteensä  | Kuvaus  |
-| :--------:|:------------------------|:-----------|:--------|
-| 18.7.2024 | 00.06 - 02.44 (158 min) | 2 h 38 min | Npm/vite/typescript/cargo/docker/ym. järjestelyä |
-| 18.7.2024 | 22.17 - 23.40 (83 min)  | 4 h 1 min  | Sovelluksen ydintoimintojen suunnittelua |
-| 19.7.2024 | 01.04 - 03.29 (145 min) | 6 h 26 min | Kunnon readme:n kirjoittaminen, tietokantayhteyksien lisääminen backendiin |
+|   Päivä   |        Aikaväli         |  Yhteensä   | Kuvaus  |
+| :--------:|:------------------------|:------------|:--------|
+| 18.7.2024 | 00.06 - 02.44 (158 min) | 2 h 38 min  | Npm/vite/typescript/cargo/docker/ym. järjestelyä |
+| 18.7.2024 | 22.17 - 23.40 (83 min)  | 4 h 1 min   | Sovelluksen ydintoimintojen suunnittelua |
+| 19.7.2024 | 01.04 - 03.29 (145 min) | 6 h 26 min  | Kunnon readme:n kirjoittaminen, tietokantayhteyksien lisääminen backendiin |
+| 19.7.2024 | 16.53 - 02.54 (601 min) | 16 h 27 min | Kirjautumis- ja rekisteröintilomakkeiden toteutus frontendissä, käyttäjien lisäys ja salasanojen tarkistuksen toteuttaminen backendissä (ei vielä sessioita) |
 
 ## Linkki ja ohjeet
 
