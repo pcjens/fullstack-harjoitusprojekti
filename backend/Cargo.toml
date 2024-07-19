@@ -7,7 +7,9 @@ authors = ["Jens Pitkanen <jens.pitkanen@helsinki.fi>"]
 
 [dependencies]
 anyhow = "1.0.86"
+arrayvec = { version = "0.7.4", features = ["serde"] }
 axum = "0.7.5"
+serde = "1.0.204"
 sqlx = { version = "0.7.4", default-features = false, features = ["runtime-tokio", "tls-rustls", "any", "sqlite", "postgres", "mysql", "macros", "migrate"] }
 tokio = { version = "1.38.1", features = ["rt-multi-thread", "net", "macros", "signal"] }
 tower-http = { version = "0.5.2", features = ["trace", "compression-deflate", "compression-gzip", "decompression-deflate", "decompression-gzip"] }

@@ -13,7 +13,7 @@ Alla kirjanpito tähän projektiin käyttämistäni tunneista, kurssin
 työtuntivaatimuksien seuraamista varten.
 
 |   Päivä   |        Aikaväli         |  Yhteensä  | Kuvaus  |
-| :--------:|:-----------------------:|:-----------|:--------|
+| :--------:|:------------------------|:-----------|:--------|
 | 18.7.2024 | 00.06 - 02.44 (158 min) | 2 h 38 min | Npm/vite/typescript/cargo/docker/ym. järjestelyä |
 | 18.7.2024 | 22.17 - 23.40 (83 min)  | 4 h 1 min  | Sovelluksen ydintoimintojen suunnittelua |
 | 19.7.2024 | 01.04 - 03.29 (145 min) | 6 h 26 min | Kunnon readme:n kirjoittaminen, tietokantayhteyksien lisääminen backendiin |
@@ -28,9 +28,9 @@ työtuntivaatimuksien seuraamista varten.
 
 #### Tietokantayhteydet
 
-Backendin käyttämä tietokanta voi olla MySQL, PostgreSQL, tai SQLite
--tietokanta. Mitä tietokantaa käytetään, riippuu backendin saamasta DATABASE_URL
-ympäristömuuttujasta, jonka formaattiin löytyy ohjeet seuraavista linkeistä:
+Tämän sovelluksen backend voi käyttää MySQL, PostgreSQL, tai SQLite
+-tietokantaa. Käytetty tietokanta riippuu backendin saamasta DATABASE_URL
+ympäristömuuttujasta, jonka muodostamiseen löytyy ohjeet seuraavista linkeistä:
 [MySQL](https://docs.rs/sqlx/latest/sqlx/mysql/struct.MySqlConnectOptions.html),
 [PostgreSQL](https://docs.rs/sqlx/latest/sqlx/postgres/struct.PgConnectOptions.html),
 [SQLite](https://docs.rs/sqlx/latest/sqlx/sqlite/struct.SqliteConnectOptions.html).

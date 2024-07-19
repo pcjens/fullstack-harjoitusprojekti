@@ -12,13 +12,18 @@ use axum::routing::get;
 use axum::Router;
 use sqlx::{AnyPool, Connection};
 
+mod user;
+
 #[derive(Debug)]
 pub struct SharedState {
     pub db_pool: AnyPool,
 }
 
 pub fn create_router() -> Router<Arc<SharedState>> {
-    Router::new().route("/health", get(health)).fallback(not_found)
+    Router::new()
+        .route("/health", get(health))
+        .nest("/user", user::create_router())
+        .fallback(not_found)
 }
 
 #[tracing::instrument(level = "trace")]

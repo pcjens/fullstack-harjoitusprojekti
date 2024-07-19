@@ -11,7 +11,10 @@ use tower_http::trace::TraceLayer;
 
 use crate::routes::SharedState;
 
+mod api_errors;
+mod data;
 mod routes;
+mod services;
 
 #[tokio::main]
 async fn main() {
