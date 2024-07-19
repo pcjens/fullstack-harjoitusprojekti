@@ -23,6 +23,7 @@ pub enum ApiError {
     PasswordTooShort,
     PasswordsDontMatch,
     InvalidCredentials,
+    UsernameTaken,
     // NOTE: When changing these (not recommended) or adding new ones, remember
     // to update the localization strings on the frontend as well!
 }
@@ -36,7 +37,8 @@ impl IntoResponse for ApiError {
             ApiError::UsernameTooShort
             | ApiError::PasswordTooShort
             | ApiError::PasswordsDontMatch
-            | ApiError::InvalidCredentials => StatusCode::BAD_REQUEST,
+            | ApiError::InvalidCredentials
+            | ApiError::UsernameTaken => StatusCode::BAD_REQUEST,
         };
         (status, Json(ErrorResponse { error: self })).into_response()
     }

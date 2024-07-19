@@ -99,3 +99,18 @@ where
 
     Ok(Some(()))
 }
+
+pub async fn is_username_taken<E>(
+    conn: &mut E,
+    username: UsernameString,
+) -> Result<bool, anyhow::Error>
+where
+    for<'e> &'e mut E: Executor<'e, Database = Any>,
+{
+    let user: Option<User> = sqlx::query_as("select * from users where username = ?")
+        .bind(username.0.as_str())
+        .fetch_optional(conn)
+        .await
+        .context("user fetch on is_username_taken check failed")?;
+    Ok(user.is_some())
+}

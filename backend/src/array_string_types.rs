@@ -59,15 +59,18 @@ macro_rules! array_string_newtype_impls {
     };
 }
 
+#[derive(Clone, Copy)]
 pub struct UuidString(pub ArrayString<36>);
 array_string_newtype_impls!(UuidString);
 
-#[derive(serde::Deserialize)]
+#[derive(Clone, Copy, serde::Deserialize)]
 pub struct UsernameString(pub ArrayString<30>);
 array_string_newtype_impls!(UsernameString);
 
+#[derive(Clone, Copy)]
 pub struct PasswordKeyString(pub ArrayString<44>); // base64 encoded length of a 32-byte key
 array_string_newtype_impls!(PasswordKeyString);
 
+#[derive(Clone, Copy)]
 pub struct SaltString(pub ArrayString<16>); // base64 encoded length of a 12-byte key
 array_string_newtype_impls!(SaltString);

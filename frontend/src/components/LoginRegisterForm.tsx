@@ -1,6 +1,7 @@
 import { FormEventHandler, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Spinner from "react-bootstrap/Spinner";
 
 import { VITE_API_BASE_URL } from "../util/config";
 import { apiFetch } from "../util/api";
@@ -14,10 +15,12 @@ export const LoginRegisterForm = ({ isRegister }: Props) => {
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const login: FormEventHandler = (event) => {
         event.preventDefault();
         const asyncBody = async () => {
+            setLoading(true);
             const response = await apiFetch(`${VITE_API_BASE_URL}/user/${isRegister ? "register" : "login"}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -25,6 +28,7 @@ export const LoginRegisterForm = ({ isRegister }: Props) => {
                     username, password, password2,
                 }),
             });
+            setLoading(false);
             if ("userError" in response) {
                 setError(response.userError);
                 return;
@@ -82,8 +86,9 @@ export const LoginRegisterForm = ({ isRegister }: Props) => {
             {error && <p className="text-danger">
                 {error /* TODO: localize this */}
             </p>}
-            <Button variant="primary" type="submit">
-                {isRegister ? "Register" : "Log in"}
+            <Button variant="primary" type="submit" disabled={loading}>
+                {loading && <Spinner size="sm" role="status" aria-hidden="true" style={{ marginRight: 6 }} />}
+                {(isRegister ? "Register" : "Log in")}
             </Button>
         </Form >
     );

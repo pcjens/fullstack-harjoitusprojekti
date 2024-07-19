@@ -75,6 +75,16 @@ async fn register(
     tracing::trace!("Registering a new user {username}.");
     {
         let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
+
+        let username_taken =
+            services::user::is_username_taken(&mut *conn, username).await.map_err(|err| {
+                tracing::error!("Username availability check failed: {err:?}");
+                ApiError::DbError
+            })?;
+        if username_taken {
+            return Err(ApiError::UsernameTaken);
+        }
+
         services::user::create_user(&mut *conn, username, &password).await.map_err(|err| {
             tracing::error!("User creation failed: {err:?}");
             ApiError::DbError
