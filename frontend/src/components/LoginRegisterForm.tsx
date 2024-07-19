@@ -26,11 +26,18 @@ export const LoginRegisterForm = ({ isRegister }: Props) => {
                 }),
             });
             if ("userError" in response) {
-                console.warn("User error:", response.userError);
                 setError(response.userError);
                 return;
             }
+
             console.log(response.value);
+            // TODO: Save the token somewhere
+            // TODO: Navigate to the management UI
+
+            setUsername("");
+            setPassword("");
+            setPassword2("");
+            setError("");
         };
         void asyncBody();
     };

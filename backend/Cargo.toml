@@ -9,12 +9,15 @@ authors = ["Jens Pitkanen <jens.pitkanen@helsinki.fi>"]
 anyhow = "1.0.86"
 arrayvec = { version = "0.7.4", features = ["serde"] }
 axum = "0.7.5"
+data-encoding = "2.6.0"
+ring = "0.17.8"
 serde = "1.0.204"
 sqlx = { version = "0.7.4", default-features = false, features = ["runtime-tokio", "tls-rustls", "any", "sqlite", "postgres", "mysql", "macros", "migrate"] }
 tokio = { version = "1.38.1", features = ["rt-multi-thread", "net", "macros", "signal"] }
 tower-http = { version = "0.5.2", features = ["trace", "compression-deflate", "compression-gzip", "decompression-deflate", "decompression-gzip"] }
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+uuid = { version = "1.10.0", features = ["v4"] }
 
 [profile.dev.package.sqlx-macros]
 opt-level = 3

@@ -1,12 +1,11 @@
-use arrayvec::ArrayString;
+use crate::array_string_types::{PasswordKeyString, SaltString, UsernameString};
 
-pub struct User {}
-
-pub type UsernameString = ArrayString<30>;
-pub type PasswordString = ArrayString<100>;
-
-#[derive(serde::Deserialize)]
-pub struct Credentials {
+#[derive(Debug, sqlx::FromRow)]
+pub struct User {
+    pub id: i32,
     pub username: UsernameString,
-    pub password: PasswordString,
+    #[sqlx(default)]
+    pub password_key_base64: Option<PasswordKeyString>,
+    pub pbkdf2_iterations: i32,
+    pub salt_base64: SaltString,
 }

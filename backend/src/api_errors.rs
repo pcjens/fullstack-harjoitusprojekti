@@ -15,6 +15,8 @@ pub enum ApiError {
     // Internal server errors, which do not necessarily require translations
     #[allow(dead_code)]
     Todo(&'static str),
+    DbConnAcquire,
+    DbError,
 
     // User-facing erros which require translations client-side
     UsernameTooShort,
@@ -29,6 +31,8 @@ impl IntoResponse for ApiError {
     fn into_response(self) -> Response {
         let status = match self {
             ApiError::Todo(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            ApiError::DbConnAcquire => StatusCode::SERVICE_UNAVAILABLE,
+            ApiError::DbError => StatusCode::INTERNAL_SERVER_ERROR,
             ApiError::UsernameTooShort
             | ApiError::PasswordTooShort
             | ApiError::PasswordsDontMatch

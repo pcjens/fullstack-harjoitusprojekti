@@ -1,4 +1,3 @@
-use std::env;
 use std::sync::Arc;
 
 use axum::Router;
@@ -12,6 +11,8 @@ use tower_http::trace::TraceLayer;
 use crate::routes::SharedState;
 
 mod api_errors;
+mod array_string_types;
+mod config;
 mod data;
 mod routes;
 mod services;
@@ -21,20 +22,21 @@ async fn main() {
     tracing_subscriber::fmt::init();
     tracing::debug!("Starting up.");
 
-    let base_path = env::var("HTTP_BASE_PATH");
-    let base_path = base_path.as_deref().unwrap_or("/");
+    let base_path = config::http_base_path();
     let router = if base_path.is_empty() || base_path == "/" {
         routes::create_router()
     } else {
-        Router::new().nest(base_path, routes::create_router())
+        Router::new().nest(&base_path, routes::create_router())
     };
     tracing::debug!("Routes created.");
 
-    let conn_str =
-        env::var("DATABASE_URL").expect("The DATABASE_URL environment variable should be defined");
+    let conn_str = config::database_url();
     sqlx::any::install_default_drivers();
     let db_pool = AnyPool::connect(&conn_str).await.expect("DATABASE_URL should be connectable");
     tracing::info!("Connected to the database.");
+
+    sqlx::migrate!().run(&db_pool).await.expect("migrations should run");
+    tracing::info!("Migrations done.");
 
     let shared_state = Arc::new(SharedState { db_pool });
 
@@ -45,9 +47,8 @@ async fn main() {
         .layer(DecompressionLayer::new());
     tracing::debug!("Axum app configured.");
 
-    let addr = env::var("HTTP_BIND_ADDRESS");
-    let addr = addr.as_deref().unwrap_or("127.0.0.1:3000");
-    let listener = TcpListener::bind(addr).await.unwrap();
+    let addr = config::http_bind_address();
+    let listener = TcpListener::bind(&addr).await.unwrap();
     tracing::info!("Now serving the HTTP API at: http://{addr}{base_path}");
 
     axum::serve(listener, app).with_graceful_shutdown(shutdown_signal()).await.unwrap();

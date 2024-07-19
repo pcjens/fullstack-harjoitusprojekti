@@ -34,8 +34,6 @@ ympäristömuuttujasta, jonka muodostamiseen löytyy ohjeet seuraavista linkeist
 [MySQL](https://docs.rs/sqlx/latest/sqlx/mysql/struct.MySqlConnectOptions.html),
 [PostgreSQL](https://docs.rs/sqlx/latest/sqlx/postgres/struct.PgConnectOptions.html),
 [SQLite](https://docs.rs/sqlx/latest/sqlx/sqlite/struct.SqliteConnectOptions.html).
-Mikäli DATABASE_URL ei ole määritelty, käytetään muistissa olevaan SQLite
-tietokantaa, joka tietenkin tyhjenee kun backend kaatuu tai sammutetaan.
 
 Kehitysympäristön docker compose -konfiguraatiossa käytetään SQLite-tietokantaa,
 joka tallentuu bind-mountattuun tiedostoon
