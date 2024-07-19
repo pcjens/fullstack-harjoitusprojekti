@@ -7,6 +7,11 @@ services:
       - ./backend:/usr/src/backend
     ports:
       - 3000:3000
+    environment:
+      - HTTP_BASE_PATH=/api
+      - HTTP_BIND_ADDRESS=0.0.0.0:3000
+      - RUST_LOG=info,backend=trace,tower_http=trace
+      - DATABASE_URL=sqlite://dev-compose-data.db?mode=rwc
   frontend:
     build:
       context: ./frontend

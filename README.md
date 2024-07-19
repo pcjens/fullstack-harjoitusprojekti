@@ -23,6 +23,23 @@ työtuntivaatimuksien seuraamista varten.
 
 *TODO: Perus käyttöohjeet testaamista varten*
 
+### Ylläpitohuomioita
+
+#### Tietokantayhteydet
+
+Backendin käyttämä tietokanta voi olla MySQL, PostgreSQL, tai SQLite
+-tietokanta. Mitä tietokantaa käytetään, riippuu backendin saamasta DATABASE_URL
+ympäristömuuttujasta, jonka formaattiin löytyy ohjeet seuraavista linkeistä:
+[MySQL](https://docs.rs/sqlx/latest/sqlx/mysql/struct.MySqlConnectOptions.html),
+[PostgreSQL](https://docs.rs/sqlx/latest/sqlx/postgres/struct.PgConnectOptions.html),
+[SQLite](https://docs.rs/sqlx/latest/sqlx/sqlite/struct.SqliteConnectOptions.html).
+Mikäli DATABASE_URL ei ole määritelty, käytetään muistissa olevaan SQLite
+tietokantaa, joka tietenkin tyhjenee kun backend kaatuu tai sammutetaan.
+
+Kehitysympäristön docker compose -konfiguraatiossa käytetään SQLite-tietokantaa,
+joka tallentuu bind-mountattuun tiedostoon
+[backend/dev-compose-data.db](backend/dev-compose-data.db).
+
 ## Kuvakaappauksia
 
 *TODO: Kuvia sovelluksen käyttöliittymästä ja sillä luodusta portfoliosivusta, kunhan nämä on valmiita*
