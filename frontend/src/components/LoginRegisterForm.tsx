@@ -37,9 +37,10 @@ export const LoginRegisterForm = ({ isRegister }: Props) => {
                 return;
             }
 
-            console.log(response.value);
-            // TODO: response type & validator
-            login(response.value.session_id);
+            const { sessionId } = parseLoginResponse(response.value);
+            login(sessionId);
+            const res = await apiFetch(`${VITE_API_BASE_URL}/user/me`);
+            console.log("me:", res);
             // TODO: Navigate to the management UI
 
             setUsername("");
@@ -96,4 +97,11 @@ export const LoginRegisterForm = ({ isRegister }: Props) => {
             </Button>
         </Form >
     );
+};
+
+const parseLoginResponse = (value: unknown): { sessionId: string } => {
+    if (value == null || typeof value !== "object" || !("session_id" in value) || typeof value.session_id !== "string") {
+        throw new Error("unexpected server response: " + JSON.stringify(value));
+    }
+    return { sessionId: value.session_id };
 };

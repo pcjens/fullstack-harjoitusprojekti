@@ -1,11 +1,23 @@
 import useSession from "./useSession";
 
 export default () => {
-    const { logout } = useSession();
+    const { getSessionId, logout } = useSession();
 
     const apiFetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<{ value: unknown } | { userError: string }> => {
+        const sessionId = getSessionId();
+        if (sessionId) {
+            init = {
+                ...(init ?? {}),
+                headers: {
+                    ...(init?.headers ?? {}),
+                    Authorization: `Bearer ${sessionId}`,
+                },
+            };
+        }
+
         let response;
         try {
+            console.debug(input, init);
             response = await fetch(input, init);
         } catch (err) {
             return { userError: "NetworkError" }; // TODO: add to some enum which is handled wherever the errors are localized

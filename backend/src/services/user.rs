@@ -141,7 +141,7 @@ pub async fn get_session<E>(
 where
     for<'e> &'e mut E: Executor<'e, Database = Any>,
 {
-    sqlx::query_as("select * from sessions where session_id = ?")
+    sqlx::query_as("select * from sessions where uuid = ?")
         .bind(&session_id)
         .fetch_optional(conn)
         .await

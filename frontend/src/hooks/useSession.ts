@@ -1,17 +1,17 @@
-import { useState } from "react";
-
 export default () => {
-    const [sessionId, setSessionId] = useState(localStorage.getItem("sessionId"));
-
     const login = (newSessionId: string) => {
         localStorage.setItem("sessionId", newSessionId);
-        setSessionId(newSessionId);
+        console.log("Logged in.");
     };
 
     const logout = () => {
         localStorage.clear();
-        setSessionId(null);
+        console.log("Logged out.");
     };
 
-    return { sessionId, login, logout };
+    const getSessionId = () => {
+        return localStorage.getItem("sessionId");
+    };
+
+    return { getSessionId, login, logout };
 };
