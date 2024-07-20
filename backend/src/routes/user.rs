@@ -2,16 +2,20 @@ use std::sync::Arc;
 
 use axum::extract::State;
 use axum::http::StatusCode;
-use axum::routing::post;
+use axum::routing::{get, post};
 use axum::{Json, Router};
 
 use crate::api_errors::ApiError;
-use crate::array_string_types::UsernameString;
+use crate::array_string_types::{UsernameString, UuidString};
+use crate::data::user::Session;
 use crate::routes::SharedState;
 use crate::services;
 
 pub fn create_router() -> Router<Arc<SharedState>> {
-    Router::new().route("/login", post(login)).route("/register", post(register))
+    Router::new()
+        .route("/login", post(login))
+        .route("/register", post(register))
+        .route("/me", get(me))
 }
 
 #[derive(serde::Deserialize)]
@@ -27,7 +31,7 @@ struct AuthRequest {
 }
 #[derive(serde::Serialize)]
 struct AuthResponse {
-    success: bool,
+    session_id: UuidString,
 }
 async fn login(
     State(state): State<Arc<SharedState>>,
@@ -35,20 +39,19 @@ async fn login(
 ) -> Result<Json<AuthResponse>, ApiError> {
     let AuthRequest { creds: Credentials { username, password } } = req;
     tracing::trace!("Attempting to log in user {username}.");
-    let token = {
+    let session = {
         let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
-        let Some(token) =
-            services::user::login(&mut *conn, username, &password).await.map_err(|err| {
-                tracing::error!("Login failed: {err:?}");
-                ApiError::DbError
-            })?
-        else {
-            return Err(ApiError::InvalidCredentials);
-        };
-        token
+        services::user::login(&mut *conn, username, &password).await.map_err(|err| {
+            tracing::error!("Login failed: {err:?}");
+            ApiError::DbError
+        })?
     };
-    tracing::debug!("{:?}", token);
-    Ok(Json(AuthResponse { success: true }))
+    if let Some(session) = session {
+        tracing::debug!("session: {:?}", session);
+        Ok(Json(AuthResponse { session_id: session.uuid }))
+    } else {
+        Err(ApiError::InvalidCredentials)
+    }
 }
 
 #[derive(serde::Deserialize)]
@@ -92,4 +95,13 @@ async fn register(
     }
 
     Ok(StatusCode::CREATED)
+}
+
+#[derive(serde::Serialize)]
+struct MyInfo {
+    youare: &'static str,
+    session_id: UuidString,
+}
+async fn me(session: Session) -> Json<MyInfo> {
+    Json(MyInfo { youare: "logged in!", session_id: session.uuid })
 }

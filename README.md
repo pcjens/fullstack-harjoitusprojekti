@@ -18,6 +18,7 @@ työtuntivaatimuksien seuraamista varten.
 | 18.7.2024 | 22.17 - 23.40 (83 min)  | 4 h 1 min   | Sovelluksen ydintoimintojen suunnittelua |
 | 19.7.2024 | 01.04 - 03.29 (145 min) | 6 h 26 min  | Kunnon readme:n kirjoittaminen, tietokantayhteyksien lisääminen backendiin |
 | 19.7.2024 | 16.53 - 02.54 (601 min) | 16 h 27 min | Kirjautumis- ja rekisteröintilomakkeiden toteutus frontendissä, käyttäjien lisäys ja salasanojen tarkistuksen toteuttaminen backendissä (ei vielä sessioita) |
+| 19.7.2024 | 17.00 - 19.13 (133 min) | 18 h 40 min | Sessioiden lisäys backendiin, vielä vaiheessa frontissa |
 
 ## Linkki ja ohjeet
 

@@ -10,14 +10,11 @@ use axum::extract::State;
 use axum::http::StatusCode;
 use axum::routing::get;
 use axum::Router;
-use sqlx::{AnyPool, Connection};
+use sqlx::Connection;
+
+use crate::request_state::SharedState;
 
 mod user;
-
-#[derive(Debug)]
-pub struct SharedState {
-    pub db_pool: AnyPool,
-}
 
 pub fn create_router() -> Router<Arc<SharedState>> {
     Router::new()

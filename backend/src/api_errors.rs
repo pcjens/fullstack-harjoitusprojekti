@@ -18,12 +18,16 @@ pub enum ApiError {
     DbConnAcquire,
     DbError,
 
-    // User-facing erros which require translations client-side
+    // User-facing errors which require translations client-side
     UsernameTooShort,
     PasswordTooShort,
     PasswordsDontMatch,
     InvalidCredentials,
     UsernameTaken,
+    /// No or malformed session token.
+    MissingSession,
+    /// Very probably an expired session token, or just a spoofed one.
+    InvalidSession,
     // NOTE: When changing these (not recommended) or adding new ones, remember
     // to update the localization strings on the frontend as well!
 }
@@ -39,6 +43,7 @@ impl IntoResponse for ApiError {
             | ApiError::PasswordsDontMatch
             | ApiError::InvalidCredentials
             | ApiError::UsernameTaken => StatusCode::BAD_REQUEST,
+            ApiError::MissingSession | ApiError::InvalidSession => StatusCode::FORBIDDEN,
         };
         (status, Json(ErrorResponse { error: self })).into_response()
     }

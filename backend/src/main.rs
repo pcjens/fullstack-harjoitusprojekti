@@ -8,12 +8,13 @@ use tower_http::compression::CompressionLayer;
 use tower_http::decompression::DecompressionLayer;
 use tower_http::trace::TraceLayer;
 
-use crate::routes::SharedState;
+use crate::request_state::SharedState;
 
 mod api_errors;
 mod array_string_types;
 mod config;
 mod data;
+mod request_state;
 mod routes;
 mod services;
 

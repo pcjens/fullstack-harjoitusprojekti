@@ -7,6 +7,7 @@ use arrayvec::ArrayString;
 use sqlx::encode::IsNull;
 use sqlx::postgres::any::{AnyTypeInfo, AnyTypeInfoKind, AnyValueKind};
 use sqlx::{Any, Decode, Encode, Type};
+use uuid::Uuid;
 
 /// Implements [Display], [Debug], [sqlx::Type], [sqlx::Encode], and [sqlx::Decode] for the given type,
 /// assuming it's `ArrayStringType(ArrayString<N>)` shaped.
@@ -53,15 +54,28 @@ macro_rules! array_string_newtype_impls {
 
         impl fmt::Display for $array_string_type {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-                self.0.fmt(f)
+                write!(f, "{}", self.0)
             }
         }
     };
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, serde::Serialize, serde::Deserialize)]
 pub struct UuidString(pub ArrayString<36>);
 array_string_newtype_impls!(UuidString);
+impl From<Uuid> for UuidString {
+    fn from(uuid: Uuid) -> Self {
+        use core::fmt::Write;
+        let mut str = ArrayString::new();
+        write!(&mut str, "{}", uuid.hyphenated()).unwrap();
+        UuidString(str)
+    }
+}
+impl UuidString {
+    pub fn generate() -> UuidString {
+        UuidString::from(Uuid::new_v4())
+    }
+}
 
 #[derive(Clone, Copy, serde::Deserialize)]
 pub struct UsernameString(pub ArrayString<30>);

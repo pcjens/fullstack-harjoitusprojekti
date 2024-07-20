@@ -4,7 +4,8 @@ import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 
 import { VITE_API_BASE_URL } from "../util/config";
-import { apiFetch } from "../util/api";
+import useApiFetch from "../hooks/useApiFetch";
+import useSession from "../hooks/useSession";
 
 interface Props {
     isRegister?: boolean,
@@ -16,8 +17,10 @@ export const LoginRegisterForm = ({ isRegister }: Props) => {
     const [password2, setPassword2] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const { login } = useSession();
+    const apiFetch = useApiFetch();
 
-    const login: FormEventHandler = (event) => {
+    const submitHandler: FormEventHandler = (event) => {
         event.preventDefault();
         const asyncBody = async () => {
             setLoading(true);
@@ -35,7 +38,8 @@ export const LoginRegisterForm = ({ isRegister }: Props) => {
             }
 
             console.log(response.value);
-            // TODO: Save the token somewhere
+            // TODO: response type & validator
+            login(response.value.session_id);
             // TODO: Navigate to the management UI
 
             setUsername("");
@@ -47,7 +51,7 @@ export const LoginRegisterForm = ({ isRegister }: Props) => {
     };
 
     return (
-        <Form onSubmit={login}>
+        <Form onSubmit={submitHandler}>
             <Form.Group>
                 <Form.Label htmlFor="inputUsername">Username</Form.Label>
                 <Form.Control minLength={3} maxLength={30} required

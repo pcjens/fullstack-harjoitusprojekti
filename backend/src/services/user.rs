@@ -1,4 +1,5 @@
 use core::num::NonZeroU32;
+use std::time::SystemTime;
 
 use anyhow::Context;
 use arrayvec::ArrayVec;
@@ -7,9 +8,9 @@ use ring::pbkdf2::{self, PBKDF2_HMAC_SHA256};
 use ring::rand::{SecureRandom, SystemRandom};
 use sqlx::{Any, Executor};
 
-use crate::array_string_types::UsernameString;
+use crate::array_string_types::{UsernameString, UuidString};
 use crate::config;
-use crate::data::user::User;
+use crate::data::user::{Session, User};
 
 const USERNAME_LEN: usize = 30;
 const SALT_BYTES_LEN: usize = 12;
@@ -43,7 +44,7 @@ where
     let username: &str = username.0.as_str();
     let password_key_base64: String = BASE64.encode(&password_key_bytes);
     let db_salt_base64: String = BASE64.encode(&db_salt_bytes);
-    sqlx::query("insert into users (username, password_key_base64, pbkdf2_iterations, salt_base64) values (?, ?, ?, ?)")
+    let result = sqlx::query("insert into users (username, password_key_base64, pbkdf2_iterations, salt_base64) values (?, ?, ?, ?)")
         .bind(username)
         .bind(password_key_base64)
         .bind(pbkdf2_iterations.get() as i32)
@@ -51,6 +52,7 @@ where
         .execute(conn)
         .await
         .context("user insert failed")?;
+    assert_eq!(1, result.rows_affected());
 
     Ok(())
 }
@@ -59,13 +61,13 @@ pub async fn login<E>(
     conn: &mut E,
     username: UsernameString,
     password: &str,
-) -> Result<Option<()>, anyhow::Error>
+) -> Result<Option<Session>, anyhow::Error>
 where
     for<'e> &'e mut E: Executor<'e, Database = Any>,
 {
     let user: Option<User> = sqlx::query_as("select * from users where username = ?")
         .bind(username.0.as_str())
-        .fetch_optional(conn)
+        .fetch_optional(&mut *conn)
         .await
         .context("user fetch on login failed")?;
 
@@ -97,7 +99,24 @@ where
         return Ok(None);
     }
 
-    Ok(Some(()))
+    let seconds_since_unix_epoch =
+        SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
+    let session = Session {
+        uuid: UuidString::generate(),
+        user_id: user.id,
+        created_at: seconds_since_unix_epoch as i64,
+    };
+
+    let result = sqlx::query("insert into sessions (uuid, user_id, created_at) values (?, ?, ?)")
+        .bind(&session.uuid)
+        .bind(session.user_id)
+        .bind(session.created_at)
+        .execute(&mut *conn)
+        .await
+        .context("session creation on login failed")?;
+    assert_eq!(1, result.rows_affected());
+
+    Ok(Some(session))
 }
 
 pub async fn is_username_taken<E>(
@@ -113,4 +132,18 @@ where
         .await
         .context("user fetch on is_username_taken check failed")?;
     Ok(user.is_some())
+}
+
+pub async fn get_session<E>(
+    conn: &mut E,
+    session_id: UuidString,
+) -> Result<Option<Session>, anyhow::Error>
+where
+    for<'e> &'e mut E: Executor<'e, Database = Any>,
+{
+    sqlx::query_as("select * from sessions where session_id = ?")
+        .bind(&session_id)
+        .fetch_optional(conn)
+        .await
+        .context("user fetch on is_username_taken check failed")
 }
