@@ -1,52 +1,53 @@
-import { useEffect, useState } from "react";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Container from "react-bootstrap/Container";
+import Spinner from "react-bootstrap/Spinner";
+import { LoggedOutIndex } from "./components/LoggedOutIndex";
+import { LoginStatus, useSession } from "./hooks/useSession";
+import { useTimeout } from "./hooks/useTimeout";
+import { LoginContext, useLogin } from "./hooks/useLogin";
+import { BackendStatus } from "./components/BackendStatus";
 
-import { VITE_API_BASE_URL } from "./util/config";
-import { LoginRegisterForm } from "./components/LoginRegisterForm";
+const IndexContent = () => {
+    const { myInfo, loginStatus } = useSession();
 
-const App = () => {
-    const [backendResponse, setBackendResponse] = useState("");
-
-    useEffect(() => {
-        let ignore = false;
-        void fetch(`${VITE_API_BASE_URL}/health`)
-            .then((res) => res.text()
-                .then((text) => { if (!ignore) { setBackendResponse(text); } }))
-            .catch(() => { if (!ignore) { setBackendResponse("not reachable"); } });
-        return () => { ignore = true; };
-    }, []);
+    // Only show spinner after 400ms (seems like an appropriate timeout for the backend to respond)
+    const { timedOut: showLoading } = useTimeout(400);
+    // If it really takes a while, show more info
+    const { timedOut: showLoadingText } = useTimeout(4000);
 
     return (
         <>
-            <Container className="d-flex justify-content-center">
-                <Row className="align-items-center mt-3 mb-5">
-                    <Col md="6" className="my-2">
-                        <Card>
-                            <Card.Header>Log in</Card.Header>
-                            <Card.Body>
-                                <LoginRegisterForm />
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col md="6" className="my-2">
-                        <Card>
-                            <Card.Header>Register</Card.Header>
-                            <Card.Body>
-                                <LoginRegisterForm isRegister />
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
-            <footer style={{ display: "fixed", bottom: 0, textAlign: "center" }}>
-                {import.meta.env.DEV && <p>Backend status: {backendResponse}</p>}
+            {loginStatus === LoginStatus.LoggedOut && <LoggedOutIndex />}
+            {loginStatus === LoginStatus.LoggedIn && <center>
+                You are logged in: {myInfo}
+            </center>}
+            {loginStatus === LoginStatus.Unknown && showLoading &&
+                <Container className="d-flex vh-100 justify-content-center align-items-center">
+                    <div>
+                        {showLoadingText || <Spinner title="Loading..."></Spinner>}
+                        {showLoadingText && <p style={{ textAlign: "center" }}>
+                            Reaching the backend server is taking longer than expected.
+                            This service is probably unavailable, possibly for maintenance, or
+                            there could be an issue with your internet connectivity.
+                            In any case, sorry about this, you may want to try again later.
+                        </p>}
+                    </div>
+                </Container>
+            }
+            {loginStatus !== LoginStatus.Unknown && <footer style={{ display: "fixed", bottom: 0, textAlign: "center" }}>
+                {import.meta.env.DEV && <p>Backend status: {<BackendStatus />}</p>}
                 <p>This web software is available under the  GNU AGPL 3.0 license. <a href="https://github.com/pcjens/fullstack-harjoitustyo">Source code</a></p>
-            </footer>
+            </footer>}
         </>
+    );
+};
+
+const App = () => {
+    const { contextObject } = useLogin();
+    return (
+        <LoginContext.Provider value={contextObject}>
+            <IndexContent />
+        </LoginContext.Provider>
     );
 };
 

@@ -12,6 +12,7 @@ services:
       - HTTP_BIND_ADDRESS=0.0.0.0:3000
       - RUST_LOG=info,backend=trace,tower_http=trace
       - DATABASE_URL=sqlite://dev-compose-data.db?mode=rwc
+      - SESSION_EXPIRATION_SECONDS=3600
   frontend:
     build:
       context: ./frontend

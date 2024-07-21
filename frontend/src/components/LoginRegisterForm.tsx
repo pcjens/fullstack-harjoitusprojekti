@@ -1,52 +1,57 @@
-import { FormEventHandler, useState } from "react";
+import { FormEventHandler, useCallback, useContext, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
-
-import { VITE_API_BASE_URL } from "../util/config";
-import useApiFetch from "../hooks/useApiFetch";
-import useSession from "../hooks/useSession";
+import { useApiFetch } from "../hooks/useApiFetch";
+import { LoginContext } from "../hooks/useLogin";
 
 interface Props {
     isRegister?: boolean,
 }
 
 export const LoginRegisterForm = ({ isRegister }: Props) => {
+    const loginManager = useContext(LoginContext);
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const { login } = useSession();
-    const apiFetch = useApiFetch();
+
+    const mapLoginResult = useCallback(parseLoginResponse, []);
+
+    const [reqParams, setReqParams] = useState<RequestInit>({});
+    const {
+        refetch: loginOrRegister,
+    } = useApiFetch(`/user/${isRegister ? "register" : "login"}`, mapLoginResult, reqParams, true);
+
+    useEffect(() => {
+        setReqParams({
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password, password2 }),
+        });
+    }, [username, password, password2]);
 
     const submitHandler: FormEventHandler = (event) => {
         event.preventDefault();
         const asyncBody = async () => {
+            setError("");
             setLoading(true);
-            const response = await apiFetch(`${VITE_API_BASE_URL}/user/${isRegister ? "register" : "login"}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    username, password, password2,
-                }),
-            });
+            const response = await loginOrRegister();
             setLoading(false);
             if ("userError" in response) {
                 setError(response.userError);
                 return;
             }
 
-            const { sessionId } = parseLoginResponse(response.value);
-            login(sessionId);
-            const res = await apiFetch(`${VITE_API_BASE_URL}/user/me`);
-            console.log("me:", res);
+            const { sessionId } = response.value;
+            loginManager.login(sessionId);
             // TODO: Navigate to the management UI
 
             setUsername("");
             setPassword("");
             setPassword2("");
-            setError("");
         };
         void asyncBody();
     };

@@ -147,3 +147,20 @@ where
         .await
         .context("user fetch on is_username_taken check failed")
 }
+
+pub async fn remove_sessions<E>(
+    conn: &mut E,
+    before_timestamp: SystemTime,
+) -> Result<(), anyhow::Error>
+where
+    for<'e> &'e mut E: Executor<'e, Database = Any>,
+{
+    let timestamp =
+        before_timestamp.duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs() as i64;
+    sqlx::query("delete from sessions where created_at < ?")
+        .bind(timestamp)
+        .execute(conn)
+        .await
+        .context("removing sessions failed")?;
+    Ok(())
+}

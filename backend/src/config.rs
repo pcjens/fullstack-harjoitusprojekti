@@ -22,3 +22,12 @@ pub fn pbkdf2_iterations() -> NonZeroU32 {
         })
         .unwrap_or_else(|_| NonZeroU32::new(DEFAULT).unwrap())
 }
+
+pub fn session_expiration_seconds() -> u64 {
+    const DEFAULT: u64 = 60 * 60 * 24 * 30; // 30 days
+    env::var("SESSION_EXPIRATION_SECONDS")
+        .map(|n| {
+            n.parse::<u64>().expect("SESSION_EXPIRATION_SECONDS must be a non-negative integer")
+        })
+        .unwrap_or(DEFAULT)
+}

@@ -9,7 +9,7 @@ use anyhow::Context;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::routing::get;
-use axum::Router;
+use axum::{Json, Router};
 use sqlx::Connection;
 
 use crate::request_state::SharedState;
@@ -24,7 +24,7 @@ pub fn create_router() -> Router<Arc<SharedState>> {
 }
 
 #[tracing::instrument(level = "trace")]
-pub async fn health(State(state): State<Arc<SharedState>>) -> (StatusCode, String) {
+pub async fn health(State(state): State<Arc<SharedState>>) -> (StatusCode, Json<String>) {
     let run_checks = || async {
         // Database
         let mut conn =
@@ -37,9 +37,9 @@ pub async fn health(State(state): State<Arc<SharedState>>) -> (StatusCode, Strin
 
     if let Err(message) = run_checks().await {
         let message: anyhow::Error = message;
-        (StatusCode::INTERNAL_SERVER_ERROR, format!("{message}"))
+        (StatusCode::INTERNAL_SERVER_ERROR, Json(format!("{message}")))
     } else {
-        (StatusCode::OK, "All systems nominal.".into())
+        (StatusCode::OK, Json("All systems nominal.".into()))
     }
 }
 

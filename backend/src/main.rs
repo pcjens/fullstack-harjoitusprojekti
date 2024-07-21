@@ -1,4 +1,6 @@
+use core::time::Duration;
 use std::sync::Arc;
+use std::time::SystemTime;
 
 use axum::Router;
 use sqlx::AnyPool;
@@ -40,6 +42,23 @@ async fn main() {
     tracing::info!("Migrations done.");
 
     let shared_state = Arc::new(SharedState { db_pool });
+
+    tokio::spawn({
+        let state = shared_state.clone();
+        async move {
+            loop {
+                let mut conn = state.db_pool.acquire().await.unwrap();
+                let before_timestamp =
+                    SystemTime::now() - Duration::from_secs(config::session_expiration_seconds());
+                if let Err(err) =
+                    services::user::remove_sessions(&mut *conn, before_timestamp).await
+                {
+                    tracing::warn!("Failed to remove old sessions: {:?}", err);
+                }
+                tokio::time::sleep(Duration::from_secs(60)).await;
+            }
+        }
+    });
 
     let app = router
         .with_state(shared_state)

@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use axum::extract::State;
-use axum::http::StatusCode;
 use axum::routing::{get, post};
 use axum::{Json, Router};
 
@@ -18,7 +17,7 @@ pub fn create_router() -> Router<Arc<SharedState>> {
         .route("/me", get(me))
 }
 
-#[derive(serde::Deserialize)]
+#[derive(Clone, serde::Deserialize)]
 pub struct Credentials {
     pub username: UsernameString,
     pub password: String,
@@ -63,8 +62,9 @@ struct RegisterRequest {
 async fn register(
     State(state): State<Arc<SharedState>>,
     Json(req): Json<RegisterRequest>,
-) -> Result<StatusCode, ApiError> {
-    let RegisterRequest { creds: Credentials { username, password }, password2 } = req;
+) -> Result<Json<AuthResponse>, ApiError> {
+    let RegisterRequest { creds, password2 } = req;
+    let Credentials { username, password } = creds.clone();
     if username.0.len() < 3 {
         return Err(ApiError::UsernameTooShort);
     }
@@ -94,7 +94,7 @@ async fn register(
         })?;
     }
 
-    Ok(StatusCode::CREATED)
+    login(State(state), Json(AuthRequest { creds })).await
 }
 
 #[derive(serde::Serialize)]

@@ -20,6 +20,7 @@ työtuntivaatimuksien seuraamista varten.
 | 19.7.2024 | 16.53 - 02.54 (601 min) | 16 h 27 min | Kirjautumis- ja rekisteröintilomakkeiden toteutus frontendissä, käyttäjien lisäys ja salasanojen tarkistuksen toteuttaminen backendissä (ei vielä sessioita) |
 | 20.7.2024 | 17.00 - 19.13 (133 min) | 18 h 40 min | Sessioiden lisäys backendiin, vielä vaiheessa frontissa |
 | 21.7.2024 | 00.00 - 00.54 (54 min)  | 19 h 34 min | Sessiot toimintaan myös frontin osalta |
+| 21.7.2024 | 17.23 - 21.51 (268 min) | 24 h 2 min  | Frontendin bäkkärikutsujen tekemistä varten olevan hookin refaktorointi, nyt integroi paljon paremmin Reactin state-systeemien kanssa, login-kontekstin lisäys, sessioiden vanhentuminen backendiin |
 
 ## Linkki ja ohjeet
 

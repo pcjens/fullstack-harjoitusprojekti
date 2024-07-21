@@ -1,17 +1,42 @@
-export default () => {
-    const login = (newSessionId: string) => {
-        localStorage.setItem("sessionId", newSessionId);
-        console.log("Logged in.");
-    };
+import { useCallback, useEffect, useState } from "react";
+import { useApiFetch } from "./useApiFetch";
 
-    const logout = () => {
-        localStorage.clear();
-        console.log("Logged out.");
-    };
+export enum LoginStatus {
+    Unknown,
+    LoggedIn,
+    LoggedOut,
+}
 
-    const getSessionId = () => {
-        return localStorage.getItem("sessionId");
-    };
+export const useSession = () => {
+    const mapMyInfoResult = useCallback((value: unknown) => JSON.stringify(value), []);
+    const { result: myInfoResult, refetch } = useApiFetch("/user/me", mapMyInfoResult);
+    const [myInfo, setMyInfo] = useState("");
+    const [loginStatus, setLoginStatus] = useState(LoginStatus.Unknown);
 
-    return { getSessionId, login, logout };
+    useEffect(() => {
+        if (myInfoResult === null) {
+            setLoginStatus(LoginStatus.Unknown);
+            setTimeout(refetch, 1000);
+        } else if ("value" in myInfoResult) {
+            setMyInfo(myInfoResult.value);
+            setLoginStatus(LoginStatus.LoggedIn);
+        } else {
+            const { userError } = myInfoResult;
+            switch (userError) {
+            default:
+                setLoginStatus(LoginStatus.Unknown);
+                setTimeout(refetch, 1000);
+                break;
+            case "MissingSession":
+            case "InvalidSession":
+                setLoginStatus(LoginStatus.LoggedOut);
+                break;
+            }
+        }
+    }, [myInfoResult, refetch]);
+
+    return {
+        myInfo,
+        loginStatus,
+    };
 };
