@@ -9,7 +9,7 @@ export const BackendStatus = () => {
 
     const backendStatusText = backendStatus && "value" in backendStatus
         ? backendStatus.value
-        : backendStatus?.userError; // TODO: translate error
+        : backendStatus?.userError;
 
     return (<>{backendStatusText}</>);
 };

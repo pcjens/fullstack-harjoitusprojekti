@@ -1,0 +1,32 @@
+{
+    "nav": {
+        "dashboard": "Dashboard",
+        "language": "Language"
+    },
+    "footer": {
+        "licenseNote": "This web software is available under the GNU AGPL 3.0 license.",
+        "sourceCode": "Source code"
+    },
+    "cantConnectInfo": "Reaching the backend server is taking longer than expected. This service is probably unavailable, possibly for maintenance, or there could be an issue with your internet connectivity. In any case, sorry about this, you may want to try again later.",
+    "username": "Username",
+    "usernameInfo": "The username must be between {{min}} and {{max}} characters long.",
+    "password": "Password",
+    "passwordInfo": "The password must be between {{min}} and {{max}} characters long, and ideally, hard to guess.",
+    "passwordConfirm": "Confirm password",
+    "passwordConfirmInfo": "Repeat the password here.",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "error": {
+        "NetworkError": "todo error translations",
+        "UnrecognizedResponse": "todo error translations",
+        "InternalServerError": "todo error translations",
+        "UsernameTooShort": "todo error translations",
+        "PasswordTooShort": "todo error translations",
+        "PasswordsDontMatch": "todo error translations",
+        "InvalidCredentials": "todo error translations",
+        "UsernameTaken": "todo error translations",
+        "MissingSession": "todo error translations",
+        "InvalidSession": "todo error translations"
+    }
+}

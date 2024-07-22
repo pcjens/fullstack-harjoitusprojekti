@@ -1,14 +1,24 @@
+import { useContext } from "react";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import Spinner from "react-bootstrap/Spinner";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
+
 import { LoggedOutIndex } from "./components/LoggedOutIndex";
 import { LoginStatus, useSession } from "./hooks/useSession";
 import { useTimeout } from "./hooks/useTimeout";
 import { LoginContext, useLogin } from "./hooks/useLogin";
 import { BackendStatus } from "./components/BackendStatus";
+import { MainDashboard } from "./components/MainDashboard";
+import { useTranslation } from "react-i18next";
 
 const IndexContent = () => {
-    const { myInfo, loginStatus } = useSession();
+    const { loginStatus } = useSession();
+    const { logout } = useContext(LoginContext);
+    const { t, i18n } = useTranslation();
 
     // Only show spinner after 400ms (seems like an appropriate timeout for the backend to respond)
     const { timedOut: showLoading } = useTimeout(400);
@@ -16,29 +26,58 @@ const IndexContent = () => {
     const { timedOut: showLoadingText } = useTimeout(4000);
 
     return (
-        <>
+        <BrowserRouter>
+            {loginStatus !== LoginStatus.Unknown && <Navbar expand="sm">
+                <Container>
+                    <Navbar.Brand as={Link} to="/">Portfolio Manager</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="navbar-nav" />
+                    <Navbar.Collapse id="navbar-nav">
+                        <Nav className="me-auto">
+                            {loginStatus === LoginStatus.LoggedIn && <Nav.Link as={Link} to="/">{t("nav.dashboard")}</Nav.Link>}
+                            {loginStatus === LoginStatus.LoggedIn && <Nav.Link onClick={logout}>{t("logout")}</Nav.Link>}
+                            <NavDropdown title={t("nav.language")} id="navbar-language-selector">
+                                <NavDropdown.Item onClick={() => { void i18n.changeLanguage("en"); }}>
+                                    English
+                                </NavDropdown.Item>
+                                <NavDropdown.Item onClick={() => { void i18n.changeLanguage("fi"); }}>
+                                    Suomi
+                                </NavDropdown.Item>
+                            </NavDropdown>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar >}
+
             {loginStatus === LoginStatus.LoggedOut && <LoggedOutIndex />}
-            {loginStatus === LoginStatus.LoggedIn && <center>
-                You are logged in: {myInfo}
-            </center>}
-            {loginStatus === LoginStatus.Unknown && showLoading &&
+
+            {
+                loginStatus === LoginStatus.LoggedIn && <Routes>
+                    <Route path="/" element={<MainDashboard />} />
+                </Routes>
+            }
+
+            {
+                loginStatus === LoginStatus.Unknown && showLoading &&
                 <Container className="d-flex vh-100 justify-content-center align-items-center">
                     <div>
                         {showLoadingText || <Spinner title="Loading..."></Spinner>}
                         {showLoadingText && <p style={{ textAlign: "center" }}>
-                            Reaching the backend server is taking longer than expected.
-                            This service is probably unavailable, possibly for maintenance, or
-                            there could be an issue with your internet connectivity.
-                            In any case, sorry about this, you may want to try again later.
+                            {t("cantConnectInfo")}
                         </p>}
                     </div>
                 </Container>
             }
-            {loginStatus !== LoginStatus.Unknown && <footer style={{ display: "fixed", bottom: 0, textAlign: "center" }}>
-                {import.meta.env.DEV && <p>Backend status: {<BackendStatus />}</p>}
-                <p>This web software is available under the  GNU AGPL 3.0 license. <a href="https://github.com/pcjens/fullstack-harjoitustyo">Source code</a></p>
-            </footer>}
-        </>
+
+            {
+                loginStatus !== LoginStatus.Unknown && <footer className="my-5" style={{ textAlign: "center" }}>
+                    {import.meta.env.DEV && <p>Backend status: {<BackendStatus />}</p>}
+                    <p>
+                        {t("footer.licenseNote")} {" "}
+                        <a href="https://github.com/pcjens/fullstack-harjoitustyo">{t("footer.sourceCode")}</a>
+                    </p>
+                </footer>
+            }
+        </BrowserRouter>
     );
 };
 

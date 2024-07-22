@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 
+import "./i18n";
+
 const root = document.getElementById("root");
 if (root == null) {
     throw new Error("No element with id \"root\" found, cannot create react root.");

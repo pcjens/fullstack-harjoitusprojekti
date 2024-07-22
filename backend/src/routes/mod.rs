@@ -23,7 +23,6 @@ pub fn create_router() -> Router<Arc<SharedState>> {
         .fallback(not_found)
 }
 
-#[tracing::instrument(level = "trace")]
 pub async fn health(State(state): State<Arc<SharedState>>) -> (StatusCode, Json<String>) {
     let run_checks = || async {
         // Database

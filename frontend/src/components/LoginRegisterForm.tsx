@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import { useApiFetch } from "../hooks/useApiFetch";
 import { LoginContext } from "../hooks/useLogin";
+import { useTranslation } from "react-i18next";
 
 interface Props {
     isRegister?: boolean,
@@ -11,6 +12,7 @@ interface Props {
 
 export const LoginRegisterForm = ({ isRegister }: Props) => {
     const loginManager = useContext(LoginContext);
+    const { t } = useTranslation();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -59,18 +61,18 @@ export const LoginRegisterForm = ({ isRegister }: Props) => {
     return (
         <Form onSubmit={submitHandler}>
             <Form.Group>
-                <Form.Label htmlFor="inputUsername">Username</Form.Label>
+                <Form.Label htmlFor="inputUsername">{t("username")}</Form.Label>
                 <Form.Control minLength={3} maxLength={30} required
                     id="inputUsername"
                     aria-describedby="usernameHelp"
                     value={username}
                     onChange={({ target }) => { setUsername(target.value); }} />
                 {isRegister && <Form.Text id="usernameHelp" muted>
-                    The username must be between 3 and 30 characters long.
+                    {t("usernameInfo", { min: 3, max: 30 })}
                 </Form.Text>}
             </Form.Group>
             <Form.Group className="my-3">
-                <Form.Label htmlFor="inputPassword">Password</Form.Label>
+                <Form.Label htmlFor="inputPassword">{t("password")}</Form.Label>
                 <Form.Control minLength={10} maxLength={100} required
                     type="password"
                     id="inputPassword"
@@ -78,11 +80,11 @@ export const LoginRegisterForm = ({ isRegister }: Props) => {
                     value={password}
                     onChange={({ target }) => { setPassword(target.value); }} />
                 {isRegister && <Form.Text id="passwordHelp" muted>
-                    The password must be between 10 and 100 characters long, and ideally, hard to guess.
+                    {t("passwordInfo", { min: 10, max: 100 })}
                 </Form.Text>}
             </Form.Group>
             {isRegister && <Form.Group className="my-3">
-                <Form.Label htmlFor="inputPassword2">Confirm password</Form.Label>
+                <Form.Label htmlFor="inputPassword2">{t("passwordConfirm")}</Form.Label>
                 <Form.Control minLength={10} maxLength={100} required
                     type="password"
                     id="inputPassword2"
@@ -90,15 +92,15 @@ export const LoginRegisterForm = ({ isRegister }: Props) => {
                     value={password2}
                     onChange={({ target }) => { setPassword2(target.value); }} />
                 <Form.Text id="password2Help" muted>
-                    Same as above.
+                    {t("passwordConfirmInfo")}
                 </Form.Text>
             </Form.Group>}
             {error && <p className="text-danger">
-                {error /* TODO: localize this */}
+                {t(`error.${error}`)}
             </p>}
             <Button variant="primary" type="submit" disabled={loading}>
                 {loading && <Spinner size="sm" role="status" aria-hidden="true" style={{ marginRight: 6 }} />}
-                {(isRegister ? "Register" : "Log in")}
+                {(isRegister ? t("register") : t("login"))}
             </Button>
         </Form >
     );

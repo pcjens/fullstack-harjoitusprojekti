@@ -2,7 +2,7 @@ use core::str::FromStr;
 use std::sync::Arc;
 
 use arrayvec::ArrayString;
-use axum::extract::{FromRequestParts};
+use axum::extract::FromRequestParts;
 use axum::http::request::Parts;
 use axum::http::{HeaderMap, HeaderValue};
 use sqlx::AnyPool;

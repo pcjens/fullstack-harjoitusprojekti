@@ -155,10 +155,11 @@ pub async fn remove_sessions<E>(
 where
     for<'e> &'e mut E: Executor<'e, Database = Any>,
 {
-    let timestamp =
+    let before_timestamp =
         before_timestamp.duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs() as i64;
+    tracing::trace!("Clearing sessions before {before_timestamp:?}.");
     sqlx::query("delete from sessions where created_at < ?")
-        .bind(timestamp)
+        .bind(before_timestamp)
         .execute(conn)
         .await
         .context("removing sessions failed")?;

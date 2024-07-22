@@ -9,6 +9,7 @@ use tokio::signal;
 use tower_http::compression::CompressionLayer;
 use tower_http::decompression::DecompressionLayer;
 use tower_http::trace::TraceLayer;
+use tracing_subscriber::EnvFilter;
 
 use crate::request_state::SharedState;
 
@@ -22,7 +23,7 @@ mod services;
 
 #[tokio::main]
 async fn main() {
-    tracing_subscriber::fmt::init();
+    tracing_subscriber::fmt().with_env_filter(EnvFilter::from_default_env()).init();
     tracing::debug!("Starting up.");
 
     let base_path = config::http_base_path();

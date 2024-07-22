@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useApiFetch } from "./useApiFetch";
+import { ApiError, useApiFetch } from "./useApiFetch";
 
 export enum LoginStatus {
     Unknown,
@@ -27,8 +27,8 @@ export const useSession = () => {
                 setLoginStatus(LoginStatus.Unknown);
                 setTimeout(refetch, 1000);
                 break;
-            case "MissingSession":
-            case "InvalidSession":
+            case ApiError.MissingSession:
+            case ApiError.InvalidSession:
                 setLoginStatus(LoginStatus.LoggedOut);
                 break;
             }

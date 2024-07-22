@@ -2,14 +2,30 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { VITE_API_BASE_URL } from "../util/config";
 import { LoginContext } from "./useLogin";
 
+/**
+ * All the expected errors from the backend + a few ones internal to useApiFetch.
+ */
+export enum ApiError {
+    NetworkError = "NetworkError",
+    UnrecognizedResponse = "UnrecognizedResponse",
+    InternalServerError = "InternalServerError",
+    UsernameTooShort = "UsernameTooShort",
+    PasswordTooShort = "PasswordTooShort",
+    PasswordsDontMatch = "PasswordsDontMatch",
+    InvalidCredentials = "InvalidCredentials",
+    UsernameTaken = "UsernameTaken",
+    MissingSession = "MissingSession",
+    InvalidSession = "InvalidSession",
+}
+
+type ApiResponse<T> = { value: T } | { userError: ApiError };
+
 const apiFetch = async (
     apiPath: string,
     logout: () => void,
     sessionId: string | null,
     reqParams?: RequestInit,
-): Promise<{ value: unknown } | { userError: string }> => {
-    // TODO: Add response caching, react state changes call this pretty eagerly
-
+): Promise<ApiResponse<unknown>> => {
     const init = { ...reqParams };
     if (sessionId) {
         init.headers = {
@@ -24,7 +40,7 @@ const apiFetch = async (
         console.debug(apiPath, url, init);
         response = await fetch(url, init);
     } catch (err) {
-        return { userError: "NetworkError" }; // TODO: add to some enum which is handled wherever the errors are localized
+        return { userError: ApiError.NetworkError };
     }
     const text: string = await response.text();
 
@@ -33,7 +49,7 @@ const apiFetch = async (
         value = text.length > 0 ? JSON.parse(text) : null;
     } catch (error) {
         console.error(`failed to parse api response json - the request is probably malformed. request: ${JSON.stringify(apiPath)}, error: ${JSON.stringify(error)}, response: ${text}`);
-        return { userError: "UnrecognizedResponse" };
+        return { userError: ApiError.UnrecognizedResponse };
     }
 
     if (value != null && typeof value === "object" && "error" in value) {
@@ -42,14 +58,39 @@ const apiFetch = async (
                 console.error("invalid session; logging out");
                 logout();
             }
-            return { userError: value.error };
+            if (Object.values(ApiError).includes(value.error as ApiError)) {
+                console.error(`successfully parsed response, but got an unrecognized error: ${value.error}`);
+                return { userError: ApiError.UnrecognizedResponse };
+            }
+            return { userError: value.error as ApiError };
         } else {
             console.error("non-user-facing error from the backend:", value.error);
-            return { userError: "InternalServerError" };
+            return { userError: ApiError.InternalServerError };
         }
     }
 
     return { value };
+};
+
+const cache: { latestParams: string, latestTime: number, latestResponse: Promise<ApiResponse<unknown>> | null } = {
+    latestParams: "",
+    latestTime: performance.now(),
+    latestResponse: null,
+};
+const cachedApiFetch = async (
+    apiPath: string,
+    logout: () => void,
+    sessionId: string | null,
+    reqParams?: RequestInit,
+): Promise<ApiResponse<unknown>> => {
+    const now = performance.now();
+    const params = JSON.stringify({ apiPath, sessionId, reqParams });
+    if (cache.latestResponse == null || now - cache.latestTime > 500 || cache.latestParams !== params) {
+        cache.latestTime = now;
+        cache.latestParams = params;
+        cache.latestResponse = apiFetch(apiPath, logout, sessionId, reqParams);
+    }
+    return await cache.latestResponse;
 };
 
 /**
@@ -73,11 +114,11 @@ export const useApiFetch = <T>(
 ) => {
     const { sessionId, logout } = useContext(LoginContext);
     const [loading, setLoading] = useState(!manualFetch);
-    const [result, setResult] = useState<{ value: T } | { userError: string } | null>(null);
+    const [result, setResult] = useState<ApiResponse<T> | null>(null);
 
-    const refetch: () => Promise<{ value: T } | { userError: string }> = useCallback(async () => {
+    const refetch: () => Promise<ApiResponse<T>> = useCallback(async () => {
         setLoading(true);
-        const rawResult = await apiFetch(apiPath, logout, sessionId, reqParams);
+        const rawResult = await cachedApiFetch(apiPath, logout, sessionId, reqParams);
         let result;
         if ("value" in rawResult) {
             result = { value: mapResult(rawResult.value) };
