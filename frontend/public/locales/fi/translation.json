@@ -1,0 +1,32 @@
+{
+    "nav": {
+        "dashboard": "Hallinta",
+        "language": "Kieli"
+    },
+    "footer": {
+        "licenseNote": "Tämä websovellus on saatavilla GNU AGPL 3.0 lisessin ehtojen mukaisesti.",
+        "sourceCode": "Lähdekoodi"
+    },
+    "cantConnectInfo": "Yhteydenotto palvelimeen on vienyt pidempään kuin on odotettavissa. Palvelin on todennäköisesti kokonaan saavutettamattomissa, joko virheen tai ylläpitotarpeiden vuoksi, tai sitten internet-yhteydessä on ongelma. Kokeile myöhemmin uudelleen.",
+    "username": "Käyttäjätunnus",
+    "usernameInfo": "Käyttäjätunnuksen pitäisi olla vähintään {{min}} merkkiä pitkä, enintään {{max}}.",
+    "password": "Salasana",
+    "passwordInfo": "Salasanan pitäisi olla vähintään {{min}} merkkiä pitkä, enintään {{max}}, ja mielellään vaikea arvata.",
+    "passwordConfirm": "Salasanan varmistus",
+    "passwordConfirmInfo": "Kirjoita salasana uudelleen vielä tähänkin.",
+    "login": "Kirjaudu",
+    "logout": "Kirjaudu ulos",
+    "register": "Luo tili",
+    "error": {
+        "NetworkError": "Yhteyttä ei saatu, kokeile myöhemmin uudelleen.",
+        "UnrecognizedResponse": "Jotain meni pieleen, mutta ei ole ihan selvää mitä. Palvelimelta tuli odottamaton vastaus.",
+        "InternalServerError": "Palvelimella tapahtui sisäinen virhe. Kokeile myöhemmin uudelleen.",
+        "UsernameTooShort": "Käyttäjätunnus on liian lyhyt.",
+        "PasswordTooShort": "Salasana on liian lyhyt.",
+        "PasswordsDontMatch": "Salasanojen pitäisi olla samat.",
+        "InvalidCredentials": "Käyttäjätunnus ja/tai salasana on väärin.",
+        "UsernameTaken": "Tämä käyttäjätunnus on jo käytössä.",
+        "MissingSession": "Kirjautuminen vaadittu.",
+        "InvalidSession": "Istuntosi on vanhentunut, kirjaudu sisään uudelleen."
+    }
+}

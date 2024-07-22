@@ -58,7 +58,7 @@ const apiFetch = async (
                 console.error("invalid session; logging out");
                 logout();
             }
-            if (Object.values(ApiError).includes(value.error as ApiError)) {
+            if (!Object.values(ApiError).includes(value.error as ApiError)) {
                 console.error(`successfully parsed response, but got an unrecognized error: ${value.error}`);
                 return { userError: ApiError.UnrecognizedResponse };
             }

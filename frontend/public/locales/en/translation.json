@@ -18,15 +18,15 @@
     "logout": "Logout",
     "register": "Register",
     "error": {
-        "NetworkError": "todo error translations",
-        "UnrecognizedResponse": "todo error translations",
-        "InternalServerError": "todo error translations",
-        "UsernameTooShort": "todo error translations",
-        "PasswordTooShort": "todo error translations",
-        "PasswordsDontMatch": "todo error translations",
-        "InvalidCredentials": "todo error translations",
-        "UsernameTaken": "todo error translations",
-        "MissingSession": "todo error translations",
-        "InvalidSession": "todo error translations"
+        "NetworkError": "Connection failed, please try again later.",
+        "UnrecognizedResponse": "Something went wrong, we're unsure what, but something's not working. Sorry about this.",
+        "InternalServerError": "There was an issue in the backend, which requires further investigation. Maybe try again later?",
+        "UsernameTooShort": "The username is too short.",
+        "PasswordTooShort": "The password is too short.",
+        "PasswordsDontMatch": "The passwords must match.",
+        "InvalidCredentials": "Invalid credentials.",
+        "UsernameTaken": "That username is taken.",
+        "MissingSession": "Login required.",
+        "InvalidSession": "Your session has expired, please login again."
     }
 }

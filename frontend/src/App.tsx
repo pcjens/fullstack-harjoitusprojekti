@@ -29,17 +29,25 @@ const IndexContent = () => {
         <BrowserRouter>
             {loginStatus !== LoginStatus.Unknown && <Navbar expand="sm">
                 <Container>
-                    <Navbar.Brand as={Link} to="/">Portfolio Manager</Navbar.Brand>
+                    <Navbar.Brand as={Link} to="/">
+                        <img
+                            src="/public/icon.svg"
+                            width="30"
+                            height="30"
+                            className="d-inline-block align-top"
+                            alt="Portfolio logo"
+                        />
+                    </Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbar-nav" />
                     <Navbar.Collapse id="navbar-nav">
                         <Nav className="me-auto">
                             {loginStatus === LoginStatus.LoggedIn && <Nav.Link as={Link} to="/">{t("nav.dashboard")}</Nav.Link>}
                             {loginStatus === LoginStatus.LoggedIn && <Nav.Link onClick={logout}>{t("logout")}</Nav.Link>}
                             <NavDropdown title={t("nav.language")} id="navbar-language-selector">
-                                <NavDropdown.Item onClick={() => { void i18n.changeLanguage("en"); }}>
+                                <NavDropdown.Item onClick={() => { void i18n.changeLanguage("en"); }} disabled={i18n.language === "en"}>
                                     English
                                 </NavDropdown.Item>
-                                <NavDropdown.Item onClick={() => { void i18n.changeLanguage("fi"); }}>
+                                <NavDropdown.Item onClick={() => { void i18n.changeLanguage("fi"); }} disabled={i18n.language === "fi"}>
                                     Suomi
                                 </NavDropdown.Item>
                             </NavDropdown>
