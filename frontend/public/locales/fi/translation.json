@@ -4,7 +4,7 @@
         "language": "Kieli"
     },
     "footer": {
-        "licenseNote": "Tämä websovellus on saatavilla GNU AGPL 3.0 lisessin ehtojen mukaisesti.",
+        "licenseNote": "Tämä websovellus on saatavilla GNU AGPL 3.0 lisenssin ehtojen mukaisesti.",
         "sourceCode": "Lähdekoodi"
     },
     "cantConnectInfo": "Yhteydenotto palvelimeen on vienyt pidempään kuin on odotettavissa. Palvelin on todennäköisesti kokonaan saavutettamattomissa, joko virheen tai ylläpitotarpeiden vuoksi, tai sitten internet-yhteydessä on ongelma. Kokeile myöhemmin uudelleen.",

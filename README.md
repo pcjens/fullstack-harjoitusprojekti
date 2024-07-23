@@ -23,6 +23,7 @@ työtuntivaatimuksien seuraamista varten.
 | 21.7.2024 | 17.23 - 21.51 (268 min) | 24 h 2 min  | Frontendin bäkkärikutsujen tekemistä varten olevan hookin refaktorointi, nyt integroi paljon paremmin Reactin state-systeemien kanssa, login-kontekstin lisäys, sessioiden vanhentuminen backendiin |
 | 22.7.2024 | 09.17 - 11.17 (120 min) | 26 h 2 min  | Käännösten (ja niiden vaatimien systeemien) lisäämistä frontendiin, navipalkki, routeeminen |
 | 22.7.2024 | 14.09 - 14.57 (48 min)  | 26 h 50 min | Käännösten viimeistely, faviconin/"brand ikonin" etsintää ja lisäystä |
+| 23.7.2024 | 10.22 - 11.10 (48 min)  | 27 h 38 min | Portfolio-listaus-näkymän työstämistä frontendissä |
 
 ## Linkki ja ohjeet
 
