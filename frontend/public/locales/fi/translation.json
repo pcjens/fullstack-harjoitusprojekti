@@ -17,6 +17,14 @@
     "login": "Kirjaudu",
     "logout": "Kirjaudu ulos",
     "register": "Luo tili",
+    "portfolios": "Portfoliot",
+    "latest-publish": "Viimeisin versio: {{published, datetime}}",
+    "no-version-published": "Luonnos (ei vielä julkaistu)",
+    "no-portfolios-found": "Portfolioita ei löytynyt.",
+    "action": {
+        "open": "Avaa",
+        "edit": "Muokkaa"
+    },
     "error": {
         "NetworkError": "Yhteyttä ei saatu, kokeile myöhemmin uudelleen.",
         "UnrecognizedResponse": "Jotain meni pieleen, mutta ei ole ihan selvää mitä. Palvelimelta tuli odottamaton vastaus.",

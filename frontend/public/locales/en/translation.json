@@ -17,6 +17,14 @@
     "login": "Login",
     "logout": "Logout",
     "register": "Register",
+    "portfolios": "Portfolios",
+    "latest-publish": "Latest version: {{published, datetime}}",
+    "no-version-published": "Draft (not published yet)",
+    "no-portfolios-found": "No portfolios found.",
+    "action": {
+        "open": "Open",
+        "edit": "Edit"
+    },
     "error": {
         "NetworkError": "Connection failed, please try again later.",
         "UnrecognizedResponse": "Something went wrong, we're unsure what, but something's not working. Sorry about this.",

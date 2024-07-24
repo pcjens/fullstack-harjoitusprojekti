@@ -13,9 +13,6 @@ export const MainDashboard = () => {
             title: "Portfolio",
             subtitle: "Game designer with a specialty in classic RTS games.",
             name: "Jane Doe",
-            categories: 3,
-            totalWorks: 12,
-            versions: 0,
             latestPublish: null,
         },
         {
@@ -23,9 +20,6 @@ export const MainDashboard = () => {
             title: "John's Art",
             subtitle: "Traditional artist with a penchant for haunting impressionist landscapes.",
             name: "John Doe",
-            categories: 1,
-            totalWorks: 50,
-            versions: 2,
             latestPublish: 1721722244,
         },
     ];
@@ -37,7 +31,18 @@ export const MainDashboard = () => {
                 <Card className="my-2 px-0">
                     <Card.Header>
                         {p.latestPublish
-                            ? "Latest version: " + String(p.latestPublish) /* translate to a datetime */
+                            ? t("latest-publish", {
+                                published: new Date(p.latestPublish * 1000),
+                                formatParams: {
+                                    published: {
+                                        year: "numeric",
+                                        month: "numeric",
+                                        day: "numeric",
+                                        hour: "numeric",
+                                        minute: "numeric",
+                                    },
+                                },
+                            })
                             : t("no-version-published")}
                     </Card.Header>
                     <Card.Body>
