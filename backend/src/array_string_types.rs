@@ -5,8 +5,9 @@ use core::str::FromStr;
 
 use arrayvec::ArrayString;
 use sqlx::encode::IsNull;
+use sqlx::error::BoxDynError;
 use sqlx::postgres::any::{AnyTypeInfo, AnyTypeInfoKind, AnyValueKind};
-use sqlx::{Any, Decode, Encode, Type};
+use sqlx::{Any, Database, Decode, Encode, Type};
 use uuid::Uuid;
 
 /// Implements [Display], [Debug], [sqlx::Type], [sqlx::Encode], and [sqlx::Decode] for the given type,
@@ -21,8 +22,8 @@ macro_rules! array_string_newtype_impls {
 
         impl<'r> Decode<'r, Any> for $array_string_type {
             fn decode(
-                value: <Any as sqlx::database::HasValueRef<'r>>::ValueRef,
-            ) -> Result<Self, sqlx::error::BoxDynError> {
+                value: <Any as Database>::ValueRef<'r>,
+            ) -> Result<Self, BoxDynError> {
                 let s: &'r str = Decode::<'r, Any>::decode(value)?;
                 Ok($array_string_type(ArrayString::from_str(s)?))
             }
@@ -31,16 +32,16 @@ macro_rules! array_string_newtype_impls {
         impl<'r> Encode<'r, Any> for &'r $array_string_type {
             fn encode(
                 self,
-                buf: &mut <Any as sqlx::database::HasArguments<'r>>::ArgumentBuffer,
-            ) -> sqlx::encode::IsNull {
+                buf: &mut <Any as Database>::ArgumentBuffer<'r>,
+            ) -> Result<IsNull, BoxDynError> {
                 buf.0.push(AnyValueKind::Text(self.0.as_str().into()));
-                IsNull::No
+                Ok(IsNull::No)
             }
 
             fn encode_by_ref(
                 &self,
-                buf: &mut <Any as sqlx::database::HasArguments<'r>>::ArgumentBuffer,
-            ) -> sqlx::encode::IsNull {
+                buf: &mut <Any as Database>::ArgumentBuffer<'r>,
+            ) -> Result<IsNull, BoxDynError> {
                 let s: &&'r str = &self.0.as_str();
                 Encode::<'r, Any>::encode(s, buf)
             }

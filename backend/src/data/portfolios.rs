@@ -1,4 +1,4 @@
-#[derive(Debug, sqlx::FromRow)]
+#[derive(Debug, sqlx::FromRow, serde::Serialize)]
 pub struct Portfolio {
     pub id: i32,
     /// The creation time of this portfolio, in seconds since the unix epoch.
