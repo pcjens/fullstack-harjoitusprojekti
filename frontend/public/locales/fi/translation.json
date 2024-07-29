@@ -23,11 +23,25 @@
     "no-portfolios-found": "Portfolioita ei löytynyt.",
     "not-found-title": "Täällä ei ole mitään",
     "not-found-description": "Olet osunut puuttuvalle sivulle. Tämä on todennäköisesti virhe websovelluksessa.",
+    "create-portfolio": "Uusi portfolio",
+    "edit-portfolio": "Muokkaa portfoliota",
+    "portfolio-editor": {
+        "slug": "Slugi",
+        "slug-help": "Lyhyt alfanumeerinen tunnus portfoliolle, jota käytetään sen linkissä.",
+        "author": "Tekijä",
+        "author-help": "Portfolion sisältämien teoksien tekijä.",
+        "title": "Otsikko",
+        "title-help": "Portfolion otsikko. Voi olla vain \"Portfolio\", mutta voi olla jotain mielenkiintoisempaakin.",
+        "subtitle": "Alaotsikko",
+        "subtitle-help": "Pidempi kuvaus tekijästä ja teoksista."
+    },
     "action": {
         "open": "Avaa",
         "edit": "Muokkaa",
         "create-new-portfolio": "Luo uusi portfolio",
-        "go-back": "Palaa takaisin"
+        "go-back": "Palaa takaisin",
+        "create-portfolio": "Luo",
+        "edit-portfolio": "Tallenna"
     },
     "error": {
         "NetworkError": "Yhteyttä ei saatu, kokeile myöhemmin uudelleen.",

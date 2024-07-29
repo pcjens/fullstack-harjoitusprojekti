@@ -2,16 +2,10 @@ import Card from "react-bootstrap/Card";
 import Placeholder from "react-bootstrap/Placeholder";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Portfolio } from ".";
 
 export interface Props {
-    portfolio: "placeholder" | {
-        created_at: number,
-        published_at?: number,
-        slug: string,
-        title: string,
-        subtitle: string,
-        author: string,
-    },
+    portfolio: "placeholder" | Portfolio,
 }
 
 export const PortfolioCard = ({ portfolio: p }: Props) => {

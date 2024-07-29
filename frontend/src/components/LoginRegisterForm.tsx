@@ -49,7 +49,6 @@ export const LoginRegisterForm = ({ isRegister }: Props) => {
 
             const { sessionId } = response.value;
             loginManager.login(sessionId);
-            // TODO: Navigate to the management UI
 
             setUsername("");
             setPassword("");

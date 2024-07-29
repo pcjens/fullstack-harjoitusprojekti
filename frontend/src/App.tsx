@@ -7,6 +7,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Button from "react-bootstrap/Button";
+import { useTranslation } from "react-i18next";
 
 import { LoggedOutIndex } from "./components/LoggedOutIndex";
 import { LoginStatus, useSession } from "./hooks/useSession";
@@ -14,7 +15,7 @@ import { useTimeout } from "./hooks/useTimeout";
 import { LoginContext, useLogin } from "./hooks/useLogin";
 import { BackendStatus } from "./components/BackendStatus";
 import { MainDashboard } from "./components/MainDashboard";
-import { useTranslation } from "react-i18next";
+import { PortfolioEditor } from "./components/Portfolio/Edit";
 
 const NotFound = () => {
     const { t } = useTranslation();
@@ -74,6 +75,7 @@ const IndexContent = () => {
             {
                 loginStatus === LoginStatus.LoggedIn && <Routes>
                     <Route path="/" element={<MainDashboard />} />
+                    <Route path="/portfolio/new" element={<PortfolioEditor />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             }

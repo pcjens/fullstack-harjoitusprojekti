@@ -23,11 +23,25 @@
     "no-portfolios-found": "No portfolios found.",
     "not-found-title": "Not found",
     "not-found-description": "There is nothing on this page. This is probably a bug in the web application.",
+    "create-portfolio": "New portfolio",
+    "edit-portfolio": "Edit portfolio",
+    "portfolio-editor": {
+        "slug": "Slug",
+        "slug-help": "A short alphanumeric id for the portfolio, used in its URL.",
+        "author": "Author",
+        "author-help": "The name of the author of the works included in the portfolio, shown prominently.",
+        "title": "Title",
+        "title-help": "The title of the portfolio, could be just \"Portfolio\", or maybe something more elaborate.",
+        "subtitle": "Subtitle",
+        "subtitle-help": "A longer, more elaborate description of the author and the works."
+    },
     "action": {
         "open": "Open",
         "edit": "Edit",
         "create-new-portfolio": "Create a new portfolio",
-        "go-back": "Go back"
+        "go-back": "Go back",
+        "create-portfolio": "Create",
+        "edit-portfolio": "Save"
     },
     "error": {
         "NetworkError": "Connection failed, please try again later.",
