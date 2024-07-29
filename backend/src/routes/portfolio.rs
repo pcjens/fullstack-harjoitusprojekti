@@ -1,7 +1,8 @@
 use std::sync::Arc;
 
+use arrayvec::ArrayString;
 use axum::extract::{Path, State};
-use axum::routing::get;
+use axum::routing::{get, post};
 use axum::{Json, Router};
 
 use crate::api_errors::ApiError;
@@ -11,7 +12,7 @@ use crate::routes::SharedState;
 use crate::services;
 
 pub fn create_router() -> Router<Arc<SharedState>> {
-    Router::new().route("/", get(all)).route("/:slug", get(by_slug))
+    Router::new().route("/", get(all)).route("/:slug", get(by_slug)).route("/:slug", post(create))
 }
 
 async fn all(
@@ -40,5 +41,36 @@ async fn by_slug(
             ApiError::DbError
         })?
         .ok_or(ApiError::NoSuchSlug)?;
+    Ok(Json(portfolio))
+}
+
+#[derive(serde::Deserialize)]
+struct CreatePortfolioArgs {
+    pub title: ArrayString<100>,
+    pub subtitle: ArrayString<500>,
+    pub author: ArrayString<100>,
+}
+async fn create(
+    State(state): State<Arc<SharedState>>,
+    Session { user_id, .. }: Session,
+    Path(slug): Path<String>,
+    Json(args): Json<CreatePortfolioArgs>,
+) -> Result<Json<Portfolio>, ApiError> {
+    let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
+    let portfolio = services::portfolio::create_portfolio(
+        &mut *conn,
+        &slug,
+        &args.title,
+        &args.subtitle,
+        &args.author,
+        user_id,
+    )
+    .await
+    .map_err(|err| {
+        // TODO: Add a special case for handling unique slug errors
+        tracing::error!("Creating a new portfolio failed: {err:?}");
+        ApiError::DbError
+    })?;
+
     Ok(Json(portfolio))
 }

@@ -25,15 +25,26 @@
     "not-found-description": "There is nothing on this page. This is probably a bug in the web application.",
     "create-portfolio": "New portfolio",
     "edit-portfolio": "Edit portfolio",
+    "input-too-short": "This field should be longer, between {{min}} and {{max}} characters.",
+    "input-too-long": "This field should be shorter, between {{min}} and {{max}} characters.",
+    "input-not-alphadashnumeric": "This field should only contain letters (A-Z), numbers (0-9), and dashes (-).",
     "portfolio-editor": {
-        "slug": "Slug",
-        "slug-help": "A short alphanumeric id for the portfolio, used in its URL.",
-        "author": "Author",
-        "author-help": "The name of the author of the works included in the portfolio, shown prominently.",
-        "title": "Title",
-        "title-help": "The title of the portfolio, could be just \"Portfolio\", or maybe something more elaborate.",
-        "subtitle": "Subtitle",
-        "subtitle-help": "A longer, more elaborate description of the author and the works."
+        "slug": {
+            "name": "Slug",
+            "help": "A short alphanumeric id for the portfolio, used in its URL."
+        },
+        "author": {
+            "name": "Author",
+            "help": "The name of the author of the works included in the portfolio, shown prominently."
+        },
+        "title": {
+            "name": "Title",
+            "help": "The title of the portfolio, could be just \"Portfolio\", or maybe something more elaborate."
+        },
+        "subtitle": {
+            "name": "Subtitle",
+            "help": "A longer, more elaborate description of the author and the works."
+        }
     },
     "action": {
         "open": "Open",

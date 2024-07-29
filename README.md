@@ -27,6 +27,7 @@ työtuntivaatimuksien seuraamista varten.
 | 24.7.2024 | 21.03 - 23.00 (117 min) | 29 h 35 min | Portfolio-listaus-näkymän viimeistelyä, portfolio-skeeman suunnittelua backendiin |
 | 26.7.2024 | 18.33 - 21.56 (203 min) | 32 h 58 min | Portfolioiden haun toteutus backendissä, portfolioiden haku backendista sekä esimerkkipohjaisen tyyppitarkistussysteemin toteutus frontendissä |
 | 29.7.2024 | 13.34 - 17.22 (228 min) | 36 h 46 min | Api-kutsujen korjailua hitaan netin kanssa tunnistettujen ongelmien osalta, portfolioiden luonti/muokkaus-lomakkeen kehitystä |
+| 29.7.2024 | 22.16 - 23.35 (79 min)  | 38 h 5 min  | Portfolioiden luomis-ominaisuus (vielä ilman itse teoksia) valmiiksi |
 
 ## Linkki ja ohjeet
 

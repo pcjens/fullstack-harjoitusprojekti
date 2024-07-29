@@ -25,15 +25,26 @@
     "not-found-description": "Olet osunut puuttuvalle sivulle. Tämä on todennäköisesti virhe websovelluksessa.",
     "create-portfolio": "Uusi portfolio",
     "edit-portfolio": "Muokkaa portfoliota",
+    "input-too-short": "Tämän kentän pitäisi olla pidempi, {{min}} ja {{max}} merkin väliltä.",
+    "input-too-long": "Tämän kentän pitäisi olla lyhyempi, {{min}} ja {{max}} merkin väliltä.",
+    "input-not-alphadashnumeric": "Tämän kentän pitäisi sisältää vain kirjaimia (a-z), numeroita (0-9) ja viivoja (-).",
     "portfolio-editor": {
-        "slug": "Slugi",
-        "slug-help": "Lyhyt alfanumeerinen tunnus portfoliolle, jota käytetään sen linkissä.",
-        "author": "Tekijä",
-        "author-help": "Portfolion sisältämien teoksien tekijä.",
-        "title": "Otsikko",
-        "title-help": "Portfolion otsikko. Voi olla vain \"Portfolio\", mutta voi olla jotain mielenkiintoisempaakin.",
-        "subtitle": "Alaotsikko",
-        "subtitle-help": "Pidempi kuvaus tekijästä ja teoksista."
+        "slug": {
+            "name": "Tunnus",
+            "help": "Lyhyt alfanumeerinen tunnus portfoliolle, jota käytetään sen linkissä."
+        },
+        "author": {
+            "name": "Tekijä",
+            "help": "Portfolion sisältämien teoksien tekijä."
+        },
+        "title": {
+            "name": "Otsikko",
+            "help": "Portfolion otsikko. Voi olla vain \"Portfolio\", mutta voi olla jotain mielenkiintoisempaakin."
+        },
+        "subtitle": {
+            "name": "Alaotsikko",
+            "help": "Pidempi kuvaus tekijästä ja teoksista."
+        }
     },
     "action": {
         "open": "Avaa",
