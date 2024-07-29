@@ -21,9 +21,13 @@
     "latest-publish": "Viimeisin versio: {{published, datetime}}",
     "no-version-published": "Luonnos (ei vielä julkaistu)",
     "no-portfolios-found": "Portfolioita ei löytynyt.",
+    "not-found-title": "Täällä ei ole mitään",
+    "not-found-description": "Olet osunut puuttuvalle sivulle. Tämä on todennäköisesti virhe websovelluksessa.",
     "action": {
         "open": "Avaa",
-        "edit": "Muokkaa"
+        "edit": "Muokkaa",
+        "create-new-portfolio": "Luo uusi portfolio",
+        "go-back": "Palaa takaisin"
     },
     "error": {
         "NetworkError": "Yhteyttä ei saatu, kokeile myöhemmin uudelleen.",

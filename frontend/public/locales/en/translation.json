@@ -4,7 +4,7 @@
         "language": "Language"
     },
     "footer": {
-        "licenseNote": "This web software is available under the GNU AGPL 3.0 license.",
+        "licenseNote": "This web application is available under the GNU AGPL 3.0 license.",
         "sourceCode": "Source code"
     },
     "cantConnectInfo": "Reaching the backend server is taking longer than expected. This service is probably unavailable, possibly for maintenance, or there could be an issue with your internet connectivity. In any case, sorry about this, you may want to try again later.",
@@ -21,9 +21,13 @@
     "latest-publish": "Latest version: {{published, datetime}}",
     "no-version-published": "Draft (not published yet)",
     "no-portfolios-found": "No portfolios found.",
+    "not-found-title": "Not found",
+    "not-found-description": "There is nothing on this page. This is probably a bug in the web application.",
     "action": {
         "open": "Open",
-        "edit": "Edit"
+        "edit": "Edit",
+        "create-new-portfolio": "Create a new portfolio",
+        "go-back": "Go back"
     },
     "error": {
         "NetworkError": "Connection failed, please try again later.",

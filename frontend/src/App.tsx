@@ -6,6 +6,7 @@ import Spinner from "react-bootstrap/Spinner";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import Button from "react-bootstrap/Button";
 
 import { LoggedOutIndex } from "./components/LoggedOutIndex";
 import { LoginStatus, useSession } from "./hooks/useSession";
@@ -14,6 +15,20 @@ import { LoginContext, useLogin } from "./hooks/useLogin";
 import { BackendStatus } from "./components/BackendStatus";
 import { MainDashboard } from "./components/MainDashboard";
 import { useTranslation } from "react-i18next";
+
+const NotFound = () => {
+    const { t } = useTranslation();
+
+    return (
+        <Container>
+            <h2>{t("not-found-title")}</h2>
+            <p>
+                {t("not-found-description")}
+            </p>
+            <Button onClick={() => { history.back(); }}>{t("action.go-back")}</Button>
+        </Container>
+    );
+};
 
 const IndexContent = () => {
     const { loginStatus, slow: showLoadingText } = useSession();
@@ -59,6 +74,7 @@ const IndexContent = () => {
             {
                 loginStatus === LoginStatus.LoggedIn && <Routes>
                     <Route path="/" element={<MainDashboard />} />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             }
 
