@@ -37,7 +37,7 @@ const apiFetch = async (
     let response;
     try {
         const url = `${VITE_API_BASE_URL}${apiPath}`;
-        console.debug(apiPath, url, init);
+        console.debug("request from useApiFetch:", apiPath, url, init);
         response = await fetch(url, init);
     } catch (err) {
         return { userError: ApiError.NetworkError };
@@ -77,11 +77,12 @@ const apiFetch = async (
     return { value };
 };
 
-const cache: { latestParams: string, latestTime: number, latestResponse: Promise<ApiResponse<unknown>> | null } = {
-    latestParams: "",
-    latestTime: performance.now(),
-    latestResponse: null,
-};
+interface CacheSlot {
+    latestParams: string,
+    latestTime: number,
+    latestResponse: Promise<ApiResponse<unknown>> | null,
+}
+const cacheSlots: Record<string, CacheSlot> = {};
 const cachedApiFetch = async (
     apiPath: string,
     logout: (fromSessionId: string | null) => void,
@@ -90,7 +91,15 @@ const cachedApiFetch = async (
 ): Promise<ApiResponse<unknown>> => {
     const now = performance.now();
     const params = JSON.stringify({ apiPath, sessionId, reqParams });
-    if (cache.latestResponse == null || now - cache.latestTime > 500 || cache.latestParams !== params) {
+
+    if (!(apiPath in cacheSlots)) {
+        cacheSlots[apiPath] = { latestResponse: null, latestTime: 0, latestParams: "" };
+    }
+    const cache = cacheSlots[apiPath];
+
+    if (cache.latestResponse == null
+        || now - cache.latestTime > (import.meta.env.VITE_API_CACHE_IDENTICAL_REQUESTS_FOR_MILLIS ?? 500)
+        || cache.latestParams !== params) {
         cache.latestTime = now;
         cache.latestParams = params;
         cache.latestResponse = apiFetch(apiPath, logout, sessionId, reqParams);
