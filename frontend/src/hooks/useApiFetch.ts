@@ -22,7 +22,7 @@ type ApiResponse<T> = { value: T } | { userError: ApiError };
 
 const apiFetch = async (
     apiPath: string,
-    logout: () => void,
+    logout: (fromSessionId: string | null) => void,
     sessionId: string | null,
     reqParams?: RequestInit,
 ): Promise<ApiResponse<unknown>> => {
@@ -56,7 +56,7 @@ const apiFetch = async (
         if (typeof value.error === "string" && response.status >= 400 && response.status < 500) {
             if (value.error === "InvalidSession") {
                 console.error("invalid session; logging out");
-                logout();
+                logout(sessionId);
             }
             if (!Object.values(ApiError).includes(value.error as ApiError)) {
                 console.error(`successfully parsed response, but got an unrecognized error: ${value.error}`);
@@ -79,7 +79,7 @@ const cache: { latestParams: string, latestTime: number, latestResponse: Promise
 };
 const cachedApiFetch = async (
     apiPath: string,
-    logout: () => void,
+    logout: (fromSessionId: string | null) => void,
     sessionId: string | null,
     reqParams?: RequestInit,
 ): Promise<ApiResponse<unknown>> => {

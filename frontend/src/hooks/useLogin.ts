@@ -13,10 +13,18 @@ export const useLogin = () => {
         console.log("Logged in.");
     };
 
-    const logout = () => {
-        localStorage.removeItem("sessionId");
-        setSessionId("");
-        console.log("Logged out.");
+    const logout = (fromSessionId: string | null) => {
+        // This sequence of "get, compare, remove" should not introduce a race
+        // condition since there's no awaits in between, and we're not
+        // multithreading with web workers (afaik).
+        const current = localStorage.getItem("sessionId");
+        if (fromSessionId == null || current === fromSessionId) {
+            localStorage.removeItem("sessionId");
+            setSessionId("");
+            console.log("Logged out.");
+        } else {
+            console.log("Already logged out from this session, not doing anything.");
+        }
     };
 
     return {
@@ -31,9 +39,9 @@ export const useLogin = () => {
 export const LoginContext = createContext({
     sessionId: "",
     login: (sessionId: string): void => {
-        throw new Error(`using LoginContext for login("${sessionId}") outside a provider`);
+        throw new Error(`using LoginContext for login(${sessionId}) outside a provider`);
     },
-    logout: (): void => {
-        throw new Error("using LoginContext for logout outside a provider");
+    logout: (fromSessionId: string | null): void => {
+        throw new Error(`using LoginContext for logout(${fromSessionId ?? "null"}) outside a provider`);
     },
 });
