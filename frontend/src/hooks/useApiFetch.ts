@@ -44,6 +44,11 @@ const apiFetch = async (
     }
     const text: string = await response.text();
 
+    // For debugging loading effects
+    if (import.meta.env.DEV) {
+        await new Promise((r) => setTimeout(r, 0));
+    }
+
     let value: unknown = null;
     try {
         value = text.length > 0 ? JSON.parse(text) : null;
@@ -114,11 +119,21 @@ export const useApiFetch = <T>(
 ) => {
     const { sessionId, logout } = useContext(LoginContext);
     const [loading, setLoading] = useState(!manualFetch);
+    const [slow, setSlow] = useState(false);
     const [result, setResult] = useState<ApiResponse<T> | null>(null);
 
     const refetch: () => Promise<ApiResponse<T>> = useCallback(async () => {
+        setSlow(false);
         setLoading(true);
+
+        const slowTimeoutHandle = setTimeout(() => {
+            setSlow(true);
+        }, import.meta.env.VITE_API_SLOW_RESPONSE_THRESHOLD_MILLIS ?? 5000);
+
         const rawResult = await cachedApiFetch(apiPath, logout, sessionId, reqParams);
+
+        clearTimeout(slowTimeoutHandle);
+
         let result;
         if ("value" in rawResult) {
             result = { value: mapResult(rawResult.value) };
@@ -136,5 +151,5 @@ export const useApiFetch = <T>(
         }
     }, [manualFetch, refetch]);
 
-    return { loading, result, refetch };
+    return { loading, slow, result, refetch };
 };

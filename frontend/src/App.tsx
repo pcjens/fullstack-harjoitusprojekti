@@ -16,14 +16,12 @@ import { MainDashboard } from "./components/MainDashboard";
 import { useTranslation } from "react-i18next";
 
 const IndexContent = () => {
-    const { loginStatus } = useSession();
+    const { loginStatus, slow: showLoadingText } = useSession();
     const { logout } = useContext(LoginContext);
     const { t, i18n } = useTranslation();
 
     // Only show spinner after 400ms (seems like an appropriate timeout for the backend to respond)
     const { timedOut: showLoading } = useTimeout(400);
-    // If it really takes a while, show more info
-    const { timedOut: showLoadingText } = useTimeout(4000);
 
     return (
         <BrowserRouter>
@@ -42,7 +40,7 @@ const IndexContent = () => {
                     <Navbar.Collapse id="navbar-nav">
                         <Nav className="me-auto">
                             {loginStatus === LoginStatus.LoggedIn && <Nav.Link as={Link} to="/">{t("nav.dashboard")}</Nav.Link>}
-                            {loginStatus === LoginStatus.LoggedIn && <Nav.Link onClick={logout}>{t("logout")}</Nav.Link>}
+                            {loginStatus === LoginStatus.LoggedIn && <Nav.Link onClick={() => { logout(null); }}>{t("logout")}</Nav.Link>}
                             <NavDropdown title={t("nav.language")} id="navbar-language-selector">
                                 <NavDropdown.Item onClick={() => { void i18n.changeLanguage("en"); }} disabled={i18n.language === "en"}>
                                     English
