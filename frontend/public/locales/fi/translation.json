@@ -64,6 +64,8 @@
         "InvalidCredentials": "Käyttäjätunnus ja/tai salasana on väärin.",
         "UsernameTaken": "Tämä käyttäjätunnus on jo käytössä.",
         "MissingSession": "Kirjautuminen vaadittu.",
-        "InvalidSession": "Istuntosi on vanhentunut, kirjaudu sisään uudelleen."
+        "InvalidSession": "Istuntosi on vanhentunut, kirjaudu sisään uudelleen.",
+        "NoSuchSlug": "Portfoliota ei löytynyt.",
+        "NotFound": "Resurssia ei löytynyt."
     }
 }

@@ -5,24 +5,45 @@ import { useTranslation } from "react-i18next";
 import Container from "react-bootstrap/Container";
 import Stack from "react-bootstrap/Stack";
 import Spinner from "react-bootstrap/Spinner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { Portfolio } from ".";
+import { typecheckPortfolio } from ".";
 import { ValidatedTextInput } from "../Forms";
 import { useApiFetch } from "../../hooks/useApiFetch";
 import { createTypechekerFromExample } from "../../util/helpers";
-
-export interface Props {
-    portfolio?: Portfolio,
-}
 
 const typecheckCreatedPortfolio = createTypechekerFromExample({
     slug: "",
 }, "portfolio");
 
-export const PortfolioEditor = ({ portfolio }: Props) => {
+export const PortfolioEditor = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+
+    const [serverError, setServerError] = useState("");
+
+    const [slug, setSlug] = useState("");
+    const [title, setTitle] = useState("");
+    const [subtitle, setSubtitle] = useState("");
+    const [author, setAuthor] = useState("");
+
+    const params = useParams();
+    const isEdit = params.slug != null;
+    const mapGetResult = useCallback(typecheckPortfolio, []);
+    const { result: slugFindResult } = useApiFetch(`/portfolio/${params.slug ?? ""}`, mapGetResult);
+    useEffect(() => {
+        console.log("portfolio status", slugFindResult);
+        if (slugFindResult != null) {
+            if ("value" in slugFindResult) {
+                setSlug(slugFindResult.value.slug);
+                setTitle(slugFindResult.value.title);
+                setSubtitle(slugFindResult.value.subtitle);
+                setAuthor(slugFindResult.value.author);
+            } else if (isEdit) {
+                setServerError(slugFindResult.userError);
+            }
+        }
+    }, [slugFindResult, isEdit]);
 
     const createLengthValidator = (min: number, max: number) => {
         return (value: string) => {
@@ -43,29 +64,20 @@ export const PortfolioEditor = ({ portfolio }: Props) => {
 
     const [shouldValidate, setShouldValidate] = useState(false);
 
-    const [slug, setSlug] = useState(portfolio?.slug ?? "");
     const validateSlug = combineValidators(
         createLengthValidator(1, 100),
         (slug: string) => slug.search(/[^a-z0-9-]/) === -1 ? null : t("input-not-alphadashnumeric"),
     );
-
-    const [title, setTitle] = useState(portfolio?.title ?? "");
     const validateTitle = createLengthValidator(1, 100);
-
-    const [subtitle, setSubtitle] = useState(portfolio?.subtitle ?? "");
     const validateSubtitle = createLengthValidator(1, 500);
-
-    const [author, setAuthor] = useState(portfolio?.author ?? "");
     const validateAuthor = createLengthValidator(1, 100);
 
-    const [serverError, setServerError] = useState("");
-
-    const mapResult = useCallback(typecheckCreatedPortfolio, []);
+    const mapPostResult = useCallback(typecheckCreatedPortfolio, []);
     const [reqParams, setReqParams] = useState<RequestInit>({});
     const {
         refetch: createPortfolio,
         loading,
-    } = useApiFetch(`/portfolio/${slug}`, mapResult, reqParams, true);
+    } = useApiFetch(`/portfolio/${slug}`, mapPostResult, reqParams, true);
 
     useEffect(() => {
         setReqParams({
@@ -105,7 +117,7 @@ export const PortfolioEditor = ({ portfolio }: Props) => {
     return (
         <Container>
             <h2>
-                {t(portfolio != null ? "edit-portfolio" : "create-portfolio")}
+                {t(isEdit ? "edit-portfolio" : "create-portfolio")}
             </h2>
             <Form onSubmit={submitHandler} noValidate>
                 <Stack gap={3}>
@@ -123,7 +135,7 @@ export const PortfolioEditor = ({ portfolio }: Props) => {
                     <Form.Group>
                         <Button type="submit" disabled={loading}>
                             {loading && <Spinner size="sm" role="status" aria-hidden="true" style={{ marginRight: 6 }} />}
-                            {t(portfolio != null ? "action.edit-portfolio" : "action.create-portfolio")}
+                            {t(isEdit ? "action.edit-portfolio" : "action.create-portfolio")}
                         </Button>
                     </Form.Group>
                 </Stack>

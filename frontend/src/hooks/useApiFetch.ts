@@ -9,6 +9,7 @@ export enum ApiError {
     NetworkError = "NetworkError",
     UnrecognizedResponse = "UnrecognizedResponse",
     InternalServerError = "InternalServerError",
+    NotFound = "NotFound",
     UsernameTooShort = "UsernameTooShort",
     PasswordTooShort = "PasswordTooShort",
     PasswordsDontMatch = "PasswordsDontMatch",
@@ -16,6 +17,7 @@ export enum ApiError {
     UsernameTaken = "UsernameTaken",
     MissingSession = "MissingSession",
     InvalidSession = "InvalidSession",
+    NoSuchSlug = "NoSuchSlug",
 }
 
 type ApiResponse<T> = { value: T } | { userError: ApiError };
@@ -53,6 +55,9 @@ const apiFetch = async (
     try {
         value = text.length > 0 ? JSON.parse(text) : null;
     } catch (error) {
+        if (response.status === 404) {
+            return { userError: ApiError.NotFound };
+        }
         console.error(`failed to parse api response json - the request is probably malformed. request: ${JSON.stringify(apiPath)}, error: ${JSON.stringify(error)}, response: ${text}`);
         return { userError: ApiError.UnrecognizedResponse };
     }

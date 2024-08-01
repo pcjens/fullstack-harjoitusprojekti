@@ -76,6 +76,7 @@ const IndexContent = () => {
                 loginStatus === LoginStatus.LoggedIn && <Routes>
                     <Route path="/" element={<MainDashboard />} />
                     <Route path="/portfolio/new" element={<PortfolioEditor />} />
+                    <Route path="/p/:slug/edit" element={<PortfolioEditor />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             }

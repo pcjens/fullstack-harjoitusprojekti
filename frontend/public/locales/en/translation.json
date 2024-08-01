@@ -64,6 +64,8 @@
         "InvalidCredentials": "Invalid credentials.",
         "UsernameTaken": "That username is taken.",
         "MissingSession": "Login required.",
-        "InvalidSession": "Your session has expired, please login again."
+        "InvalidSession": "Your session has expired, please login again.",
+        "NoSuchSlug": "Portfolio not found.",
+        "NotFound": "Resource not found."
     }
 }
