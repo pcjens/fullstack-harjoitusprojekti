@@ -12,22 +12,22 @@ puolelta Axumilla, Sqlx:llä ja Rustilla.
 Alla kirjanpito tähän projektiin käyttämistäni tunneista, kurssin
 työtuntivaatimuksien seuraamista varten.
 
-|   Päivä   |     Aikaväli       |Yhteensä | Kuvaus |
-| :--------:|:-------------------|:--------|:-------|
-| 18.7.2024 | 00.06–02.44 (158m) | 2h 38m  | Npm/vite/typescript/cargo/docker/ym. järjestelyä |
-| 18.7.2024 | 22.17–23.40 (83m)  | 4h 1m   | Sovelluksen ydintoimintojen suunnittelua |
-| 19.7.2024 | 01.04–03.29 (145m) | 6h 26m  | Kunnon readme:n kirjoittaminen, tietokantayhteyksien lisääminen backendiin |
-| 19.7.2024 | 16.53–02.54 (601m) | 16h 27m | Kirjautumis- ja rekisteröintilomakkeiden toteutus frontendissä, käyttäjien lisäys ja salasanojen tarkistuksen toteuttaminen backendissä (ei vielä sessioita) |
-| 20.7.2024 | 17.00–19.13 (133m) | 18h 40m | Sessioiden lisäys backendiin, vielä vaiheessa frontissa |
-| 21.7.2024 | 00.00–00.54 (54m)  | 19h 34m | Sessiot toimintaan myös frontin osalta |
-| 21.7.2024 | 17.23–21.51 (268m) | 24h 2m  | Frontendin bäkkärikutsujen tekemistä varten olevan hookin refaktorointi, nyt integroi paljon paremmin Reactin state-systeemien kanssa, login-kontekstin lisäys, sessioiden vanhentuminen backendiin |
-| 22.7.2024 | 09.17–11.17 (120m) | 26h 2m  | Käännösten (ja niiden vaatimien systeemien) lisäämistä frontendiin, navipalkki, routeeminen |
-| 22.7.2024 | 14.09–14.57 (48m)  | 26h 50m | Käännösten viimeistely, faviconin/"brand ikonin" etsintää ja lisäystä |
-| 23.7.2024 | 10.22–11.10 (48m)  | 27h 38m | Portfolio-listaus-näkymän työstämistä frontendissä |
-| 24.7.2024 | 21.03–23.00 (117m) | 29h 35m | Portfolio-listaus-näkymän viimeistelyä, portfolio-skeeman suunnittelua backendiin |
-| 26.7.2024 | 18.33–21.56 (203m) | 32h 58m | Portfolioiden haun toteutus backendissä, portfolioiden haku backendista sekä esimerkkipohjaisen tyyppitarkistussysteemin toteutus frontendissä |
-| 29.7.2024 | 13.34–17.22 (228m) | 36h 46m | Api-kutsujen korjailua hitaan netin kanssa tunnistettujen ongelmien osalta, portfolioiden luonti/muokkaus-lomakkeen kehitystä |
-| 29.7.2024 | 22.16–23.35 (79m)  | 38h 5m  | Portfolioiden luomis-ominaisuus (vielä ilman itse teoksia) valmiiksi |
+| Päivä | Alku&nbsp;ja&nbsp;loppu | Käytetty&nbsp;aika | Yhteensä | Kuvaus |
+| :----:|:------------|:-----|:--------|:-------|
+| 18.7. | 00.06–02.44 | 2h 38m | 2h 38m  | Npm/vite/typescript/cargo/docker/ym. järjestelyä |
+| 18.7. | 22.17–23.40 | 1h 23m | 4h 1m   | Sovelluksen ydintoimintojen suunnittelua |
+| 19.7. | 01.04–03.29 | 2h 25m | 6h 26m  | Kunnon readme:n kirjoittaminen, tietokantayhteyksien lisääminen backendiin |
+| 19.7. | 16.53–02.54 | 10h 1m | 16h 27m | Kirjautumis- ja rekisteröintilomakkeiden toteutus frontendissä, käyttäjien lisäys ja salasanojen tarkistuksen toteuttaminen backendissä (ei vielä sessioita) |
+| 20.7. | 17.00–19.13 | 2h 13m | 18h 40m | Sessioiden lisäys backendiin, vielä vaiheessa frontissa |
+| 21.7. | 00.00–00.54 | 54m    | 19h 34m | Sessiot toimintaan myös frontin osalta |
+| 21.7. | 17.23–21.51 | 4h 28m | 24h 2m  | Frontendin bäkkärikutsujen tekemistä varten olevan hookin refaktorointi, nyt integroi paljon paremmin Reactin state-systeemien kanssa, login-kontekstin lisäys, sessioiden vanhentuminen backendiin |
+| 22.7. | 09.17–11.17 | 2h     | 26h 2m  | Käännösten (ja niiden vaatimien systeemien) lisäämistä frontendiin, navipalkki, routeeminen |
+| 22.7. | 14.09–14.57 | 48m    | 26h 50m | Käännösten viimeistely, faviconin/"brand ikonin" etsintää ja lisäystä |
+| 23.7. | 10.22–11.10 | 48m    | 27h 38m | Portfolio-listaus-näkymän työstämistä frontendissä |
+| 24.7. | 21.03–23.00 | 1h 57m | 29h 35m | Portfolio-listaus-näkymän viimeistelyä, portfolio-skeeman suunnittelua backendiin |
+| 26.7. | 18.33–21.56 | 3h 23m | 32h 58m | Portfolioiden haun toteutus backendissä, portfolioiden haku backendista sekä esimerkkipohjaisen tyyppitarkistussysteemin toteutus frontendissä |
+| 29.7. | 13.34–17.22 | 3h 48m | 36h 46m | Api-kutsujen korjailua hitaan netin kanssa tunnistettujen ongelmien osalta, portfolioiden luonti/muokkaus-lomakkeen kehitystä |
+| 29.7. | 22.16–23.35 | 1h 19m | 38h 5m  | Portfolioiden luomis-ominaisuus (vielä ilman itse teoksia) valmiiksi |
 
 ## Linkki ja ohjeet
 
