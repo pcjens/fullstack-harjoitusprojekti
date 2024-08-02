@@ -10,6 +10,8 @@ import { useTranslation } from "react-i18next";
 type Validator = (value: string) => string | null;
 
 export interface Props {
+    showPlaceholder?: boolean,
+
     name: string,
     /**
      * Prefix to add before `name` to form the translation key. E.g. is name:
@@ -36,6 +38,8 @@ export const ValidatedTextInput = (props: Props) => {
             <Form.Label>{t(`${props.pfx}.${props.name}.name`)}</Form.Label>
             <InputGroup hasValidation>
                 <Form.Control required aria-describedby={helpName}
+                    disabled={!!props.showPlaceholder}
+                    placeholder={props.showPlaceholder ? t("input-loading") : undefined}
                     isInvalid={props.shouldValidate && error != null}
                     isValid={props.shouldValidate && error == null}
                     value={props.input} onChange={(({ target }) => { props.setInput(target.value); })} />

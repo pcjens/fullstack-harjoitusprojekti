@@ -91,12 +91,12 @@ where
 pub async fn get_portfolio<E>(
     conn: &mut E,
     slug: &str,
-    user_id: i32,
+    user_id: Option<i32>,
 ) -> Result<Option<Portfolio>, anyhow::Error>
 where
     for<'e> &'e mut E: Executor<'e, Database = Any>,
 {
-    sqlx::query_as("select * from portfolios join portfolio_rights where slug = ? and user_id = ?")
+    sqlx::query_as("select * from portfolios join portfolio_rights where slug = ? and (user_id = ? or published_at is not null)")
         .bind(slug)
         .bind(user_id)
         .fetch_optional(conn)

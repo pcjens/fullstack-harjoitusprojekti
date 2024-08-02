@@ -16,6 +16,7 @@ import { LoginContext, useLogin } from "./hooks/useLogin";
 import { BackendStatus } from "./components/BackendStatus";
 import { MainDashboard } from "./components/MainDashboard";
 import { PortfolioEditor } from "./components/Portfolio/Edit";
+import { PortfolioPage } from "./components/Portfolio/Page";
 
 const NotFound = () => {
     const { t } = useTranslation();
@@ -36,7 +37,12 @@ const PortfolioEditorFromPath = () => {
     return <PortfolioEditor slug={params.slug} />;
 };
 
-const IndexContent = () => {
+const PortfolioPageFromPath = () => {
+    const params = useParams();
+    return <PortfolioPage slug={params.slug ?? ""} />;
+};
+
+const NavWrapper = (props: { element: JSX.Element, hideNavIfLoggedOut?: boolean }) => {
     const { loginStatus, slow: showLoadingText } = useSession();
     const { logout } = useContext(LoginContext);
     const { t, i18n } = useTranslation();
@@ -44,9 +50,29 @@ const IndexContent = () => {
     // Only show spinner after 400ms (seems like an appropriate timeout for the backend to respond)
     const { timedOut: showLoading } = useTimeout(400);
 
+    if (props.hideNavIfLoggedOut && loginStatus !== LoginStatus.LoggedIn) {
+        return props.element;
+    }
+
+    if (loginStatus === LoginStatus.Unknown) {
+        if (!showLoading) {
+            return <></>;
+        }
+        return (
+            <Container className="d-flex vh-100 justify-content-center align-items-center">
+                <div>
+                    {showLoadingText || <Spinner title="Loading..."></Spinner>}
+                    {showLoadingText && <p style={{ textAlign: "center" }}>
+                        {t("cantConnectInfo")}
+                    </p>}
+                </div>
+            </Container>
+        );
+    }
+
     return (
-        <BrowserRouter>
-            {loginStatus !== LoginStatus.Unknown && <Navbar expand="sm">
+        <>
+            <Navbar expand="sm">
                 <Container>
                     <Navbar.Brand as={Link} to="/">
                         <img
@@ -73,40 +99,31 @@ const IndexContent = () => {
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
-            </Navbar >}
+            </Navbar>
 
-            {loginStatus === LoginStatus.LoggedOut && <LoggedOutIndex />}
+            {loginStatus === LoginStatus.LoggedIn ? props.element : <LoggedOutIndex />}
 
-            {
-                loginStatus === LoginStatus.LoggedIn && <Routes>
-                    <Route path="/" element={<MainDashboard />} />
-                    <Route path="/portfolio/new" element={<PortfolioEditor />} />
-                    <Route path="/p/:slug/edit" element={<PortfolioEditorFromPath />} />
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            }
+            <footer className="my-5" style={{ textAlign: "center" }}>
+                {import.meta.env.DEV && <p>Backend status: {<BackendStatus />}</p>}
+                <p>
+                    {t("footer.licenseNote")} {" "}
+                    <a href="https://github.com/pcjens/fullstack-harjoitustyo">{t("footer.sourceCode")}</a>
+                </p>
+            </footer>
+        </>
+    );
+}
 
-            {
-                loginStatus === LoginStatus.Unknown && showLoading &&
-                <Container className="d-flex vh-100 justify-content-center align-items-center">
-                    <div>
-                        {showLoadingText || <Spinner title="Loading..."></Spinner>}
-                        {showLoadingText && <p style={{ textAlign: "center" }}>
-                            {t("cantConnectInfo")}
-                        </p>}
-                    </div>
-                </Container>
-            }
-
-            {
-                loginStatus !== LoginStatus.Unknown && <footer className="my-5" style={{ textAlign: "center" }}>
-                    {import.meta.env.DEV && <p>Backend status: {<BackendStatus />}</p>}
-                    <p>
-                        {t("footer.licenseNote")} {" "}
-                        <a href="https://github.com/pcjens/fullstack-harjoitustyo">{t("footer.sourceCode")}</a>
-                    </p>
-                </footer>
-            }
+const IndexContent = () => {
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<NavWrapper element={<MainDashboard />} />} />
+                <Route path="/portfolio/new" element={<NavWrapper element={<PortfolioEditor />} />} />
+                <Route path="/p/:slug/edit" element={<NavWrapper element={<PortfolioEditorFromPath />} />} />
+                <Route path="/p/:slug" element={<NavWrapper hideNavIfLoggedOut={true} element={<PortfolioPageFromPath />} />} />
+                <Route path="*" element={<NavWrapper element={<NotFound />} />} />
+            </Routes>
         </BrowserRouter>
     );
 };

@@ -28,6 +28,7 @@
     "input-too-short": "Tämän kentän pitäisi olla pidempi, {{min}} ja {{max}} merkin väliltä.",
     "input-too-long": "Tämän kentän pitäisi olla lyhyempi, {{min}} ja {{max}} merkin väliltä.",
     "input-not-alphadashnumeric": "Tämän kentän pitäisi sisältää vain kirjaimia (a-z), numeroita (0-9) ja viivoja (-).",
+    "input-loading": "Ladataan...",
     "portfolio-editor": {
         "slug": {
             "name": "Tunnus",

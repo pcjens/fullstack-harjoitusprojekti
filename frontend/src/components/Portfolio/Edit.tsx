@@ -30,7 +30,10 @@ export const PortfolioEditor = (props: { slug?: string }) => {
     const [author, setAuthor] = useState("");
 
     const mapGetResult = useCallback(typecheckPortfolio, []);
-    const { result: slugFindResult } = useApiFetch(`/portfolio/${props.slug ?? ""}`, mapGetResult);
+    const {
+        result: slugFindResult,
+        loading: originalPortfolioLoading,
+    } = useApiFetch(`/portfolio/${props.slug ?? ""}`, mapGetResult);
     useEffect(() => {
         console.log("portfolio status", slugFindResult);
         if (slugFindResult != null) {
@@ -122,13 +125,13 @@ export const PortfolioEditor = (props: { slug?: string }) => {
             <Form onSubmit={submitHandler} noValidate>
                 <Stack gap={3}>
                     <ValidatedTextInput pfx={"portfolio-editor"} name={"slug"} shouldValidate={shouldValidate}
-                        input={slug} setInput={setSlug} validate={validateSlug} />
+                        input={slug} setInput={setSlug} validate={validateSlug} showPlaceholder={isEdit && originalPortfolioLoading} />
                     <ValidatedTextInput pfx={"portfolio-editor"} name={"author"} shouldValidate={shouldValidate}
-                        input={author} setInput={setAuthor} validate={validateAuthor} />
+                        input={author} setInput={setAuthor} validate={validateAuthor} showPlaceholder={isEdit && originalPortfolioLoading} />
                     <ValidatedTextInput pfx={"portfolio-editor"} name={"title"} shouldValidate={shouldValidate}
-                        input={title} setInput={setTitle} validate={validateTitle} />
+                        input={title} setInput={setTitle} validate={validateTitle} showPlaceholder={isEdit && originalPortfolioLoading} />
                     <ValidatedTextInput pfx={"portfolio-editor"} name={"subtitle"} shouldValidate={shouldValidate}
-                        input={subtitle} setInput={setSubtitle} validate={validateSubtitle} />
+                        input={subtitle} setInput={setSubtitle} validate={validateSubtitle} showPlaceholder={isEdit && originalPortfolioLoading} />
                     {serverError && <p className="text-danger">
                         {t(`error.${serverError}`)}
                     </p>}

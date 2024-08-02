@@ -28,6 +28,7 @@
     "input-too-short": "This field should be longer, between {{min}} and {{max}} characters.",
     "input-too-long": "This field should be shorter, between {{min}} and {{max}} characters.",
     "input-not-alphadashnumeric": "This field should only contain letters (A-Z), numbers (0-9), and dashes (-).",
+    "input-loading": "Loading...",
     "portfolio-editor": {
         "slug": {
             "name": "Slug",

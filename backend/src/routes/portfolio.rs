@@ -34,11 +34,11 @@ async fn all(
 
 async fn by_slug(
     State(state): State<Arc<SharedState>>,
-    Session { user_id, .. }: Session,
+    session: Option<Session>,
     Path(slug): Path<String>,
 ) -> Result<Json<Portfolio>, ApiError> {
     let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
-    let portfolio = services::portfolio::get_portfolio(&mut *conn, &slug, user_id)
+    let portfolio = services::portfolio::get_portfolio(&mut *conn, &slug, session.map(|Session {user_id, ..}| user_id))
         .await
         .map_err(|err| {
             tracing::error!("Getting portfolio by slug failed: {err:?}");
