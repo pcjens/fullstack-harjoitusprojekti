@@ -44,6 +44,37 @@ where
     Ok(portfolio)
 }
 
+pub async fn update_portfolio<E>(
+    conn: &mut E,
+    original_slug: &str,
+    new_slug: &str,
+    title: &str,
+    subtitle: &str,
+    author: &str,
+    user_id: i32,
+) -> Result<Portfolio, anyhow::Error>
+where
+    for<'e> &'e mut E: Executor<'e, Database = Any>,
+{
+    let query = sqlx::query_as(
+        "update portfolios set slug = ?, title = ?, subtitle = ?, author = ? \
+        where slug = ? and id in ( select portfolio_id from portfolio_rights where user_id = ? ) \
+        returning *",
+    );
+    let portfolio: Portfolio = query
+        .bind(new_slug)
+        .bind(title)
+        .bind(subtitle)
+        .bind(author)
+        .bind(original_slug)
+        .bind(user_id)
+        .fetch_one(&mut *conn)
+        .await
+        .context("portfolios update failed")?;
+
+    Ok(portfolio)
+}
+
 pub async fn get_portfolios<E>(conn: &mut E, user_id: i32) -> Result<Vec<Portfolio>, anyhow::Error>
 where
     for<'e> &'e mut E: Executor<'e, Database = Any>,

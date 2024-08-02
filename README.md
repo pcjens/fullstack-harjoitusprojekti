@@ -29,6 +29,7 @@ työtuntivaatimuksien seuraamista varten.
 | 29.7. | 13.34–17.22 |  3h 48m | 36h 46m | Api-kutsujen korjailua hitaan netin kanssa tunnistettujen ongelmien osalta, portfolioiden luonti/muokkaus-lomakkeen kehitystä |
 | 29.7. | 22.16–23.35 |  1h 19m | 38h  5m | Portfolioiden luomis-ominaisuus (vielä ilman itse teoksia) valmiiksi |
 |  1.8. | 19.31–20.21 |     50m | 38h 55m | Portfolioiden muokkaamis-näkymä frontendissä |
+|  2.8. | 15.43–##.## | ##h ##m | ##h ##m |  |
 
 ## Linkki ja ohjeet
 

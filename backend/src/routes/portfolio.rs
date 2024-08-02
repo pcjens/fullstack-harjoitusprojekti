@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use arrayvec::ArrayString;
 use axum::extract::{Path, State};
-use axum::routing::{get, post};
+use axum::routing::{get, post, put};
 use axum::{Json, Router};
 
 use crate::api_errors::ApiError;
@@ -12,7 +12,11 @@ use crate::routes::SharedState;
 use crate::services;
 
 pub fn create_router() -> Router<Arc<SharedState>> {
-    Router::new().route("/", get(all)).route("/:slug", get(by_slug)).route("/:slug", post(create))
+    Router::new()
+        .route("/", get(all))
+        .route("/:slug", get(by_slug))
+        .route("/:slug", post(create))
+        .route("/:slug", put(edit))
 }
 
 async fn all(
@@ -69,6 +73,40 @@ async fn create(
     .map_err(|err| {
         // TODO: Add a special case for handling unique slug errors
         tracing::error!("Creating a new portfolio failed: {err:?}");
+        ApiError::DbError
+    })?;
+
+    Ok(Json(portfolio))
+}
+
+#[derive(serde::Deserialize)]
+struct EditPortfolioArgs {
+    pub slug: ArrayString<100>,
+    pub title: ArrayString<100>,
+    pub subtitle: ArrayString<500>,
+    pub author: ArrayString<100>,
+}
+async fn edit(
+    State(state): State<Arc<SharedState>>,
+    Session { user_id, .. }: Session,
+    Path(slug): Path<String>,
+    Json(args): Json<EditPortfolioArgs>,
+) -> Result<Json<Portfolio>, ApiError> {
+    let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
+    let portfolio = services::portfolio::update_portfolio(
+        &mut *conn,
+        &slug,
+        &args.slug,
+        &args.title,
+        &args.subtitle,
+        &args.author,
+        user_id,
+    )
+    .await
+    .map_err(|err| {
+        // TODO: Add a special case for handling unique slug errors
+        // TODO: Add a special case for handling missing rights to portfolio (i.e. no portfolio found to update)
+        tracing::error!("Updating the {slug} portfolio failed: {err:?}");
         ApiError::DbError
     })?;
 

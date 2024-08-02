@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Link, Route, Routes, useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import Spinner from "react-bootstrap/Spinner";
@@ -29,6 +29,11 @@ const NotFound = () => {
             <Button onClick={() => { history.back(); }}>{t("action.go-back")}</Button>
         </Container>
     );
+};
+
+const PortfolioEditorFromPath = () => {
+    const params = useParams();
+    return <PortfolioEditor slug={params.slug} />;
 };
 
 const IndexContent = () => {
@@ -76,7 +81,7 @@ const IndexContent = () => {
                 loginStatus === LoginStatus.LoggedIn && <Routes>
                     <Route path="/" element={<MainDashboard />} />
                     <Route path="/portfolio/new" element={<PortfolioEditor />} />
-                    <Route path="/p/:slug/edit" element={<PortfolioEditor />} />
+                    <Route path="/p/:slug/edit" element={<PortfolioEditorFromPath />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             }

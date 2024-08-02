@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import Container from "react-bootstrap/Container";
 import Stack from "react-bootstrap/Stack";
 import Spinner from "react-bootstrap/Spinner";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { typecheckPortfolio } from ".";
 import { ValidatedTextInput } from "../Forms";
@@ -16,9 +16,11 @@ const typecheckCreatedPortfolio = createTypechekerFromExample({
     slug: "",
 }, "portfolio");
 
-export const PortfolioEditor = () => {
+export const PortfolioEditor = (props: { slug?: string }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+
+    const isEdit = props.slug != null;
 
     const [serverError, setServerError] = useState("");
 
@@ -27,10 +29,8 @@ export const PortfolioEditor = () => {
     const [subtitle, setSubtitle] = useState("");
     const [author, setAuthor] = useState("");
 
-    const params = useParams();
-    const isEdit = params.slug != null;
     const mapGetResult = useCallback(typecheckPortfolio, []);
-    const { result: slugFindResult } = useApiFetch(`/portfolio/${params.slug ?? ""}`, mapGetResult);
+    const { result: slugFindResult } = useApiFetch(`/portfolio/${props.slug ?? ""}`, mapGetResult);
     useEffect(() => {
         console.log("portfolio status", slugFindResult);
         if (slugFindResult != null) {
@@ -77,15 +77,15 @@ export const PortfolioEditor = () => {
     const {
         refetch: createPortfolio,
         loading,
-    } = useApiFetch(`/portfolio/${slug}`, mapPostResult, reqParams, true);
+    } = useApiFetch(`/portfolio/${props.slug ?? slug}`, mapPostResult, reqParams, true);
 
     useEffect(() => {
         setReqParams({
-            method: "POST",
+            method: isEdit ? "PUT" : "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, subtitle, author }),
+            body: JSON.stringify({ slug, title, subtitle, author }),
         });
-    }, [title, subtitle, author]);
+    }, [slug, title, subtitle, author, isEdit]);
 
     const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
