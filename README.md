@@ -7,6 +7,14 @@ koostuvat peleistä ja/tai muista sovelluksista. Sovellus on toteutettu
 frontendin osalta Reactilla, Bootstrapilla ja Typescriptillä, ja backendin
 puolelta Axumilla, Sqlx:llä ja Rustilla.
 
+## Sisällys
+
+- [Työaikakirjanpito](#työaikakirjanpito)
+- [Linkki ja ohjeet](#linkki-ja-ohjeet)
+  - [Ylläpitohuomioita](#ylläpitohuomioita)
+- [Kuvakaappauksia](#kuvakaappauksia)
+- [Lisenssi](#lisenssi)
+
 ## Työaikakirjanpito
 
 Alla kirjanpito tähän projektiin käyttämistäni tunneista, kurssin
