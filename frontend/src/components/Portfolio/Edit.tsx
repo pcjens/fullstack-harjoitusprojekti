@@ -12,6 +12,7 @@ import { ValidatedTextInput } from "../Forms";
 import { useApiFetch } from "../../hooks/useApiFetch";
 import { createTypechekerFromExample } from "../../util/helpers";
 import { ValidatedCheckbox } from "../Forms/ValidatedCheckbox";
+import { CategoryEdit } from "./CategoryEdit";
 
 const typecheckCreatedPortfolio = createTypechekerFromExample({
     slug: "",
@@ -81,6 +82,7 @@ export const PortfolioEditor = (props: { slug?: string }) => {
 
     const mapPostResult = useCallback(typecheckCreatedPortfolio, []);
     const [reqParams, setReqParams] = useState<RequestInit>({});
+    const [latestSentReqParams, setLatestSentReqParams] = useState<RequestInit>({});
     const {
         refetch: createPortfolio,
         loading,
@@ -111,13 +113,19 @@ export const PortfolioEditor = (props: { slug?: string }) => {
                 setServerError(result.userError);
                 return;
             }
-            navigate(`/p/${result.value.slug}`);
 
-            setSlug("");
-            setTitle("");
-            setSubtitle("");
-            setAuthor("");
-            setPublish(false);
+            if (isEdit) {
+                setLatestSentReqParams(reqParams);
+                setShouldValidate(false);
+            } else {
+                setSlug("");
+                setTitle("");
+                setSubtitle("");
+                setAuthor("");
+                setPublish(false);
+                navigate(`/p/${result.value.slug}`);
+            }
+
             setServerError("");
         };
         void submit();
@@ -144,13 +152,20 @@ export const PortfolioEditor = (props: { slug?: string }) => {
                         {t(`error.${serverError}`)}
                     </p>}
                     <Form.Group>
-                        <Button type="submit" disabled={loading}>
+                        <Button type="submit" disabled={loading || reqParams.body === latestSentReqParams.body}>
                             {loading && <Spinner size="sm" role="status" aria-hidden="true" style={{ marginRight: 6 }} />}
-                            {t(isEdit ? "action.edit-portfolio" : "action.create-portfolio")}
+                            {isEdit && reqParams.body === latestSentReqParams.body && t("action.edit-portfolio-saved")}
+                            {isEdit && reqParams.body !== latestSentReqParams.body && t("action.edit-portfolio")}
+                            {!isEdit && t("action.create-portfolio")}
                         </Button>
                     </Form.Group>
                 </Stack>
             </Form>
+            <hr />
+            <h3>{t("categories")}</h3>
+            <Stack gap={3}>
+                <CategoryEdit />
+            </Stack>
         </Container>
     );
 };

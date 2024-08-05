@@ -18,9 +18,11 @@
     "logout": "Kirjaudu ulos",
     "register": "Luo tili",
     "portfolios": "Portfoliot",
+    "categories": "Kategoriat",
     "latest-publish": "Viimeisin versio: {{published, datetime}}",
     "no-version-published": "Luonnos (ei vielä julkaistu)",
     "no-portfolios-found": "Portfolioita ei löytynyt.",
+    "no-categories-found": "Kategorioita ei ole vielä lisätty tähän portfolioon.",
     "not-found-title": "Täällä ei ole mitään",
     "not-found-description": "Olet osunut puuttuvalle sivulle. Tämä on todennäköisesti virhe websovelluksessa.",
     "create-portfolio": "Uusi portfolio",
@@ -49,7 +51,15 @@
         "publish": {
             "name": "Julkaise",
             "help": "Jos tämä on päällä, portfolio laitetaan saataville ilman kirjautumista."
+        },
+        "category-title": {
+            "name": "Otsikko"
         }
+    },
+    "category-editor": {
+        "add-work-title": "Lisää teos",
+        "add-work-button": "Lisää",
+        "select-existing-work": "Valitse teos..."
     },
     "action": {
         "open": "Avaa",
@@ -57,7 +67,11 @@
         "create-new-portfolio": "Luo uusi portfolio",
         "go-back": "Palaa takaisin",
         "create-portfolio": "Luo",
-        "edit-portfolio": "Tallenna"
+        "edit-portfolio": "Tallenna",
+        "edit-portfolio-saved": "Tallennettu",
+        "create-new-category": "Lisää uusi kategoria teoksia",
+        "edit-categories": "Tallenna",
+        "edit-categories-no-changes": "Tallennettu"
     },
     "error": {
         "NetworkError": "Yhteyttä ei saatu, kokeile myöhemmin uudelleen.",

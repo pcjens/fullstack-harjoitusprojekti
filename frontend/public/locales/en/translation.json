@@ -18,9 +18,11 @@
     "logout": "Logout",
     "register": "Register",
     "portfolios": "Portfolios",
+    "categories": "Categories",
     "latest-publish": "Latest version: {{published, datetime}}",
     "no-version-published": "Draft (not published yet)",
     "no-portfolios-found": "No portfolios found.",
+    "no-categories-found": "No categories have been added to this portfolio yet.",
     "not-found-title": "Not found",
     "not-found-description": "There is nothing on this page. This is probably a bug in the web application.",
     "create-portfolio": "New portfolio",
@@ -49,7 +51,15 @@
         "publish": {
             "name": "Publish",
             "help": "When selected, this portfolio will be available without login."
+        },
+        "category-title": {
+            "name": "Title"
         }
+    },
+    "category-editor": {
+        "add-work-title": "Add work",
+        "add-work-button": "Add",
+        "select-existing-work": "Select work..."
     },
     "action": {
         "open": "Open",
@@ -57,7 +67,11 @@
         "create-new-portfolio": "Create a new portfolio",
         "go-back": "Go back",
         "create-portfolio": "Create",
-        "edit-portfolio": "Save"
+        "edit-portfolio": "Save",
+        "edit-portfolio-saved": "Saved",
+        "create-new-category": "Add a new category of works",
+        "edit-categories": "Save",
+        "edit-categories-no-changes": "Saved"
     },
     "error": {
         "NetworkError": "Connection failed, please try again later.",

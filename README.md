@@ -39,7 +39,7 @@ työtuntivaatimuksien seuraamista varten.
 |  1.8. | 19.31–20.21 |     50m | 38h 55m | Portfolioiden muokkaamis-näkymä frontendissä |
 |  2.8. | 15.43–17.24 |  1h 41m | 40h 36m | Portfolioiden muokkaamisen lisäys backendiin ja yleisesti toimimaan, jatkon suunnittelua |
 |  2.8. | 19.11–21.46 |  2h 35m | 43h 11m | Portfolio-näkymä työn alle, tarvitut refaktoroinnit että julkaistut portfoliot näkee kirjautumatta (ja silloin ilman navia) |
-|  5.8. | 13.53–##.## |  #h ##m | ##h ##m |  |
+|  5.8. | 13.53–19.20 |  5h 27m | 48h 38m | Portfolioiden julkaisu-ominaisuuden lisäys, teos-kategorioiden lisääminen tietokantaan ja niiden muokkaus-näkymän aloitus frontendissä |
 
 ## Linkki ja ohjeet
 
