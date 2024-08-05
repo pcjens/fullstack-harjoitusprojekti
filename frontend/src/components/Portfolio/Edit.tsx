@@ -11,6 +11,7 @@ import { typecheckPortfolio } from ".";
 import { ValidatedTextInput } from "../Forms";
 import { useApiFetch } from "../../hooks/useApiFetch";
 import { createTypechekerFromExample } from "../../util/helpers";
+import { ValidatedCheckbox } from "../Forms/ValidatedCheckbox";
 
 const typecheckCreatedPortfolio = createTypechekerFromExample({
     slug: "",
@@ -28,6 +29,7 @@ export const PortfolioEditor = (props: { slug?: string }) => {
     const [title, setTitle] = useState("");
     const [subtitle, setSubtitle] = useState("");
     const [author, setAuthor] = useState("");
+    const [publish, setPublish] = useState(false);
 
     const mapGetResult = useCallback(typecheckPortfolio, []);
     const {
@@ -42,6 +44,7 @@ export const PortfolioEditor = (props: { slug?: string }) => {
                 setTitle(slugFindResult.value.title);
                 setSubtitle(slugFindResult.value.subtitle);
                 setAuthor(slugFindResult.value.author);
+                setPublish(!!slugFindResult.value.published_at);
             } else if (isEdit) {
                 setServerError(slugFindResult.userError);
             }
@@ -74,6 +77,7 @@ export const PortfolioEditor = (props: { slug?: string }) => {
     const validateTitle = createLengthValidator(1, 100);
     const validateSubtitle = createLengthValidator(1, 500);
     const validateAuthor = createLengthValidator(1, 100);
+    const validatePublish: (value: boolean) => string | null = () => null;
 
     const mapPostResult = useCallback(typecheckCreatedPortfolio, []);
     const [reqParams, setReqParams] = useState<RequestInit>({});
@@ -86,9 +90,9 @@ export const PortfolioEditor = (props: { slug?: string }) => {
         setReqParams({
             method: isEdit ? "PUT" : "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ slug, title, subtitle, author }),
+            body: JSON.stringify({ slug, title, subtitle, author, publish }),
         });
-    }, [slug, title, subtitle, author, isEdit]);
+    }, [slug, title, subtitle, author, publish, isEdit]);
 
     const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
@@ -96,7 +100,8 @@ export const PortfolioEditor = (props: { slug?: string }) => {
         const validArguments = validateSlug(slug) == null
             && validateTitle(title) == null
             && validateSubtitle(subtitle) == null
-            && validateAuthor(author) == null;
+            && validateAuthor(author) == null
+            && validatePublish(publish) == null;
         if (!validArguments) {
             return;
         }
@@ -112,6 +117,7 @@ export const PortfolioEditor = (props: { slug?: string }) => {
             setTitle("");
             setSubtitle("");
             setAuthor("");
+            setPublish(false);
             setServerError("");
         };
         void submit();
@@ -132,6 +138,8 @@ export const PortfolioEditor = (props: { slug?: string }) => {
                         input={title} setInput={setTitle} validate={validateTitle} showPlaceholder={isEdit && originalPortfolioLoading} />
                     <ValidatedTextInput pfx={"portfolio-editor"} name={"subtitle"} shouldValidate={shouldValidate}
                         input={subtitle} setInput={setSubtitle} validate={validateSubtitle} showPlaceholder={isEdit && originalPortfolioLoading} />
+                    <ValidatedCheckbox pfx={"portfolio-editor"} name={"publish"} shouldValidate={shouldValidate}
+                        input={publish} setInput={setPublish} validate={validatePublish} showPlaceholder={isEdit && originalPortfolioLoading} />
                     {serverError && <p className="text-danger">
                         {t(`error.${serverError}`)}
                     </p>}

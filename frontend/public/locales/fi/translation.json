@@ -45,6 +45,10 @@
         "subtitle": {
             "name": "Alaotsikko",
             "help": "Pidempi kuvaus tekijästä ja teoksista."
+        },
+        "publish": {
+            "name": "Julkaise",
+            "help": "Jos tämä on päällä, portfolio laitetaan saataville ilman kirjautumista."
         }
     },
     "action": {

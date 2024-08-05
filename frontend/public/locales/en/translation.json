@@ -45,6 +45,10 @@
         "subtitle": {
             "name": "Subtitle",
             "help": "A longer, more elaborate description of the author and the works."
+        },
+        "publish": {
+            "name": "Publish",
+            "help": "When selected, this portfolio will be available without login."
         }
     },
     "action": {

@@ -38,13 +38,17 @@ async fn by_slug(
     Path(slug): Path<String>,
 ) -> Result<Json<Portfolio>, ApiError> {
     let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
-    let portfolio = services::portfolio::get_portfolio(&mut *conn, &slug, session.map(|Session {user_id, ..}| user_id))
-        .await
-        .map_err(|err| {
-            tracing::error!("Getting portfolio by slug failed: {err:?}");
-            ApiError::DbError
-        })?
-        .ok_or(ApiError::NoSuchSlug)?;
+    let portfolio = services::portfolio::get_portfolio(
+        &mut *conn,
+        &slug,
+        session.map(|Session { user_id, .. }| user_id),
+    )
+    .await
+    .map_err(|err| {
+        tracing::error!("Getting portfolio by slug failed: {err:?}");
+        ApiError::DbError
+    })?
+    .ok_or(ApiError::NoSuchSlug)?;
     Ok(Json(portfolio))
 }
 
@@ -53,6 +57,7 @@ struct CreatePortfolioArgs {
     pub title: ArrayString<100>,
     pub subtitle: ArrayString<500>,
     pub author: ArrayString<100>,
+    pub publish: bool,
 }
 async fn create(
     State(state): State<Arc<SharedState>>,
@@ -67,6 +72,7 @@ async fn create(
         &args.title,
         &args.subtitle,
         &args.author,
+        args.publish,
         user_id,
     )
     .await
@@ -85,6 +91,7 @@ struct EditPortfolioArgs {
     pub title: ArrayString<100>,
     pub subtitle: ArrayString<500>,
     pub author: ArrayString<100>,
+    pub publish: bool,
 }
 async fn edit(
     State(state): State<Arc<SharedState>>,
@@ -100,6 +107,7 @@ async fn edit(
         &args.title,
         &args.subtitle,
         &args.author,
+        args.publish,
         user_id,
     )
     .await

@@ -11,19 +11,21 @@ pub async fn create_portfolio<E>(
     title: &str,
     subtitle: &str,
     author: &str,
+    publish: bool,
     user_id: i32,
 ) -> Result<Portfolio, anyhow::Error>
 where
     for<'e> &'e mut E: Executor<'e, Database = Any>,
 {
-    let created_at =
+    let current_time =
         SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs() as i64;
     let query = sqlx::query_as(
-        "insert into portfolios (created_at, slug, title, subtitle, author) values (?, ?, ?, ?, ?) \
+        "insert into portfolios (created_at, published_at, slug, title, subtitle, author) values (?, ?, ?, ?, ?, ?) \
         returning *",
     );
     let portfolio: Portfolio = query
-        .bind(created_at)
+        .bind(current_time)
+        .bind(if publish { Some(current_time) } else { None })
         .bind(slug)
         .bind(title)
         .bind(subtitle)
@@ -44,6 +46,7 @@ where
     Ok(portfolio)
 }
 
+#[allow(clippy::too_many_arguments)]
 pub async fn update_portfolio<E>(
     conn: &mut E,
     original_slug: &str,
@@ -51,17 +54,21 @@ pub async fn update_portfolio<E>(
     title: &str,
     subtitle: &str,
     author: &str,
+    publish: bool,
     user_id: i32,
 ) -> Result<Portfolio, anyhow::Error>
 where
     for<'e> &'e mut E: Executor<'e, Database = Any>,
 {
+    let current_time =
+        SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs() as i64;
     let query = sqlx::query_as(
-        "update portfolios set slug = ?, title = ?, subtitle = ?, author = ? \
+        "update portfolios set published_at = ?, slug = ?, title = ?, subtitle = ?, author = ? \
         where slug = ? and id in ( select portfolio_id from portfolio_rights where user_id = ? ) \
         returning *",
     );
     let portfolio: Portfolio = query
+        .bind(if publish { Some(current_time) } else { None })
         .bind(new_slug)
         .bind(title)
         .bind(subtitle)
