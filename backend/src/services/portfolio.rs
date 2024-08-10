@@ -3,7 +3,7 @@ use std::time::SystemTime;
 use anyhow::Context;
 use sqlx::{Any, Executor};
 
-use crate::data::portfolios::Portfolio;
+use crate::data::portfolio::Portfolio;
 
 pub async fn create_portfolio<E>(
     conn: &mut E,
@@ -20,8 +20,8 @@ where
     let current_time =
         SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs() as i64;
     let query = sqlx::query_as(
-        "insert into portfolios (created_at, published_at, slug, title, subtitle, author) values (?, ?, ?, ?, ?, ?) \
-        returning *",
+        "INSERT INTO portfolios (created_at, published_at, slug, title, subtitle, author) VALUES (?, ?, ?, ?, ?, ?) \
+        RETURNING *",
     );
     let portfolio: Portfolio = query
         .bind(current_time)
@@ -34,7 +34,7 @@ where
         .await
         .context("portfolios insert failed")?;
 
-    let query = sqlx::query("insert into portfolio_rights (portfolio_id, user_id) values (?, ?)");
+    let query = sqlx::query("INSERT INTO portfolio_rights (portfolio_id, user_id) VALUES (?, ?)");
     let result = query
         .bind(portfolio.id)
         .bind(user_id)
@@ -63,9 +63,9 @@ where
     let current_time =
         SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs() as i64;
     let query = sqlx::query_as(
-        "update portfolios set published_at = ?, slug = ?, title = ?, subtitle = ?, author = ? \
-        where slug = ? and id in ( select portfolio_id from portfolio_rights where user_id = ? ) \
-        returning *",
+        "UPDATE portfolios SET published_at = ?, slug = ?, title = ?, subtitle = ?, author = ? \
+        WHERE slug = ? AND id IN ( select portfolio_id from portfolio_rights where user_id = ? ) \
+        RETURNING *",
     );
     let portfolio: Portfolio = query
         .bind(if publish { Some(current_time) } else { None })
@@ -87,7 +87,7 @@ where
     for<'e> &'e mut E: Executor<'e, Database = Any>,
 {
     sqlx::query_as(
-        "select * from portfolios join portfolio_rights on (id = portfolio_id) where user_id = ?",
+        "SELECT * FROM portfolios JOIN portfolio_rights ON (id = portfolio_id) WHERE user_id = ?",
     )
     .bind(user_id)
     .fetch_all(conn)
@@ -103,7 +103,7 @@ pub async fn get_portfolio<E>(
 where
     for<'e> &'e mut E: Executor<'e, Database = Any>,
 {
-    sqlx::query_as("select * from portfolios join portfolio_rights where slug = ? and (user_id = ? or published_at is not null)")
+    sqlx::query_as("SELECT * FROM portfolios JOIN portfolio_rights ON (id = portfolio_id) WHERE slug = ? and (user_id = ? or published_at is not null)")
         .bind(slug)
         .bind(user_id)
         .fetch_optional(conn)

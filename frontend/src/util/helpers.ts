@@ -53,6 +53,12 @@ export function createTypechekerFromExample<T extends NonNullable<object>>(examp
                 const key = keyString as keyof typeof example;
                 const exampleValue = example[key];
                 if (exampleValue != null && typeof exampleValue === "object" && !(exampleValue instanceof OptionalField)) {
+                    if (Array.isArray(exampleValue)) {
+                        return {
+                            key,
+                            checker: createArrayTypecheckerFromExample(exampleValue[0], `${typeName}.${keyString}`),
+                        };
+                    }
                     return {
                         key,
                         checker: createTypechekerFromExample(exampleValue, `${typeName}.${keyString}`),
@@ -62,6 +68,9 @@ export function createTypechekerFromExample<T extends NonNullable<object>>(examp
             .filter((checker) => checker != undefined);
         const flatExampleFields: Partial<T> = {};
         for (const keyString of Object.keys(example)) {
+            if (!nestedCheckers.every(({ key }) => key !== keyString)) {
+                continue;
+            }
             const key = keyString as keyof typeof example;
             flatExampleFields[key] = example[key];
         }

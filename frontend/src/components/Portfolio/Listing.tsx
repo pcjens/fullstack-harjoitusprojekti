@@ -7,11 +7,11 @@ import Button from "react-bootstrap/Button";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { useApiFetch } from "../hooks/useApiFetch";
-import { PortfolioCard, typecheckPortfolioArray } from "./Portfolio";
-import { useTimeout } from "../hooks/useTimeout";
+import { useApiFetch } from "../../hooks/useApiFetch";
+import { PortfolioCard, typecheckPortfolioArray } from ".";
+import { useTimeout } from "../../hooks/useTimeout";
 
-export const MainDashboard = () => {
+export const PortfolioListing = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
 
@@ -44,6 +44,6 @@ export const MainDashboard = () => {
                     {t("action.create-new-portfolio")}
                 </Button>
             </Stack>
-        </Container >
+        </Container>
     );
 };

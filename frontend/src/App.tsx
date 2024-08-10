@@ -14,9 +14,10 @@ import { LoginStatus, useSession } from "./hooks/useSession";
 import { useTimeout } from "./hooks/useTimeout";
 import { LoginContext, useLogin } from "./hooks/useLogin";
 import { BackendStatus } from "./components/BackendStatus";
-import { MainDashboard } from "./components/MainDashboard";
+import { PortfolioListing } from "./components/Portfolio/Listing";
 import { PortfolioEditor } from "./components/Portfolio/Edit";
 import { PortfolioPage } from "./components/Portfolio/Page";
+import { WorkListing } from "./components/Work/Listing";
 
 const NotFound = () => {
     const { t } = useTranslation();
@@ -86,7 +87,8 @@ const NavWrapper = (props: { element: JSX.Element, hideNavIfLoggedOut?: boolean 
                     <Navbar.Toggle aria-controls="navbar-nav" />
                     <Navbar.Collapse id="navbar-nav">
                         <Nav className="me-auto">
-                            {loginStatus === LoginStatus.LoggedIn && <Nav.Link as={Link} to="/">{t("nav.dashboard")}</Nav.Link>}
+                            {loginStatus === LoginStatus.LoggedIn && <Nav.Link as={Link} to="/">{t("nav.portfolios")}</Nav.Link>}
+                            {loginStatus === LoginStatus.LoggedIn && <Nav.Link as={Link} to="/works">{t("nav.works")}</Nav.Link>}
                             {loginStatus === LoginStatus.LoggedIn && <Nav.Link onClick={() => { logout(null); }}>{t("logout")}</Nav.Link>}
                             <NavDropdown title={t("nav.language")} id="navbar-language-selector">
                                 <NavDropdown.Item onClick={() => { void i18n.changeLanguage("en"); }} disabled={i18n.language === "en"}>
@@ -118,7 +120,8 @@ const IndexContent = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<NavWrapper element={<MainDashboard />} />} />
+                <Route path="/" element={<NavWrapper element={<PortfolioListing />} />} />
+                <Route path="/works" element={<NavWrapper element={<WorkListing />} />} />
                 <Route path="/portfolio/new" element={<NavWrapper element={<PortfolioEditor />} />} />
                 <Route path="/p/:slug/edit" element={<NavWrapper element={<PortfolioEditorFromPath />} />} />
                 <Route path="/p/:slug" element={<NavWrapper hideNavIfLoggedOut={true} element={<PortfolioPageFromPath />} />} />

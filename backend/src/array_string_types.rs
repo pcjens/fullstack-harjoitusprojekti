@@ -21,9 +21,7 @@ macro_rules! array_string_newtype_impls {
         }
 
         impl<'r> Decode<'r, Any> for $array_string_type {
-            fn decode(
-                value: <Any as Database>::ValueRef<'r>,
-            ) -> Result<Self, BoxDynError> {
+            fn decode(value: <Any as Database>::ValueRef<'r>) -> Result<Self, BoxDynError> {
                 let s: &'r str = Decode::<'r, Any>::decode(value)?;
                 Ok($array_string_type(ArrayString::from_str(s)?))
             }
@@ -89,3 +87,11 @@ array_string_newtype_impls!(PasswordKeyString);
 #[derive(Clone, Copy)]
 pub struct SaltString(pub ArrayString<16>); // base64 encoded length of a 12-byte key
 array_string_newtype_impls!(SaltString);
+
+#[derive(Clone, Copy, serde::Serialize)]
+pub struct AttachmentKind(pub ArrayString<16>);
+array_string_newtype_impls!(AttachmentKind);
+
+#[derive(Clone, Copy, serde::Serialize)]
+pub struct ContentType(pub ArrayString<64>);
+array_string_newtype_impls!(ContentType);

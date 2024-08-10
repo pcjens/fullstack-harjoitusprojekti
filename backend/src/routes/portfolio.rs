@@ -6,7 +6,7 @@ use axum::routing::{get, post, put};
 use axum::{Json, Router};
 
 use crate::api_errors::ApiError;
-use crate::data::portfolios::Portfolio;
+use crate::data::portfolio::Portfolio;
 use crate::data::user::Session;
 use crate::routes::SharedState;
 use crate::services;

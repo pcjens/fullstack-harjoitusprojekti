@@ -1,6 +1,7 @@
 {
     "nav": {
-        "dashboard": "Hallinta",
+        "portfolios": "Portfoliot",
+        "works": "Teokset",
         "language": "Kieli"
     },
     "footer": {

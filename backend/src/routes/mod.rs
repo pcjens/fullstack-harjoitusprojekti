@@ -14,14 +14,16 @@ use sqlx::Connection;
 
 use crate::request_state::SharedState;
 
-mod user;
 mod portfolio;
+mod user;
+mod work;
 
 pub fn create_router() -> Router<Arc<SharedState>> {
     Router::new()
         .route("/health", get(health))
         .nest("/user", user::create_router())
         .nest("/portfolio", portfolio::create_router())
+        .nest("/work", work::create_router())
         .fallback(not_found)
 }
 

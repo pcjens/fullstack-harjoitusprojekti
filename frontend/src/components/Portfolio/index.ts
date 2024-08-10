@@ -3,6 +3,7 @@ import { createArrayTypechecker, createTypechekerFromExample, OptionalField } fr
 export { PortfolioCard } from "./Card";
 
 export interface Portfolio {
+    id: number,
     created_at: number,
     published_at?: number,
     slug: string,
@@ -11,7 +12,7 @@ export interface Portfolio {
     author: string,
 }
 
-export const typecheckPortfolio = createTypechekerFromExample({
+export const typecheckPortfolio: (value: unknown) => Portfolio = createTypechekerFromExample({
     id: 0,
     created_at: 0,
     published_at: new OptionalField(0),
@@ -21,4 +22,4 @@ export const typecheckPortfolio = createTypechekerFromExample({
     author: "",
 }, "portfolio");
 
-export const typecheckPortfolioArray = createArrayTypechecker(typecheckPortfolio, "portfolios");
+export const typecheckPortfolioArray: (value: unknown) => Portfolio[] = createArrayTypechecker(typecheckPortfolio, "portfolios");
