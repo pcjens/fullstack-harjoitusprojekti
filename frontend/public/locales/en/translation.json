@@ -21,6 +21,7 @@
     "portfolios": "Portfolios",
     "categories": "Categories",
     "works": "Works",
+    "attachments": "Files",
     "latest-publish": "Latest version: {{published, datetime}}",
     "no-version-published": "Draft (not published yet)",
     "no-portfolios-found": "No portfolios found.",
@@ -36,6 +37,7 @@
     "input-too-long": "This field should be shorter, between {{min}} and {{max}} characters.",
     "input-not-alphadashnumeric": "This field should only contain letters (A-Z), numbers (0-9), and dashes (-).",
     "input-loading": "Loading...",
+    "input-file-missing": "File required.",
     "portfolio-editor": {
         "slug": {
             "name": "Slug",
@@ -69,7 +71,29 @@
         "title": {
             "name": "Title",
             "help": "The name of the work."
-        }
+        },
+        "short-description": {
+            "name": "Short description",
+            "help": "Shown below the title in listings of works, but not on the work's own page."
+        },
+        "long-description": {
+            "name": "Long description",
+            "help": "Shown on the work's own page."
+        },
+        "DownloadWindows": {
+            "name": "Windows-version",
+            "help": "Downloadable version of the work for the Windows operating system."
+        },
+        "DownloadLinux": {
+            "name": "Linux-version",
+            "help": "Downloadable version of the work for the Linux operating system."
+        },
+        "DownloadMac": {
+            "name": "MacOS-version",
+            "help": "Downloadable version of the work for the MacOS operating system."
+        },
+        "attachment-kind-unset": "Select file kind...",
+        "add-attachment": "Add file"
     },
     "category-editor": {
         "add-work-title": "Add work",

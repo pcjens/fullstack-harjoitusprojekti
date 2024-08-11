@@ -21,6 +21,7 @@
     "portfolios": "Portfoliot",
     "categories": "Kategoriat",
     "works": "Teokset",
+    "attachments": "Tiedostot",
     "latest-publish": "Viimeisin versio: {{published, datetime}}",
     "no-version-published": "Luonnos (ei vielä julkaistu)",
     "no-portfolios-found": "Portfolioita ei löytynyt.",
@@ -36,6 +37,7 @@
     "input-too-long": "Tämän kentän pitäisi olla lyhyempi, {{min}} ja {{max}} merkin väliltä.",
     "input-not-alphadashnumeric": "Tämän kentän pitäisi sisältää vain kirjaimia (a-z), numeroita (0-9) ja viivoja (-).",
     "input-loading": "Ladataan...",
+    "input-file-missing": "Tiedosto puuttuu.",
     "portfolio-editor": {
         "slug": {
             "name": "Tunnus",
@@ -69,7 +71,29 @@
         "title": {
             "name": "Otsikko",
             "help": "Teoksen nimi."
-        }
+        },
+        "short-description": {
+            "name": "Lyhyt kuvaus",
+            "help": "Kuvaus joka näytetään teoksen ohessa listauksissa, mutta ei teoksen omalla sivulla."
+        },
+        "long-description": {
+            "name": "Pitkä kuvaus",
+            "help": "Kuvaus joka näytetään teoksen omalla sivulla."
+        },
+        "DownloadWindows": {
+            "name": "Windows-versio",
+            "help": "Windows-käyttöjärjestelmälle ladattava versio teoksesta."
+        },
+        "DownloadLinux": {
+            "name": "Linux-versio",
+            "help": "Linux-käyttöjärjestelmälle ladattava versio teoksesta."
+        },
+        "DownloadMac": {
+            "name": "MacOS-versio",
+            "help": "MacOS-käyttöjärjestelmälle ladattava versio teoksesta."
+        },
+        "attachment-kind-unset": "Valitse tiedoston tyyppi...",
+        "add-attachment": "Lisää tiedosto"
     },
     "category-editor": {
         "add-work-title": "Lisää teos",

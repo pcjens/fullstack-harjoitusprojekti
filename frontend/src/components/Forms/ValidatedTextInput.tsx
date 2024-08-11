@@ -11,6 +11,7 @@ type Validator = (value: string) => string | null;
 
 export interface Props {
     showPlaceholder?: boolean,
+    textarea?: boolean,
 
     name: string,
     /**
@@ -37,7 +38,7 @@ export const ValidatedTextInput = (props: Props) => {
         <Form.Group controlId={controlName}>
             <Form.Label>{t(`${props.pfx}.${props.name}.name`)}</Form.Label>
             <InputGroup hasValidation>
-                <Form.Control required aria-describedby={helpName}
+                <Form.Control required aria-describedby={helpName} as={props.textarea ? "textarea" : undefined}
                     disabled={!!props.showPlaceholder}
                     placeholder={props.showPlaceholder ? t("input-loading") : undefined}
                     isInvalid={props.shouldValidate && error != null}

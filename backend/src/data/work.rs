@@ -31,6 +31,7 @@ pub struct WorkAttachment {
     pub work_id: i32,
     pub attachment_kind: AttachmentKind,
     pub content_type: ContentType,
+    pub filename: String,
     pub title: Option<String>,
     pub bytes_base64: String,
 }
