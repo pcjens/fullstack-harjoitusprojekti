@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useApiFetch } from "../../hooks/useApiFetch";
 import { useTimeout } from "../../hooks/useTimeout";
 import { typecheckWorkArray } from ".";
+import { WorkCard } from ".";
 
 export const WorkListing = () => {
     const { t } = useTranslation();
@@ -27,15 +28,12 @@ export const WorkListing = () => {
             {(loading || !portfolios)
                 ? <>
                     <Stack gap={2}>
-                        {timedOut && <>todo: add a placeholder card here</>}
+                        {timedOut && <WorkCard work={"placeholder"} />}
                     </Stack>
                 </>
                 : <>
-                    {portfolios.map((p) => <Row key={p.id}>
-                        <Col>
-                            <>todo: add a card for this data:</>
-                            <pre>{JSON.stringify(p, undefined, 2)}</pre>
-                        </Col>
+                    {portfolios.map((w) => <Row key={w.id}>
+                        <Col><WorkCard work={w} /></Col>
                     </Row>)}
                     {portfolios.length === 0 && <p className="my-3">
                         {t("no-works-found")}

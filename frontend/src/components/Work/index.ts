@@ -1,6 +1,8 @@
 import { createArrayTypechecker, createTypechekerFromExample, OptionalField } from "../../util/helpers";
 
 export { WorkListing } from "./Listing";
+export { WorkCard } from "./Card";
+export { WorkEditor } from "./Edit";
 
 export interface Work {
     id: number,

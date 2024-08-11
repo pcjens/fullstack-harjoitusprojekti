@@ -41,6 +41,7 @@ työtuntivaatimuksien seuraamista varten.
 |  2.8. | 19.11–21.46 |  2h 35m | 43h 11m | Portfolio-näkymä työn alle, tarvitut refaktoroinnit että julkaistut portfoliot näkee kirjautumatta (ja silloin ilman navia) |
 |  5.8. | 13.53–19.20 |  5h 27m | 48h 38m | Portfolioiden julkaisu-ominaisuuden lisäys, teos-kategorioiden lisääminen tietokantaan ja niiden muokkaus-näkymän aloitus frontendissä |
 | 10.8. | 16.36–19.26 |  2h 50m | 51h 28m | Teoksien haun lisääminen backendiin, teoslistauksen aloittelua frontendissä |
+| 11.8. | 14.22–##.## |  #h ##m | ##h ##m |  |
 
 ## Linkki ja ohjeet
 

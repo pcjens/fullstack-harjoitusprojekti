@@ -20,14 +20,18 @@
     "register": "Register",
     "portfolios": "Portfolios",
     "categories": "Categories",
+    "works": "Works",
     "latest-publish": "Latest version: {{published, datetime}}",
     "no-version-published": "Draft (not published yet)",
     "no-portfolios-found": "No portfolios found.",
     "no-categories-found": "No categories have been added to this portfolio yet.",
+    "no-works-found": "No works found.",
     "not-found-title": "Not found",
     "not-found-description": "There is nothing on this page. This is probably a bug in the web application.",
     "create-portfolio": "New portfolio",
     "edit-portfolio": "Edit portfolio",
+    "create-work": "New work",
+    "edit-work": "Edit work",
     "input-too-short": "This field should be longer, between {{min}} and {{max}} characters.",
     "input-too-long": "This field should be shorter, between {{min}} and {{max}} characters.",
     "input-not-alphadashnumeric": "This field should only contain letters (A-Z), numbers (0-9), and dashes (-).",
@@ -57,6 +61,16 @@
             "name": "Title"
         }
     },
+    "work-editor": {
+        "slug": {
+            "name": "Slug",
+            "help": "A short alphanumeric id for the portfolio, used in its URL."
+        },
+        "title": {
+            "name": "Title",
+            "help": "The name of the work."
+        }
+    },
     "category-editor": {
         "add-work-title": "Add work",
         "add-work-button": "Add",
@@ -72,7 +86,10 @@
         "edit-portfolio-saved": "Saved",
         "create-new-category": "Add a new category of works",
         "edit-categories": "Save",
-        "edit-categories-no-changes": "Saved"
+        "edit-categories-saved": "Saved",
+        "create-new-work": "Create a new work",
+        "edit-work": "Save",
+        "edit-work-saved": "Saved"
     },
     "error": {
         "NetworkError": "Connection failed, please try again later.",
@@ -85,7 +102,7 @@
         "UsernameTaken": "That username is taken.",
         "MissingSession": "Login required.",
         "InvalidSession": "Your session has expired, please login again.",
-        "NoSuchSlug": "Portfolio not found.",
-        "NotFound": "Resource not found."
+        "NoSuchSlug": "Data not found.",
+        "NotFound": "Data not found."
     }
 }

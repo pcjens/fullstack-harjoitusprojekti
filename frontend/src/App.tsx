@@ -18,6 +18,7 @@ import { PortfolioListing } from "./components/Portfolio/Listing";
 import { PortfolioEditor } from "./components/Portfolio/Edit";
 import { PortfolioPage } from "./components/Portfolio/Page";
 import { WorkListing } from "./components/Work/Listing";
+import { WorkEditor } from "./components/Work";
 
 const NotFound = () => {
     const { t } = useTranslation();
@@ -41,6 +42,11 @@ const PortfolioEditorFromPath = () => {
 const PortfolioPageFromPath = () => {
     const params = useParams();
     return <PortfolioPage slug={params.slug ?? ""} />;
+};
+
+const WorkEditorFromPath = () => {
+    const params = useParams();
+    return <WorkEditor slug={params.slug} />;
 };
 
 const NavWrapper = (props: { element: JSX.Element, hideNavIfLoggedOut?: boolean }) => {
@@ -122,6 +128,7 @@ const IndexContent = () => {
             <Routes>
                 <Route path="/" element={<NavWrapper element={<PortfolioListing />} />} />
                 <Route path="/works" element={<NavWrapper element={<WorkListing />} />} />
+                <Route path="/works/:slug/edit" element={<NavWrapper element={<WorkEditorFromPath />} />} />
                 <Route path="/portfolio/new" element={<NavWrapper element={<PortfolioEditor />} />} />
                 <Route path="/p/:slug/edit" element={<NavWrapper element={<PortfolioEditorFromPath />} />} />
                 <Route path="/p/:slug" element={<NavWrapper hideNavIfLoggedOut={true} element={<PortfolioPageFromPath />} />} />

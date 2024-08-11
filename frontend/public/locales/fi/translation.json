@@ -20,14 +20,18 @@
     "register": "Luo tili",
     "portfolios": "Portfoliot",
     "categories": "Kategoriat",
+    "works": "Teokset",
     "latest-publish": "Viimeisin versio: {{published, datetime}}",
     "no-version-published": "Luonnos (ei vielä julkaistu)",
     "no-portfolios-found": "Portfolioita ei löytynyt.",
     "no-categories-found": "Kategorioita ei ole vielä lisätty tähän portfolioon.",
+    "no-works-found": "Teoksia ei löytynyt.",
     "not-found-title": "Täällä ei ole mitään",
     "not-found-description": "Olet osunut puuttuvalle sivulle. Tämä on todennäköisesti virhe websovelluksessa.",
     "create-portfolio": "Uusi portfolio",
     "edit-portfolio": "Muokkaa portfoliota",
+    "create-work": "Uusi teos",
+    "edit-work": "Muokkaa teosta",
     "input-too-short": "Tämän kentän pitäisi olla pidempi, {{min}} ja {{max}} merkin väliltä.",
     "input-too-long": "Tämän kentän pitäisi olla lyhyempi, {{min}} ja {{max}} merkin väliltä.",
     "input-not-alphadashnumeric": "Tämän kentän pitäisi sisältää vain kirjaimia (a-z), numeroita (0-9) ja viivoja (-).",
@@ -57,6 +61,16 @@
             "name": "Otsikko"
         }
     },
+    "work-editor": {
+        "slug": {
+            "name": "Tunnus",
+            "help": "Lyhyt alfanumeerinen tunnus portfoliolle, jota käytetään sen linkissä."
+        },
+        "title": {
+            "name": "Otsikko",
+            "help": "Teoksen nimi."
+        }
+    },
     "category-editor": {
         "add-work-title": "Lisää teos",
         "add-work-button": "Lisää",
@@ -72,7 +86,10 @@
         "edit-portfolio-saved": "Tallennettu",
         "create-new-category": "Lisää uusi kategoria teoksia",
         "edit-categories": "Tallenna",
-        "edit-categories-no-changes": "Tallennettu"
+        "edit-categories-no-changes": "Tallennettu",
+        "create-new-work": "Lisää teos",
+        "edit-work": "Tallenna",
+        "edit-work-saved": "Tallennettu"
     },
     "error": {
         "NetworkError": "Yhteyttä ei saatu, kokeile myöhemmin uudelleen.",
@@ -85,7 +102,7 @@
         "UsernameTaken": "Tämä käyttäjätunnus on jo käytössä.",
         "MissingSession": "Kirjautuminen vaadittu.",
         "InvalidSession": "Istuntosi on vanhentunut, kirjaudu sisään uudelleen.",
-        "NoSuchSlug": "Portfoliota ei löytynyt.",
-        "NotFound": "Resurssia ei löytynyt."
+        "NoSuchSlug": "Tietoja ei löydetty.",
+        "NotFound": "Tietoja ei löydetty."
     }
 }
