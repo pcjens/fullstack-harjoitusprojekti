@@ -63,30 +63,18 @@ interface AttachmentInputProps {
 const AttachmentInput = (props: AttachmentInputProps) => {
     const { t } = useTranslation();
     const [attachments, setAttachments] = props.attachments;
+
     const attachment = attachments[props.index];
-
-    const [title, setTitle] = useState("");
-    const [editedAttachment, setEditedAttachment] = useState(attachment);
-
-    const removeThisAttachment = () => {
+    const setAttachment = (attachment: Attachment) => {
+        console.log("updating attachment", props.index, "with", attachment);
+        setAttachments(attachments.map((original, i) => i === props.index ? attachment : original));
+    };
+    const removeAttachment = () => {
         setAttachments(attachments.filter((_a, i) => i !== props.index));
     };
 
-    useEffect(() => {
-        if (editedAttachment.title != null) {
-            setEditedAttachment({
-                ...editedAttachment,
-                title,
-            });
-        }
-    }, [editedAttachment, setEditedAttachment, title]);
-
-    useEffect(() => {
-        attachments[props.index] = editedAttachment;
-        console.log("updated attachment:", attachments[props.index]);
-        setAttachments(attachments);
-    }, [attachments, setAttachments, props.index, editedAttachment]);
-
+    // Update the file <input> with  the current attachment's file if it's been
+    // populated (i.e. when editing a work) and the <input> is unset.
     const fileInputId = `${attachment.attachment_kind}-${attachment.title ?? ""}FileInput`;
     useEffect(() => {
         if (attachment.content_type === "") {
@@ -97,7 +85,6 @@ const AttachmentInput = (props: AttachmentInputProps) => {
             const asyncOp = async () => {
                 const attachmentBlob = await (await fetch(`data:${attachment.content_type};base64,${attachment.bytes_base64}`)).blob();
                 const transfer = new DataTransfer();
-                console.log("foo");
                 transfer.items.add(new File([attachmentBlob], attachment.filename, { type: attachment.content_type }));
                 fileInput.files = transfer.files;
             };
@@ -109,14 +96,15 @@ const AttachmentInput = (props: AttachmentInputProps) => {
         if (!("files" in target && target.files instanceof FileList)) {
             return;
         }
+        console.log("updating attachment based on <input> with id", fileInputId);
         const { files } = target;
         for (const file of files) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 const dataUrl = reader.result as string;
                 const bytes_base64 = dataUrl.split(",", 2)[1];
-                setEditedAttachment({
-                    ...editedAttachment,
+                setAttachment({
+                    ...attachment,
                     content_type: file.type,
                     bytes_base64,
                     filename: file.name,
@@ -133,7 +121,7 @@ const AttachmentInput = (props: AttachmentInputProps) => {
     const pfx = "work-editor";
     return (
         <Form.Group>
-            <CloseButton style={{ float: "right" }} className="pe-3 pt-2" onClick={removeThisAttachment} />
+            <CloseButton style={{ float: "right" }} className="pe-3 pt-2" onClick={removeAttachment} />
             <Form.Label>{t(`${pfx}.${attachment.attachment_kind}.name`)} </Form.Label>
             <InputGroup hasValidation>
                 <Row xs={1} sm={attachment.title != null ? 2 : 1}>
@@ -143,7 +131,8 @@ const AttachmentInput = (props: AttachmentInputProps) => {
                             placeholder={props.showPlaceholder ? t("input-loading") : undefined}
                             isInvalid={props.shouldValidate && errorTitle != null}
                             isValid={props.shouldValidate && errorTitle == null}
-                            value={title} onChange={(({ target }) => { setTitle(target.value); })} />
+                            value={attachment.title}
+                            onChange={(({ target }) => { setAttachment({ ...attachment, title: target.value }); })} />
                         {props.shouldValidate && errorTitle != null && <Form.Control.Feedback type="invalid">
                             {errorTitle}
                         </Form.Control.Feedback>}
@@ -204,7 +193,6 @@ export const WorkEditor = (props: { slug?: string }) => {
         loading: originalWorkLoading,
     } = useApiFetch(`/work/${props.slug ?? ""}`, mapGetResult);
     useEffect(() => {
-        console.log("work status", slugFindResult);
         if (slugFindResult != null) {
             if ("value" in slugFindResult) {
                 setSlug(slugFindResult.value.slug);
@@ -265,6 +253,8 @@ export const WorkEditor = (props: { slug?: string }) => {
                 attachments: [
                     ...files,
                 ],
+                links: [],
+                tags: [],
             }),
         });
     }, [isEdit, slug, title, shortDesc, longDesc, files]);

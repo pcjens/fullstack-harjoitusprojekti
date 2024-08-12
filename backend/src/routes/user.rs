@@ -38,13 +38,14 @@ async fn login(
 ) -> Result<Json<AuthResponse>, ApiError> {
     let AuthRequest { creds: Credentials { username, password } } = req;
     tracing::trace!("Attempting to log in user {username}.");
-    let session = {
-        let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
-        services::user::login(&mut *conn, username, &password).await.map_err(|err| {
-            tracing::error!("Login failed: {err:?}");
-            ApiError::DbError
-        })?
-    };
+
+    let mut conn = state.db_pool.begin().await.map_err(|_| ApiError::DbTransactionBegin)?;
+    let session = services::user::login(&mut *conn, username, &password).await.map_err(|err| {
+        tracing::error!("Login failed: {err:?}");
+        ApiError::DbError
+    })?;
+    conn.commit().await.map_err(|_| ApiError::DbTransactionCommit)?;
+
     if let Some(session) = session {
         tracing::debug!("session: {:?}", session);
         Ok(Json(AuthResponse { session_id: session.uuid }))
@@ -77,7 +78,7 @@ async fn register(
 
     tracing::trace!("Registering a new user {username}.");
     {
-        let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
+        let mut conn = state.db_pool.begin().await.map_err(|_| ApiError::DbTransactionBegin)?;
 
         let username_taken =
             services::user::is_username_taken(&mut *conn, username).await.map_err(|err| {
@@ -92,6 +93,8 @@ async fn register(
             tracing::error!("User creation failed: {err:?}");
             ApiError::DbError
         })?;
+
+        conn.commit().await.map_err(|_| ApiError::DbTransactionCommit)?;
     }
 
     login(State(state), Json(AuthRequest { creds })).await

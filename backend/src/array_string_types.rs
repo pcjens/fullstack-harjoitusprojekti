@@ -88,10 +88,10 @@ array_string_newtype_impls!(PasswordKeyString);
 pub struct SaltString(pub ArrayString<16>); // base64 encoded length of a 12-byte key
 array_string_newtype_impls!(SaltString);
 
-#[derive(Clone, Copy, serde::Serialize)]
+#[derive(Clone, Copy, serde::Serialize, serde::Deserialize)]
 pub struct AttachmentKind(pub ArrayString<16>);
 array_string_newtype_impls!(AttachmentKind);
 
-#[derive(Clone, Copy, serde::Serialize)]
+#[derive(Clone, Copy, serde::Serialize, serde::Deserialize)]
 pub struct ContentType(pub ArrayString<64>);
 array_string_newtype_impls!(ContentType);

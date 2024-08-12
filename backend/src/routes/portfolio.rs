@@ -65,7 +65,8 @@ async fn create(
     Path(slug): Path<String>,
     Json(args): Json<CreatePortfolioArgs>,
 ) -> Result<Json<Portfolio>, ApiError> {
-    let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
+    let mut conn = state.db_pool.begin().await.map_err(|_| ApiError::DbTransactionBegin)?;
+
     let portfolio = services::portfolio::create_portfolio(
         &mut *conn,
         &slug,
@@ -81,6 +82,8 @@ async fn create(
         tracing::error!("Creating a new portfolio failed: {err:?}");
         ApiError::DbError
     })?;
+
+    conn.commit().await.map_err(|_| ApiError::DbTransactionCommit)?;
 
     Ok(Json(portfolio))
 }
@@ -99,7 +102,8 @@ async fn edit(
     Path(slug): Path<String>,
     Json(args): Json<EditPortfolioArgs>,
 ) -> Result<Json<Portfolio>, ApiError> {
-    let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
+    let mut conn = state.db_pool.begin().await.map_err(|_| ApiError::DbTransactionBegin)?;
+
     let portfolio = services::portfolio::update_portfolio(
         &mut *conn,
         &slug,
@@ -117,6 +121,8 @@ async fn edit(
         tracing::error!("Updating the {slug} portfolio failed: {err:?}");
         ApiError::DbError
     })?;
+
+    conn.commit().await.map_err(|_| ApiError::DbTransactionCommit)?;
 
     Ok(Json(portfolio))
 }

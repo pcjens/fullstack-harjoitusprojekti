@@ -38,7 +38,6 @@ export const PortfolioEditor = (props: { slug?: string }) => {
         loading: originalPortfolioLoading,
     } = useApiFetch(`/portfolio/${props.slug ?? ""}`, mapGetResult);
     useEffect(() => {
-        console.log("portfolio status", slugFindResult);
         if (slugFindResult != null) {
             if ("value" in slugFindResult) {
                 setSlug(slugFindResult.value.slug);

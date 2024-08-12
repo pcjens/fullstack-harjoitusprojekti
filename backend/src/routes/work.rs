@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use axum::extract::{Path, State};
-use axum::routing::get;
+use axum::routing::{get, post, put};
 use axum::{Json, Router};
 
 use crate::api_errors::ApiError;
@@ -11,7 +11,11 @@ use crate::routes::SharedState;
 use crate::services;
 
 pub fn create_router() -> Router<Arc<SharedState>> {
-    Router::new().route("/", get(all)).route("/:slug", get(by_slug))
+    Router::new()
+        .route("/", get(all))
+        .route("/:slug", get(by_slug))
+        .route("/:slug", post(create))
+        .route("/:slug", put(edit))
 }
 
 async fn all(
@@ -39,5 +43,46 @@ async fn by_slug(
             ApiError::DbError
         })?
         .ok_or(ApiError::NoSuchSlug)?;
+    Ok(Json(work))
+}
+
+async fn create(
+    State(state): State<Arc<SharedState>>,
+    Session { user_id, .. }: Session,
+    Path(slug): Path<String>,
+    Json(arg): Json<Work>,
+) -> Result<Json<Work>, ApiError> {
+    let mut conn = state.db_pool.begin().await.map_err(|_| ApiError::DbTransactionBegin)?;
+
+    let work =
+        services::work::create_work(&mut *conn, &slug, user_id, arg).await.map_err(|err| {
+            // TODO: Add a special case for handling unique slug errors
+            tracing::error!("Creating a new work failed: {err:?}");
+            ApiError::DbError
+        })?;
+
+    conn.commit().await.map_err(|_| ApiError::DbTransactionCommit)?;
+
+    Ok(Json(work))
+}
+
+async fn edit(
+    State(state): State<Arc<SharedState>>,
+    Session { user_id, .. }: Session,
+    Path(slug): Path<String>,
+    Json(arg): Json<Work>,
+) -> Result<Json<Work>, ApiError> {
+    let mut conn = state.db_pool.begin().await.map_err(|_| ApiError::DbTransactionBegin)?;
+
+    let work =
+        services::work::update_work(&mut *conn, &slug, user_id, arg).await.map_err(|err| {
+            // TODO: Add a special case for handling unique slug errors
+            // TODO: Add a special case for handling missing rights to work (i.e. no work found to update)
+            tracing::error!("Updating the {slug} work failed: {err:?}");
+            ApiError::DbError
+        })?;
+
+    conn.commit().await.map_err(|_| ApiError::DbTransactionCommit)?;
+
     Ok(Json(work))
 }

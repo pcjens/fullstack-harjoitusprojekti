@@ -10,7 +10,7 @@ pub struct WorkRow {
     pub long_description: String,
 }
 
-#[derive(Debug, serde::Serialize)]
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct Work {
     #[serde(default)]
     pub id: i32,
@@ -23,7 +23,7 @@ pub struct Work {
     pub tags: Vec<WorkTag>,
 }
 
-#[derive(Debug, sqlx::FromRow, serde::Serialize)]
+#[derive(Debug, sqlx::FromRow, serde::Serialize, serde::Deserialize)]
 pub struct WorkAttachment {
     #[serde(default)]
     pub id: i32,
@@ -36,7 +36,7 @@ pub struct WorkAttachment {
     pub bytes_base64: String,
 }
 
-#[derive(Debug, sqlx::FromRow, serde::Serialize)]
+#[derive(Debug, sqlx::FromRow, serde::Serialize, serde::Deserialize)]
 pub struct WorkLink {
     #[serde(default)]
     pub id: i32,
@@ -46,7 +46,7 @@ pub struct WorkLink {
     pub href: String,
 }
 
-#[derive(Debug, sqlx::FromRow, serde::Serialize)]
+#[derive(Debug, sqlx::FromRow, serde::Serialize, serde::Deserialize)]
 pub struct WorkTag {
     #[serde(default)]
     pub id: i32,

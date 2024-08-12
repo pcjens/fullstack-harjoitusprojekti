@@ -120,7 +120,7 @@ const NavWrapper = (props: { element: JSX.Element, hideNavIfLoggedOut?: boolean 
             </footer>
         </>
     );
-}
+};
 
 const IndexContent = () => {
     return (
@@ -129,6 +129,7 @@ const IndexContent = () => {
                 <Route path="/" element={<NavWrapper element={<PortfolioListing />} />} />
                 <Route path="/works" element={<NavWrapper element={<WorkListing />} />} />
                 <Route path="/works/:slug/edit" element={<NavWrapper element={<WorkEditorFromPath />} />} />
+                <Route path="/works/new" element={<NavWrapper element={<WorkEditor />} />} />
                 <Route path="/portfolio/new" element={<NavWrapper element={<PortfolioEditor />} />} />
                 <Route path="/p/:slug/edit" element={<NavWrapper element={<PortfolioEditorFromPath />} />} />
                 <Route path="/p/:slug" element={<NavWrapper hideNavIfLoggedOut={true} element={<PortfolioPageFromPath />} />} />

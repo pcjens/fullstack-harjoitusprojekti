@@ -42,6 +42,7 @@ työtuntivaatimuksien seuraamista varten.
 |  5.8. | 13.53–19.20 |  5h 27m | 48h 38m | Portfolioiden julkaisu-ominaisuuden lisäys, teos-kategorioiden lisääminen tietokantaan ja niiden muokkaus-näkymän aloitus frontendissä |
 | 10.8. | 16.36–19.26 |  2h 50m | 51h 28m | Teoksien haun lisääminen backendiin, teoslistauksen aloittelua frontendissä |
 | 11.8. | 14.22–21.50 |  7h 28m | 58h 56m | Teoksien muokkausnäkymän lisääminen frontendiin |
+| 12.8. | 14.33–16.54 |  2h 21m | 61h 17m | Teoksien muokkaus-endpointtien lisääminen backendiin, frontin korjailua |
 
 ## Linkki ja ohjeet
 
