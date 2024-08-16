@@ -6,27 +6,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import CloseButton from "react-bootstrap/CloseButton";
 
-import { TFunction } from "i18next";
-
-export const validateAttachmentTitle = (attachment: Attachment, t: TFunction) => {
-    if (attachment.title == null) {
-        return null;
-    }
-    if (attachment.title.length < 1) {
-        return t("input-too-short", { min: 1, max: 50 });
-    }
-    if (attachment.title.length > 50) {
-        return t("input-too-long", { min: 1, max: 50 });
-    }
-    return null;
-};
-
-export const validateAttachmentFile = (attachment: Attachment, t: TFunction) => {
-    if (attachment.content_type === "") {
-        return t("input-file-missing");
-    }
-    return null;
-};
+import { validateAttachmentFile, validateAttachmentTitle } from "./validators";
 
 export interface Attachment {
     attachment_kind: string,
@@ -41,6 +21,7 @@ interface AttachmentInputProps {
     index: number,
     showPlaceholder?: boolean,
     shouldValidate: boolean,
+    accept?: string,
 }
 
 export const AttachmentInput = (props: AttachmentInputProps) => {
@@ -121,7 +102,7 @@ export const AttachmentInput = (props: AttachmentInputProps) => {
                         </Form.Control.Feedback>}
                     </Col>}
                     <Col className="mb-1">
-                        <Form.Control type="file" id={fileInputId}
+                        <Form.Control type="file" accept={props.accept} id={fileInputId}
                             disabled={!!props.showPlaceholder}
                             isInvalid={props.shouldValidate && errorFile != null}
                             isValid={props.shouldValidate && errorFile == null}

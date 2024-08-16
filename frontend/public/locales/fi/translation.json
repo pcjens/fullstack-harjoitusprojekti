@@ -97,6 +97,18 @@
             "name": "MacOS-versio",
             "help": "MacOS-käyttöjärjestelmälle ladattava versio teoksesta."
         },
+        "CoverImage": {
+            "name": "Kansi",
+            "help": "Kuva jota käytetään tämän teoksen kohdalla listauksissa teoksia."
+        },
+        "Trailer": {
+            "name": "Traileri",
+            "help": "Video joka näytetään teoksen omalla sivulla."
+        },
+        "Screenshot": {
+            "name": "Kuvakaappaus",
+            "help": "Teosta esittelevä kuva joka näytetään trailerin tilalla mikäli sitä ei ole."
+        },
         "attachment-kind-unset": "Valitse tiedoston tyyppi...",
         "add-attachment": "Lisää tiedosto"
     },

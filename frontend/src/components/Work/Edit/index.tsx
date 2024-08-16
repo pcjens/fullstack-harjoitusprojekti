@@ -14,7 +14,8 @@ import { typecheckWork } from "..";
 import { ValidatedTextInput } from "../../Forms";
 import { useApiFetch } from "../../../hooks/useApiFetch";
 import { assert, createTypechekerFromExample } from "../../../util/helpers";
-import { Attachment, AttachmentInput, validateAttachmentFile, validateAttachmentTitle } from "./AttachmentInput";
+import { Attachment, AttachmentInput } from "./AttachmentInput";
+import { validateAttachmentFile, validateAttachmentTitle } from "./validators";
 
 const typecheckCreatedWork = createTypechekerFromExample({
     slug: "",
@@ -24,7 +25,22 @@ enum AttachmentKind {
     DownloadWindows = "DownloadWindows",
     DownloadLinux = "DownloadLinux",
     DownloadMac = "DownloadMac",
+    CoverImage = "CoverImage",
+    Trailer = "Trailer",
+    Screenshot = "Screenshot",
 }
+
+const attachmentAccepts = (kind: string) => {
+    switch (kind) {
+    case AttachmentKind.CoverImage as string:
+    case AttachmentKind.Screenshot as string:
+        return "image/*";
+    case AttachmentKind.Trailer as string:
+        return "video/*";
+    default:
+        return undefined;
+    }
+};
 
 export const WorkEditor = (props: { slug?: string }) => {
     const { t } = useTranslation();
@@ -190,7 +206,7 @@ export const WorkEditor = (props: { slug?: string }) => {
                 <h3>{t("attachments")}</h3>
                 <Row xs={1} lg={2} xl={3}>
                     {files.map((a, index) => <Col key={`${a.attachment_kind}.${a.title ?? ""}`} className="p-2">
-                        <AttachmentInput shouldValidate={shouldValidate}
+                        <AttachmentInput accept={attachmentAccepts(a.attachment_kind)} shouldValidate={shouldValidate}
                             showPlaceholder={isEdit && originalWorkLoading} attachments={[files, setFiles]} index={index} />
                     </Col>)}
                     <Col className="d-flex justify-content-around align-items-center p-2">

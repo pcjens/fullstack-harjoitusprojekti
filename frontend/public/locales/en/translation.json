@@ -97,6 +97,18 @@
             "name": "MacOS-version",
             "help": "Downloadable version of the work for the MacOS operating system."
         },
+        "CoverImage": {
+            "name": "Cover",
+            "help": "The main image shown in listings of works."
+        },
+        "Trailer": {
+            "name": "Trailer",
+            "help": "A video shown prominently on the work page."
+        },
+        "Screenshot": {
+            "name": "Screenshot",
+            "help": "An image shown prominently on the work page if the work doesn't have a trailer."
+        },
         "attachment-kind-unset": "Select file kind...",
         "add-attachment": "Add file"
     },
