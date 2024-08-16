@@ -50,9 +50,11 @@ export const PortfolioCard = ({ portfolio: p }: Props) => {
                 <Card.Title>{p.title}</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">{p.author}</Card.Subtitle>
                 <Card.Text>{p.subtitle}</Card.Text>
+            </Card.Body>
+            <Card.Footer>
                 <Card.Link as={Link} to={`/p/${p.slug}`}>{t("action.open")}</Card.Link>
                 <Card.Link as={Link} to={`/p/${p.slug}/edit`}>{t("action.edit")}</Card.Link>
-            </Card.Body>
+            </Card.Footer>
         </Card>
     );
 };

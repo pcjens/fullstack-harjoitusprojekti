@@ -1,9 +1,10 @@
 # Fullstack Open harjoitustyö
 
-Tässä repositoriossa on Full Stack -websovelluskehitys harjoitustyöni. Kyseessä
-on websovellus, jolla useampi käyttäjä voi luoda portfolio-nettisivuja järkevällä
-käyttöliittymällä, erityisellä fokuksella sellaisiin portfolioihin, jotka
-koostuvat peleistä ja/tai muista sovelluksista. Sovellus on toteutettu
+Tässä repositoriossa on projektini kurssille [Full Stack -websovelluskehitys
+harjoitustyö](https://github.com/fullstack-hy2020/misc/blob/master/harjoitustyo.md).
+Kyseessä on websovellus, jolla useampi käyttäjä voi luoda portfolio-nettisivuja
+järkevällä käyttöliittymällä, erityisellä fokuksella sellaisiin portfolioihin,
+jotka koostuvat peleistä ja/tai muista sovelluksista. Sovellus on toteutettu
 frontendin osalta Reactilla, Bootstrapilla ja Typescriptillä, ja backendin
 puolelta Axumilla, Sqlx:llä ja Rustilla.
 
@@ -43,6 +44,7 @@ työtuntivaatimuksien seuraamista varten.
 | 10.8. | 16.36–19.26 |  2h 50m | 51h 28m | Teoksien haun lisääminen backendiin, teoslistauksen aloittelua frontendissä |
 | 11.8. | 14.22–21.50 |  7h 28m | 58h 56m | Teoksien muokkausnäkymän lisääminen frontendiin |
 | 12.8. | 14.33–16.54 |  2h 21m | 61h 17m | Teoksien muokkaus-endpointtien lisääminen backendiin, frontin korjailua |
+| 16.8. | 15.50–##.## |  #h ##m | ##h ##m |  |
 
 ## Linkki ja ohjeet
 

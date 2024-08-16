@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
+import Button from "react-bootstrap/Button";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -24,6 +25,8 @@ export interface Props {
 
     input: string,
     setInput: Dispatch<SetStateAction<string>>,
+
+    attachedButton?: { text: string, onClick?: () => void, type?: "button" | "submit" | "reset" }
 }
 
 export const ValidatedTextInput = (props: Props) => {
@@ -37,13 +40,16 @@ export const ValidatedTextInput = (props: Props) => {
     return (
         <Form.Group controlId={controlName}>
             <Form.Label>{t(`${props.pfx}.${props.name}.name`)}</Form.Label>
-            <InputGroup hasValidation>
+            <InputGroup hasValidation={!props.attachedButton}>
                 <Form.Control required aria-describedby={helpName} as={props.textarea ? "textarea" : undefined}
                     disabled={!!props.showPlaceholder}
                     placeholder={props.showPlaceholder ? t("input-loading") : undefined}
                     isInvalid={props.shouldValidate && error != null}
                     isValid={props.shouldValidate && error == null}
                     value={props.input} onChange={(({ target }) => { props.setInput(target.value); })} />
+                {props.attachedButton && <Button variant="outline-primary" type={props.attachedButton.type ?? "button"} onClick={props.attachedButton.onClick}>
+                    {props.attachedButton.text}
+                </Button>}
                 {props.shouldValidate && error != null && <Form.Control.Feedback type="invalid">
                     {error}
                 </Form.Control.Feedback>}

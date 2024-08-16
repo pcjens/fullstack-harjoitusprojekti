@@ -22,6 +22,7 @@
     "categories": "Kategoriat",
     "works": "Teokset",
     "attachments": "Tiedostot",
+    "tags": "Tagit",
     "latest-publish": "Viimeisin versio: {{published, datetime}}",
     "no-version-published": "Luonnos (ei vielä julkaistu)",
     "no-portfolios-found": "Portfolioita ei löytynyt.",
@@ -80,6 +81,10 @@
             "name": "Pitkä kuvaus",
             "help": "Kuvaus joka näytetään teoksen omalla sivulla."
         },
+        "tag": {
+            "name": "Nimi",
+            "help": "Tagin sisältö joka näytetään teoksen ohessa \"nappulana\"."
+        },
         "DownloadWindows": {
             "name": "Windows-versio",
             "help": "Windows-käyttöjärjestelmälle ladattava versio teoksesta."
@@ -111,9 +116,11 @@
         "create-new-category": "Lisää uusi kategoria teoksia",
         "edit-categories": "Tallenna",
         "edit-categories-no-changes": "Tallennettu",
-        "create-work": "Lisää teos",
+        "create-new-work": "Lisää teos",
+        "create-work": "Lisää",
         "edit-work": "Tallenna",
-        "edit-work-saved": "Tallennettu"
+        "edit-work-saved": "Tallennettu",
+        "add-new-tag": "Lisää"
     },
     "error": {
         "NetworkError": "Yhteyttä ei saatu, kokeile myöhemmin uudelleen.",

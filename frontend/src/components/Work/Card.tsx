@@ -28,8 +28,10 @@ export const WorkCard = ({ work: w }: Props) => {
             <Card.Body>
                 <Card.Title>{w.title}</Card.Title>
                 <Card.Text>{w.short_description}</Card.Text>
-                <Card.Link as={Link} to={`/works/${w.slug}/edit`}>{t("action.edit")}</Card.Link>
             </Card.Body>
+            <Card.Footer>
+                <Card.Link as={Link} to={`/works/${w.slug}/edit`}>{t("action.edit")}</Card.Link>
+            </Card.Footer>
         </Card>
     );
 };

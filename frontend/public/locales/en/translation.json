@@ -22,6 +22,7 @@
     "categories": "Categories",
     "works": "Works",
     "attachments": "Files",
+    "tags": "Tags",
     "latest-publish": "Latest version: {{published, datetime}}",
     "no-version-published": "Draft (not published yet)",
     "no-portfolios-found": "No portfolios found.",
@@ -80,6 +81,10 @@
             "name": "Long description",
             "help": "Shown on the work's own page."
         },
+        "tag": {
+            "name": "Name",
+            "help": "The name of the tag to add, shown next to works as a \"button\" or \"chip\"."
+        },
         "DownloadWindows": {
             "name": "Windows-version",
             "help": "Downloadable version of the work for the Windows operating system."
@@ -111,9 +116,11 @@
         "create-new-category": "Add a new category of works",
         "edit-categories": "Save",
         "edit-categories-saved": "Saved",
-        "create-work": "Create a new work",
+        "create-new-work": "Create a new work",
+        "create-work": "Create",
         "edit-work": "Save",
-        "edit-work-saved": "Saved"
+        "edit-work-saved": "Saved",
+        "add-new-tag": "Add"
     },
     "error": {
         "NetworkError": "Connection failed, please try again later.",
