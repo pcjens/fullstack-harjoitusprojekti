@@ -18,6 +18,8 @@ export enum ApiError {
     MissingSession = "MissingSession",
     InvalidSession = "InvalidSession",
     NoSuchSlug = "NoSuchSlug",
+    SlugTaken = "SlugTaken",
+    OwnedDocumentNotFound = "OwnedDocumentNotFound",
 }
 
 type ApiResponse<T> = { value: T } | { userError: ApiError };

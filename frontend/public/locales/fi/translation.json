@@ -138,6 +138,7 @@
         "NetworkError": "Yhteyttä ei saatu, kokeile myöhemmin uudelleen.",
         "UnrecognizedResponse": "Jotain meni pieleen, mutta ei ole ihan selvää mitä. Palvelimelta tuli odottamaton vastaus.",
         "InternalServerError": "Palvelimella tapahtui sisäinen virhe. Kokeile myöhemmin uudelleen.",
+        "NotFound": "Tietoja ei löydetty.",
         "UsernameTooShort": "Käyttäjätunnus on liian lyhyt.",
         "PasswordTooShort": "Salasana on liian lyhyt.",
         "PasswordsDontMatch": "Salasanojen pitäisi olla samat.",
@@ -146,6 +147,6 @@
         "MissingSession": "Kirjautuminen vaadittu.",
         "InvalidSession": "Istuntosi on vanhentunut, kirjaudu sisään uudelleen.",
         "NoSuchSlug": "Tietoja ei löydetty.",
-        "NotFound": "Tietoja ei löydetty."
+        "SlugTaken": "Tämä tunnus on jo käytössä."
     }
 }

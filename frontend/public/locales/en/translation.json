@@ -138,6 +138,7 @@
         "NetworkError": "Connection failed, please try again later.",
         "UnrecognizedResponse": "Something went wrong, we're unsure what, but something's not working. Sorry about this.",
         "InternalServerError": "There was an issue in the backend, which requires further investigation. Maybe try again later?",
+        "NotFound": "Data not found.",
         "UsernameTooShort": "The username is too short.",
         "PasswordTooShort": "The password is too short.",
         "PasswordsDontMatch": "The passwords must match.",
@@ -146,6 +147,6 @@
         "MissingSession": "Login required.",
         "InvalidSession": "Your session has expired, please login again.",
         "NoSuchSlug": "Data not found.",
-        "NotFound": "Data not found."
+        "SlugTaken": "This slug is already in use."
     }
 }

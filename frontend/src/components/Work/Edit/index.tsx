@@ -12,7 +12,7 @@ import CloseButton from "react-bootstrap/CloseButton";
 
 import { typecheckWork } from "..";
 import { ValidatedTextInput } from "../../Forms";
-import { useApiFetch } from "../../../hooks/useApiFetch";
+import { ApiError, useApiFetch } from "../../../hooks/useApiFetch";
 import { assert, createTypechekerFromExample } from "../../../util/helpers";
 import { Attachment, AttachmentInput } from "./AttachmentInput";
 import { validateAttachmentFile, validateAttachmentTitle } from "./validators";
@@ -49,6 +49,7 @@ export const WorkEditor = (props: { slug?: string }) => {
     const isEdit = props.slug != null;
 
     const [serverError, setServerError] = useState("");
+    const [slugsInUse, setSlugsInUse] = useState<string[]>([]);
 
     const [slug, setSlug] = useState("");
     const [title, setTitle] = useState("");
@@ -126,7 +127,8 @@ export const WorkEditor = (props: { slug?: string }) => {
 
     const validateSlug = combineValidators(
         createLengthValidator(1, 100),
-        (slug: string) => slug.search(/[^a-z0-9-]/) === -1 ? null : t("input-not-alphadashnumeric"),
+        (slug: string) => slug.search(/[^a-z0-9-]/) !== -1 ? t("input-not-alphadashnumeric") : null,
+        (slug: string) => slugsInUse.includes(slug) ? t("error.SlugTaken") : null,
     );
     const validateTitle = createLengthValidator(1, 100);
     const validateShortDesc = createLengthValidator(1, 80);
@@ -171,18 +173,23 @@ export const WorkEditor = (props: { slug?: string }) => {
         }
         const submit = async () => {
             const result = await createWork();
+
             if ("userError" in result) {
+                setLatestSentReqParams({});
                 setServerError(result.userError);
+                if (result.userError === ApiError.SlugTaken) {
+                    setSlugsInUse(slugsInUse.concat(slug));
+                    setServerError("");
+                }
                 return;
             }
 
             if (isEdit) {
-                setLatestSentReqParams(reqParams);
                 setShouldValidate(false);
-            } else {
-                navigate(`/works/${result.value.slug}/edit`);
             }
 
+            navigate(`/works/${result.value.slug}/edit`);
+            setLatestSentReqParams(reqParams);
             setServerError("");
         };
         void submit();

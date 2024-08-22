@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 import { typecheckPortfolio } from ".";
 import { ValidatedTextInput } from "../Forms";
-import { useApiFetch } from "../../hooks/useApiFetch";
+import { ApiError, useApiFetch } from "../../hooks/useApiFetch";
 import { createTypechekerFromExample } from "../../util/helpers";
 import { ValidatedCheckbox } from "../Forms/ValidatedCheckbox";
 import { CategoryEdit } from "./CategoryEdit";
@@ -25,6 +25,7 @@ export const PortfolioEditor = (props: { slug?: string }) => {
     const isEdit = props.slug != null;
 
     const [serverError, setServerError] = useState("");
+    const [slugsInUse, setSlugsInUse] = useState<string[]>([]);
 
     const [slug, setSlug] = useState("");
     const [title, setTitle] = useState("");
@@ -72,7 +73,8 @@ export const PortfolioEditor = (props: { slug?: string }) => {
 
     const validateSlug = combineValidators(
         createLengthValidator(1, 100),
-        (slug: string) => slug.search(/[^a-z0-9-]/) === -1 ? null : t("input-not-alphadashnumeric"),
+        (slug: string) => slug.search(/[^a-z0-9-]/) !== -1 ? t("input-not-alphadashnumeric") : null,
+        (slug: string) => slugsInUse.includes(slug) ? t("error.SlugTaken") : null,
     );
     const validateTitle = createLengthValidator(1, 100);
     const validateSubtitle = createLengthValidator(1, 500);
@@ -108,14 +110,20 @@ export const PortfolioEditor = (props: { slug?: string }) => {
         }
         const submit = async () => {
             const result = await createPortfolio();
+
             if ("userError" in result) {
+                setLatestSentReqParams({});
                 setServerError(result.userError);
+                if (result.userError === ApiError.SlugTaken) {
+                    setSlugsInUse(slugsInUse.concat(slug));
+                    setServerError("");
+                }
                 return;
             }
 
             if (isEdit) {
-                setLatestSentReqParams(reqParams);
                 setShouldValidate(false);
+                navigate(`/p/${result.value.slug}/edit`);
             } else {
                 setSlug("");
                 setTitle("");
@@ -125,6 +133,7 @@ export const PortfolioEditor = (props: { slug?: string }) => {
                 navigate(`/p/${result.value.slug}`);
             }
 
+            setLatestSentReqParams(reqParams);
             setServerError("");
         };
         void submit();
