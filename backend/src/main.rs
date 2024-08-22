@@ -20,6 +20,7 @@ mod data;
 mod request_state;
 mod routes;
 mod services;
+mod util;
 
 #[tokio::main]
 async fn main() {

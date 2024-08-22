@@ -45,6 +45,7 @@ työtuntivaatimuksien seuraamista varten.
 | 11.8. | 14.22–21.50 |  7h 28m | 58h 56m | Teoksien muokkausnäkymän lisääminen frontendiin |
 | 12.8. | 14.33–16.54 |  2h 21m | 61h 17m | Teoksien muokkaus-endpointtien lisääminen backendiin, frontin korjailua |
 | 16.8. | 15.50–18.21 |  2h 31m | 63h 48m | Teoksien muokkaus mvp valmiiksi (nyt myös tagit, kuvat) |
+| 22.8. | 19.20–##.## |  #h ##m | ##h ##m |  |
 
 ## Linkki ja ohjeet
 

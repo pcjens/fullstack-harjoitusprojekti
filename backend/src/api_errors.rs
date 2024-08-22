@@ -31,6 +31,7 @@ pub enum ApiError {
     /// Very probably an expired session token, or just a spoofed one.
     InvalidSession,
     NoSuchSlug,
+    SlugTaken,
     // NOTE: When changing these (not recommended) or adding new ones, remember
     // to update the localization strings on the frontend as well!
 }
@@ -47,7 +48,8 @@ impl IntoResponse for ApiError {
             | ApiError::PasswordTooShort
             | ApiError::PasswordsDontMatch
             | ApiError::InvalidCredentials
-            | ApiError::UsernameTaken => StatusCode::BAD_REQUEST,
+            | ApiError::UsernameTaken
+            | ApiError::SlugTaken => StatusCode::BAD_REQUEST,
             ApiError::MissingSession | ApiError::InvalidSession => StatusCode::FORBIDDEN,
             ApiError::NoSuchSlug => StatusCode::NOT_FOUND,
         };

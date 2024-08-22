@@ -9,6 +9,7 @@ use crate::data::user::Session;
 use crate::data::work::Work;
 use crate::routes::SharedState;
 use crate::services;
+use crate::util::is_unique_constraint_violation;
 
 pub fn create_router() -> Router<Arc<SharedState>> {
     Router::new()
@@ -56,8 +57,10 @@ async fn create(
 
     let work =
         services::work::create_work(&mut *conn, &slug, user_id, arg).await.map_err(|err| {
-            // TODO: Add a special case for handling unique slug errors
             tracing::error!("Creating a new work failed: {err:?}");
+            if is_unique_constraint_violation(err.root_cause()) {
+                return ApiError::SlugTaken;
+            }
             ApiError::DbError
         })?;
 
@@ -76,9 +79,10 @@ async fn edit(
 
     let work =
         services::work::update_work(&mut *conn, &slug, user_id, arg).await.map_err(|err| {
-            // TODO: Add a special case for handling unique slug errors
-            // TODO: Add a special case for handling missing rights to work (i.e. no work found to update)
             tracing::error!("Updating the {slug} work failed: {err:?}");
+            if is_unique_constraint_violation(err.root_cause()) {
+                return ApiError::SlugTaken;
+            }
             ApiError::DbError
         })?;
 
