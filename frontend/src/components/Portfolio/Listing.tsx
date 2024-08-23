@@ -8,14 +8,14 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { useApiFetch } from "../../hooks/useApiFetch";
-import { PortfolioCard, typecheckPortfolioArray } from ".";
+import { PortfolioCard, typecheckPortfolioSummaryArray } from ".";
 import { useTimeout } from "../../hooks/useTimeout";
 
 export const PortfolioListing = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
 
-    const mapResult = useCallback(typecheckPortfolioArray, []);
+    const mapResult = useCallback(typecheckPortfolioSummaryArray, []);
     const { result, loading } = useApiFetch("/portfolio", mapResult);
     const { timedOut } = useTimeout(200);
 

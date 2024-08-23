@@ -1,12 +1,11 @@
 use std::sync::Arc;
 
-use arrayvec::ArrayString;
 use axum::extract::{Path, State};
 use axum::routing::{get, post, put};
 use axum::{Json, Router};
 
 use crate::api_errors::ApiError;
-use crate::data::portfolio::Portfolio;
+use crate::data::portfolio::{Portfolio, PortfolioRow};
 use crate::data::user::Session;
 use crate::routes::SharedState;
 use crate::services;
@@ -23,7 +22,7 @@ pub fn create_router() -> Router<Arc<SharedState>> {
 async fn all(
     State(state): State<Arc<SharedState>>,
     Session { user_id, .. }: Session,
-) -> Result<Json<Vec<Portfolio>>, ApiError> {
+) -> Result<Json<Vec<PortfolioRow>>, ApiError> {
     let portfolios =
         services::portfolio::get_portfolios(&state.db_pool, user_id).await.map_err(|err| {
             tracing::error!("Getting all portfolios for the logged in user failed: {err:?}");
@@ -53,10 +52,8 @@ async fn by_slug(
 
 #[derive(serde::Deserialize)]
 struct CreatePortfolioArgs {
-    pub title: ArrayString<100>,
-    pub subtitle: ArrayString<500>,
-    pub author: ArrayString<100>,
     pub publish: bool,
+    pub portfolio: Portfolio,
 }
 async fn create(
     State(state): State<Arc<SharedState>>,
@@ -69,11 +66,9 @@ async fn create(
     let portfolio = services::portfolio::create_portfolio(
         &mut *conn,
         &slug,
-        &args.title,
-        &args.subtitle,
-        &args.author,
-        args.publish,
         user_id,
+        args.portfolio,
+        args.publish,
     )
     .await
     .map_err(|err| {
@@ -91,11 +86,8 @@ async fn create(
 
 #[derive(serde::Deserialize)]
 struct EditPortfolioArgs {
-    pub slug: ArrayString<100>,
-    pub title: ArrayString<100>,
-    pub subtitle: ArrayString<500>,
-    pub author: ArrayString<100>,
     pub publish: bool,
+    pub portfolio: Portfolio,
 }
 async fn edit(
     State(state): State<Arc<SharedState>>,
@@ -108,12 +100,9 @@ async fn edit(
     let portfolio = services::portfolio::update_portfolio(
         &mut *conn,
         &slug,
-        &args.slug,
-        &args.title,
-        &args.subtitle,
-        &args.author,
-        args.publish,
         user_id,
+        args.portfolio,
+        args.publish,
     )
     .await
     .map_err(|err| {

@@ -18,7 +18,7 @@ const NewCategoryForm = () => {
     };
 
     return (
-        <Form onSubmit={submitHandler} noValidate className="d-flex mx-3 mb-2 flex-row justify-content-between">
+        <Form onSubmit={submitHandler} noValidate className="d-flex mx-3 my-3 flex-row justify-content-between">
             <div className="me-3" style={{ flexGrow: 1 }}>
                 <Form.Control required
                     placeholder={t("portfolio-editor.category-title.name")}
@@ -57,17 +57,16 @@ export const CategoryEdit = () => {
 
     return (
         <>
-            {categories.length === 0 && <div className="my-2 mx-auto">
+            {categories.length === 0 && <div className="mx-auto">
                 <em>{t("no-categories-found")}</em>
             </div>}
             {categories.map((category) => (
-                <Container key={category.id} className="my-2">
+                <Container key={category.id}>
                     <h4>{category.title}</h4>
                     <Row xs={1} md={2} lg={3} xl={4} xxl={5} className="align-items-center">
                         {category.works.map((work) => (
                             <Col key={work.id} className="p-2">
                                 <Card>
-                                    <Card.Img variant="top" height={180} />
                                     <Card.Body>
                                         <Card.Title>
                                             <Link to={"/"}>
@@ -100,11 +99,6 @@ export const CategoryEdit = () => {
                 </Container>
             ))}
             <NewCategoryForm />
-            <Form onSubmit={(event) => { event.preventDefault(); }}>
-                <Button type="submit">
-                    {t("action.edit-categories")}
-                </Button>
-            </Form>
         </>
     );
 };

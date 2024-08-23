@@ -17,9 +17,9 @@ where
     );
     let row: WorkRow = query
         .bind(slug)
-        .bind(&new_work.title)
-        .bind(&new_work.short_description)
-        .bind(&new_work.long_description)
+        .bind(&new_work.row.title)
+        .bind(&new_work.row.short_description)
+        .bind(&new_work.row.long_description)
         .fetch_one(&mut *conn)
         .await
         .context("work insert failed")?;
@@ -60,10 +60,10 @@ where
         RETURNING *",
     );
     let row: WorkRow = query
-        .bind(&new_version.slug)
-        .bind(&new_version.title)
-        .bind(&new_version.short_description)
-        .bind(&new_version.long_description)
+        .bind(&new_version.row.slug)
+        .bind(&new_version.row.title)
+        .bind(&new_version.row.short_description)
+        .bind(&new_version.row.long_description)
         .bind(original_slug)
         .bind(user_id)
         .fetch_one(&mut *conn)
@@ -142,16 +142,7 @@ where
         .fetch_all(conn)
         .await
         .context("get work tags failed")?;
-    Ok(Work {
-        id: row.id,
-        slug: row.slug,
-        title: row.title,
-        short_description: row.short_description,
-        long_description: row.long_description,
-        attachments,
-        links,
-        tags,
-    })
+    Ok(Work { row, attachments, links, tags })
 }
 
 async fn update_work_details<E>(
@@ -235,14 +226,5 @@ where
         vec![]
     };
 
-    Ok(Work {
-        id: row.id,
-        slug: row.slug,
-        title: row.title,
-        short_description: row.short_description,
-        long_description: row.long_description,
-        attachments,
-        links,
-        tags,
-    })
+    Ok(Work { row, attachments, links, tags })
 }

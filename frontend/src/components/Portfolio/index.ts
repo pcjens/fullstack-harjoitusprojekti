@@ -2,7 +2,7 @@ import { createArrayTypechecker, createTypechekerFromExample, OptionalField } fr
 
 export { PortfolioCard } from "./Card";
 
-export interface Portfolio {
+export interface PortfolioSummary {
     id: number,
     created_at: number,
     published_at?: number,
@@ -10,6 +10,15 @@ export interface Portfolio {
     title: string,
     subtitle: string,
     author: string,
+}
+
+export interface Portfolio extends PortfolioSummary {
+    categories: {
+        id: number,
+        portfolio_id: number,
+        title: string,
+        work_slugs: string[],
+    }[],
 }
 
 export const typecheckPortfolio: (value: unknown) => Portfolio = createTypechekerFromExample({
@@ -20,6 +29,24 @@ export const typecheckPortfolio: (value: unknown) => Portfolio = createTypecheke
     title: "",
     subtitle: "",
     author: "",
+    categories: [{
+        id: 0,
+        portfolio_id: 0,
+        title: "",
+        work_slugs: [""],
+    }],
 }, "portfolio");
 
 export const typecheckPortfolioArray: (value: unknown) => Portfolio[] = createArrayTypechecker(typecheckPortfolio, "portfolios");
+
+export const typecheckPortfolioSummary: (value: unknown) => PortfolioSummary = createTypechekerFromExample({
+    id: 0,
+    created_at: 0,
+    published_at: new OptionalField(0),
+    slug: "",
+    title: "",
+    subtitle: "",
+    author: "",
+}, "portfolio_summary");
+
+export const typecheckPortfolioSummaryArray: (value: unknown) => PortfolioSummary[] = createArrayTypechecker(typecheckPortfolioSummary, "portfolio_summaries");

@@ -32,6 +32,7 @@ export const PortfolioEditor = (props: { slug?: string }) => {
     const [subtitle, setSubtitle] = useState("");
     const [author, setAuthor] = useState("");
     const [publish, setPublish] = useState(false);
+    const [categories, setCategories] = useState([]);
 
     const mapGetResult = useCallback(typecheckPortfolio, []);
     const {
@@ -93,9 +94,12 @@ export const PortfolioEditor = (props: { slug?: string }) => {
         setReqParams({
             method: isEdit ? "PUT" : "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ slug, title, subtitle, author, publish }),
+            body: JSON.stringify({
+                portfolio: { slug, title, subtitle, author, categories },
+                publish,
+            }),
         });
-    }, [slug, title, subtitle, author, publish, isEdit]);
+    }, [slug, title, subtitle, author, categories, publish, isEdit]);
 
     const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
@@ -144,36 +148,35 @@ export const PortfolioEditor = (props: { slug?: string }) => {
             <h2>
                 {t(isEdit ? "edit-portfolio" : "create-portfolio")}
             </h2>
-            <Form onSubmit={submitHandler} noValidate>
-                <Stack gap={3}>
-                    <ValidatedTextInput pfx={"portfolio-editor"} name={"slug"} shouldValidate={shouldValidate}
-                        input={slug} setInput={setSlug} validate={validateSlug} showPlaceholder={isEdit && originalPortfolioLoading} />
-                    <ValidatedTextInput pfx={"portfolio-editor"} name={"author"} shouldValidate={shouldValidate}
-                        input={author} setInput={setAuthor} validate={validateAuthor} showPlaceholder={isEdit && originalPortfolioLoading} />
-                    <ValidatedTextInput pfx={"portfolio-editor"} name={"title"} shouldValidate={shouldValidate}
-                        input={title} setInput={setTitle} validate={validateTitle} showPlaceholder={isEdit && originalPortfolioLoading} />
-                    <ValidatedTextInput pfx={"portfolio-editor"} name={"subtitle"} shouldValidate={shouldValidate}
-                        input={subtitle} setInput={setSubtitle} validate={validateSubtitle} showPlaceholder={isEdit && originalPortfolioLoading} />
-                    <ValidatedCheckbox pfx={"portfolio-editor"} name={"publish"} shouldValidate={shouldValidate}
-                        input={publish} setInput={setPublish} validate={validatePublish} showPlaceholder={isEdit && originalPortfolioLoading} />
-                    {serverError && <p className="text-danger">
-                        {t(`error.${serverError}`)}
-                    </p>}
-                    <Form.Group>
-                        <Button type="submit" disabled={loading || reqParams.body === latestSentReqParams.body}>
-                            {loading && <Spinner size="sm" role="status" aria-hidden="true" style={{ marginRight: 6 }} />}
-                            {isEdit && reqParams.body === latestSentReqParams.body && t("action.edit-portfolio-saved")}
-                            {isEdit && reqParams.body !== latestSentReqParams.body && t("action.edit-portfolio")}
-                            {!isEdit && t("action.create-portfolio")}
-                        </Button>
-                    </Form.Group>
-                </Stack>
-            </Form>
-            <hr />
-            <h3>{t("categories")}</h3>
-            <Stack gap={3}>
-                <CategoryEdit />
+            <Stack gap={3} className="mb-3">
+                <ValidatedTextInput pfx={"portfolio-editor"} name={"slug"} shouldValidate={shouldValidate}
+                    input={slug} setInput={setSlug} validate={validateSlug} showPlaceholder={isEdit && originalPortfolioLoading} />
+                <ValidatedTextInput pfx={"portfolio-editor"} name={"author"} shouldValidate={shouldValidate}
+                    input={author} setInput={setAuthor} validate={validateAuthor} showPlaceholder={isEdit && originalPortfolioLoading} />
+                <ValidatedTextInput pfx={"portfolio-editor"} name={"title"} shouldValidate={shouldValidate}
+                    input={title} setInput={setTitle} validate={validateTitle} showPlaceholder={isEdit && originalPortfolioLoading} />
+                <ValidatedTextInput pfx={"portfolio-editor"} name={"subtitle"} shouldValidate={shouldValidate}
+                    input={subtitle} setInput={setSubtitle} validate={validateSubtitle} showPlaceholder={isEdit && originalPortfolioLoading} />
+                <ValidatedCheckbox pfx={"portfolio-editor"} name={"publish"} shouldValidate={shouldValidate}
+                    input={publish} setInput={setPublish} validate={validatePublish} showPlaceholder={isEdit && originalPortfolioLoading} />
+                {serverError && <p className="text-danger">
+                    {t(`error.${serverError}`)}
+                </p>}
+                <h3>{t("categories")}</h3>
+                <div>
+                    <CategoryEdit />
+                </div>
             </Stack>
+            <Form onSubmit={submitHandler} noValidate>
+                <Form.Group>
+                    <Button type="submit" disabled={loading || reqParams.body === latestSentReqParams.body}>
+                        {loading && <Spinner size="sm" role="status" aria-hidden="true" style={{ marginRight: 6 }} />}
+                        {isEdit && reqParams.body === latestSentReqParams.body && t("action.edit-portfolio-saved")}
+                        {isEdit && reqParams.body !== latestSentReqParams.body && t("action.edit-portfolio")}
+                        {!isEdit && t("action.create-portfolio")}
+                    </Button>
+                </Form.Group>
+            </Form>
         </Container>
     );
 };

@@ -2,7 +2,7 @@ use core::fmt;
 
 use crate::array_string_types::{AttachmentKind, ContentType};
 
-#[derive(Debug, sqlx::FromRow, serde::Serialize)]
+#[derive(Debug, sqlx::FromRow, serde::Serialize, serde::Deserialize)]
 pub struct WorkRow {
     #[serde(default)]
     pub id: i32,
@@ -14,12 +14,8 @@ pub struct WorkRow {
 
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct Work {
-    #[serde(default)]
-    pub id: i32,
-    pub slug: String,
-    pub title: String,
-    pub short_description: String,
-    pub long_description: String,
+    #[serde(flatten)]
+    pub row: WorkRow,
     pub attachments: Vec<WorkAttachment>,
     pub links: Vec<WorkLink>,
     pub tags: Vec<WorkTag>,

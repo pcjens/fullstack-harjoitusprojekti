@@ -2,7 +2,9 @@ type Assert = (condition: unknown, errorMessage?: string) => asserts condition;
 
 export const assert: Assert = (condition, errorMessage) => {
     if (!condition) {
-        console.debug("assertion condition:", condition);
+        if (import.meta.env.DEV) {
+            console.debug("assertion condition:", condition);
+        }
         if (errorMessage) {
             throw new Error(`assertion failed: ${errorMessage}`);
         } else {

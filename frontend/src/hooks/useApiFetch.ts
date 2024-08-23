@@ -41,7 +41,9 @@ const apiFetch = async (
     let response;
     try {
         const url = `${VITE_API_BASE_URL}${apiPath}`;
-        console.debug("request from useApiFetch:", apiPath, url, init);
+        if (import.meta.env.DEV) {
+            console.debug("request from useApiFetch:", apiPath, url, init);
+        }
         response = await fetch(url, init);
     } catch (err) {
         return { userError: ApiError.NetworkError };
