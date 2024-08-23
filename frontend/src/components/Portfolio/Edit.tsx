@@ -7,7 +7,7 @@ import Stack from "react-bootstrap/Stack";
 import Spinner from "react-bootstrap/Spinner";
 import { useNavigate } from "react-router-dom";
 
-import { typecheckPortfolio } from ".";
+import { Category, typecheckPortfolio } from ".";
 import { ValidatedTextInput } from "../Forms";
 import { ApiError, useApiFetch } from "../../hooks/useApiFetch";
 import { createTypechekerFromExample } from "../../util/helpers";
@@ -32,7 +32,7 @@ export const PortfolioEditor = (props: { slug?: string }) => {
     const [subtitle, setSubtitle] = useState("");
     const [author, setAuthor] = useState("");
     const [publish, setPublish] = useState(false);
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState<Category[]>([]);
 
     const mapGetResult = useCallback(typecheckPortfolio, []);
     const {
@@ -164,7 +164,7 @@ export const PortfolioEditor = (props: { slug?: string }) => {
                 </p>}
                 <h3>{t("categories")}</h3>
                 <div>
-                    <CategoryEdit />
+                    <CategoryEdit categories={categories} setCategories={setCategories} />
                 </div>
             </Stack>
             <Form onSubmit={submitHandler} noValidate>

@@ -21,6 +21,8 @@ export interface Portfolio extends PortfolioSummary {
     }[],
 }
 
+export type Category = Portfolio["categories"][0];
+
 export const typecheckPortfolio: (value: unknown) => Portfolio = createTypechekerFromExample({
     id: 0,
     created_at: 0,

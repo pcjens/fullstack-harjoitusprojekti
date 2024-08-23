@@ -58,10 +58,11 @@
         },
         "publish": {
             "name": "Julkaise",
-            "help": "Jos tämä on päällä, portfolio laitetaan saataville ilman kirjautumista."
+            "help": "Jos tämä on päällä, portfolio laitetaan näkyville ilman kirjautumista."
         },
-        "category-title": {
-            "name": "Otsikko"
+        "category": {
+            "name": "Uusi kategoria",
+            "help": "Portfolio koostuu kategorioista teoksia. Tästä voit luoda uuden kategorian, johon voit sitten lisätä luomiasi teoksia."
         }
     },
     "work-editor": {
@@ -125,7 +126,7 @@
         "create-portfolio": "Luo",
         "edit-portfolio": "Tallenna",
         "edit-portfolio-saved": "Tallennettu",
-        "create-new-category": "Lisää uusi kategoria teoksia",
+        "create-new-category": "Lisää",
         "edit-categories": "Tallenna",
         "edit-categories-no-changes": "Tallennettu",
         "create-new-work": "Lisää teos",

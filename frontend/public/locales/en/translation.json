@@ -58,10 +58,11 @@
         },
         "publish": {
             "name": "Publish",
-            "help": "When selected, this portfolio will be available without login."
+            "help": "When selected, this portfolio can be viewed without login."
         },
-        "category-title": {
-            "name": "Title"
+        "category": {
+            "name": "New category",
+            "help": "Portfolios are made up of categories of works. Here you can add a new category, where you can then add works to display."
         }
     },
     "work-editor": {
@@ -125,7 +126,7 @@
         "create-portfolio": "Create",
         "edit-portfolio": "Save",
         "edit-portfolio-saved": "Saved",
-        "create-new-category": "Add a new category of works",
+        "create-new-category": "Add",
         "edit-categories": "Save",
         "edit-categories-saved": "Saved",
         "create-new-work": "Create a new work",
