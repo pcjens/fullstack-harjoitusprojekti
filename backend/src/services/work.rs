@@ -106,15 +106,16 @@ pub async fn get_work<E>(
 where
     for<'e> &'e E: Executor<'e, Database = Any>,
 {
-    let row: Option<WorkRow> = sqlx::query_as(
+    let query = sqlx::query_as(
         "SELECT * FROM works JOIN work_rights ON (id = work_id) \
         WHERE user_id = ? AND slug = ?",
-    )
-    .bind(user_id)
-    .bind(work_slug)
-    .fetch_optional(conn)
-    .await
-    .context("get work failed")?;
+    );
+    let row: Option<WorkRow> = query
+        .bind(user_id)
+        .bind(work_slug)
+        .fetch_optional(conn)
+        .await
+        .context("get work failed")?;
     if let Some(row) = row {
         let work = fetch_work_details(conn, row).await?;
         Ok(Some(work))

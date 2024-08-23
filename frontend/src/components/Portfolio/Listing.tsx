@@ -38,12 +38,12 @@ export const PortfolioListing = () => {
                         {t("no-portfolios-found")}
                     </p>}
                 </>}
-            <Stack className="my-2">
+            {(!loading || timedOut) && <Stack className="my-2">
                 <Button className="mx-auto col-sm-6" variant="primary"
                     onClick={() => { navigate("/portfolio/new"); }}>
                     {t("action.create-new-portfolio")}
                 </Button>
-            </Stack>
+            </Stack>}
         </Container>
     );
 };

@@ -93,5 +93,9 @@ pub struct AttachmentKind(pub ArrayString<16>);
 array_string_newtype_impls!(AttachmentKind);
 
 #[derive(Clone, Copy, serde::Serialize, serde::Deserialize)]
-pub struct ContentType(pub ArrayString<64>);
+pub struct ContentType(pub ArrayString<60>);
 array_string_newtype_impls!(ContentType);
+
+#[derive(Clone, Copy, serde::Serialize, serde::Deserialize, PartialEq, Eq)]
+pub struct SlugString(pub ArrayString<60>);
+array_string_newtype_impls!(SlugString);

@@ -1,12 +1,12 @@
 use core::fmt;
 
-use crate::array_string_types::{AttachmentKind, ContentType};
+use crate::array_string_types::{AttachmentKind, ContentType, SlugString};
 
 #[derive(Debug, sqlx::FromRow, serde::Serialize, serde::Deserialize)]
 pub struct WorkRow {
     #[serde(default)]
     pub id: i32,
-    pub slug: String,
+    pub slug: SlugString,
     pub title: String,
     pub short_description: String,
     pub long_description: String,

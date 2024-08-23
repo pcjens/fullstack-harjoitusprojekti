@@ -38,7 +38,17 @@ export function createArrayTypechecker<T>(checker: (value: unknown) => T, arrayN
 }
 
 export function createArrayTypecheckerFromExample<T extends NonNullable<object>>(example: T, arrayName: string) {
-    const elementChecker = createTypechekerFromExample(example, `${arrayName}[*]`);
+    let elementChecker;
+    if (typeof example === "object") {
+        elementChecker = createTypechekerFromExample(example, `${arrayName}[*]`);
+    } else {
+        elementChecker = (value: unknown) => {
+            const inputType = typeof value;
+            const expectedType = typeof example;
+            assert(inputType === expectedType, `expected ${arrayName}[*] to be '${expectedType}' but it was '${inputType}'`);
+            return value;
+        };
+    }
     return createArrayTypechecker(elementChecker, arrayName);
 }
 

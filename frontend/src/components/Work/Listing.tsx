@@ -39,12 +39,12 @@ export const WorkListing = () => {
                         {t("no-works-found")}
                     </p>}
                 </>}
-            <Stack className="my-2">
+            {(!loading || timedOut) && <Stack className="my-2">
                 <Button className="mx-auto col-sm-6" variant="primary"
                     onClick={() => { navigate("/works/new"); }}>
                     {t("action.create-new-work")}
                 </Button>
-            </Stack>
+            </Stack>}
         </Container>
     );
 };

@@ -52,7 +52,7 @@ const apiFetch = async (
 
     // For debugging loading effects
     if (import.meta.env.DEV) {
-        await new Promise((r) => setTimeout(r, 500));
+        await new Promise((r) => setTimeout(r, 0));
     }
 
     let value: unknown = null;

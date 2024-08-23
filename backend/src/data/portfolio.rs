@@ -1,3 +1,5 @@
+use crate::array_string_types::SlugString;
+
 #[derive(Debug, sqlx::FromRow, serde::Serialize, serde::Deserialize)]
 pub struct PortfolioRow {
     #[serde(default)]
@@ -8,7 +10,7 @@ pub struct PortfolioRow {
     #[serde(default)]
     /// The publication time of this portfolio, in seconds since the unix epoch.
     pub published_at: Option<i64>,
-    pub slug: String,
+    pub slug: SlugString,
     pub title: String,
     pub subtitle: String,
     pub author: String,
@@ -34,5 +36,5 @@ pub struct PortfolioCategoryRow {
 pub struct PortfolioCategory {
     #[serde(flatten)]
     pub row: PortfolioCategoryRow,
-    pub work_slugs: Vec<String>,
+    pub work_slugs: Vec<SlugString>,
 }

@@ -47,6 +47,7 @@ export const PortfolioEditor = (props: { slug?: string }) => {
                 setSubtitle(slugFindResult.value.subtitle);
                 setAuthor(slugFindResult.value.author);
                 setPublish(!!slugFindResult.value.published_at);
+                setCategories(slugFindResult.value.categories);
             } else if (isEdit) {
                 setServerError(slugFindResult.userError);
             }
