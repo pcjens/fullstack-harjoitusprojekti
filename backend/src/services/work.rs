@@ -1,10 +1,3 @@
-//! Functions for working with the Works in the database.a
-//!
-//! NOTE: Sqlx doesn't support one-to-many relations very well, so we need many
-//! queries per operation. Sqlx also doesn't allow many concurrent queries on
-//! one executor, so the queries need to be done serially. Result: works are
-//! slow to create/update/get! Much manual effort or an ORM would fix this.
-
 use anyhow::Context;
 use sqlx::{Any, Executor};
 
@@ -77,41 +70,46 @@ where
         .await
         .context("work update failed")?;
 
-    let work =
-        update_work_details(&mut *conn, row, &new_version.attachments, &new_version.links, &new_version.tags)
-            .await
-            .context("updating work details failed")?;
+    let work = update_work_details(
+        &mut *conn,
+        row,
+        &new_version.attachments,
+        &new_version.links,
+        &new_version.tags,
+    )
+    .await
+    .context("updating work details failed")?;
     tracing::debug!("updated work: {work:#?}");
 
     Ok(work)
 }
 
-pub async fn get_works<E>(conn: &mut E, user_id: i32) -> Result<Vec<Work>, anyhow::Error>
+pub async fn get_works<E>(conn: &E, user_id: i32) -> Result<Vec<Work>, anyhow::Error>
 where
-    for<'e> &'e mut E: Executor<'e, Database = Any>,
+    for<'e> &'e E: Executor<'e, Database = Any>,
 {
     let work_rows: Vec<WorkRow> =
         sqlx::query_as("SELECT * FROM works JOIN work_rights ON (id = work_id) WHERE user_id = ?")
             .bind(user_id)
-            .fetch_all(&mut *conn)
+            .fetch_all(conn)
             .await
             .context("get all works failed")?;
 
     let mut works: Vec<Work> = Vec::with_capacity(work_rows.len());
     for row in work_rows {
-        works.push(fetch_work_details(&mut *conn, row).await?);
+        works.push(fetch_work_details(conn, row).await?);
     }
 
     Ok(works)
 }
 
 pub async fn get_work<E>(
-    conn: &mut E,
+    conn: &E,
     work_slug: &str,
     user_id: i32,
 ) -> Result<Option<Work>, anyhow::Error>
 where
-    for<'e> &'e mut E: Executor<'e, Database = Any>,
+    for<'e> &'e E: Executor<'e, Database = Any>,
 {
     let row: Option<WorkRow> = sqlx::query_as(
         "SELECT * FROM works JOIN work_rights ON (id = work_id) \
@@ -119,7 +117,7 @@ where
     )
     .bind(user_id)
     .bind(work_slug)
-    .fetch_optional(&mut *conn)
+    .fetch_optional(conn)
     .await
     .context("get work failed")?;
     if let Some(row) = row {
@@ -130,23 +128,23 @@ where
     }
 }
 
-async fn fetch_work_details<E>(conn: &mut E, row: WorkRow) -> Result<Work, anyhow::Error>
+async fn fetch_work_details<E>(conn: &E, row: WorkRow) -> Result<Work, anyhow::Error>
 where
-    for<'e> &'e mut E: Executor<'e, Database = Any>,
+    for<'e> &'e E: Executor<'e, Database = Any>,
 {
     let attachments = sqlx::query_as("SELECT * FROM work_attachments WHERE work_id = ?")
         .bind(row.id)
-        .fetch_all(&mut *conn)
+        .fetch_all(conn)
         .await
         .context("get work attachments failed")?;
     let links = sqlx::query_as("SELECT * FROM work_links WHERE work_id = ?")
         .bind(row.id)
-        .fetch_all(&mut *conn)
+        .fetch_all(conn)
         .await
         .context("get work links failed")?;
     let tags = sqlx::query_as("SELECT * FROM work_tags WHERE work_id = ?")
         .bind(row.id)
-        .fetch_all(&mut *conn)
+        .fetch_all(conn)
         .await
         .context("get work tags failed")?;
     Ok(Work {

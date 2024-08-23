@@ -40,9 +40,7 @@ impl FromRequestParts<Arc<SharedState>> for Session {
             let session_id = UuidString(session_id);
 
             let session = {
-                let mut conn =
-                    state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
-                services::user::get_session(&mut *conn, session_id).await.map_err(|err| {
+                services::user::get_session(&state.db_pool, session_id).await.map_err(|err| {
                     tracing::error!("Fetching session failed: {err:?}");
                     ApiError::DbError
                 })?

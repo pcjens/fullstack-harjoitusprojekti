@@ -76,7 +76,7 @@ impl UuidString {
     }
 }
 
-#[derive(Clone, Copy, serde::Deserialize)]
+#[derive(Clone, Copy, serde::Deserialize, serde::Serialize)]
 pub struct UsernameString(pub ArrayString<30>);
 array_string_newtype_impls!(UsernameString);
 

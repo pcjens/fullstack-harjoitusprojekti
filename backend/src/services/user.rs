@@ -135,11 +135,11 @@ where
 }
 
 pub async fn get_session<E>(
-    conn: &mut E,
+    conn: &E,
     session_id: UuidString,
 ) -> Result<Option<Session>, anyhow::Error>
 where
-    for<'e> &'e mut E: Executor<'e, Database = Any>,
+    for<'e> &'e E: Executor<'e, Database = Any>,
 {
     sqlx::query_as("SELECT * FROM sessions WHERE uuid = ?")
         .bind(&session_id)

@@ -24,9 +24,8 @@ async fn all(
     State(state): State<Arc<SharedState>>,
     Session { user_id, .. }: Session,
 ) -> Result<Json<Vec<Portfolio>>, ApiError> {
-    let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
     let portfolios =
-        services::portfolio::get_portfolios(&mut *conn, user_id).await.map_err(|err| {
+        services::portfolio::get_portfolios(&state.db_pool, user_id).await.map_err(|err| {
             tracing::error!("Getting all portfolios for the logged in user failed: {err:?}");
             ApiError::DbError
         })?;
@@ -38,9 +37,8 @@ async fn by_slug(
     session: Option<Session>,
     Path(slug): Path<String>,
 ) -> Result<Json<Portfolio>, ApiError> {
-    let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
     let portfolio = services::portfolio::get_portfolio(
-        &mut *conn,
+        &state.db_pool,
         &slug,
         session.map(|Session { user_id, .. }| user_id),
     )

@@ -15,7 +15,6 @@ pub enum ApiError {
     // Internal server errors, which do not necessarily require translations
     #[allow(dead_code)]
     Todo(&'static str),
-    DbConnAcquire,
     DbTransactionBegin,
     DbTransactionCommit,
     DbError,
@@ -40,9 +39,7 @@ impl IntoResponse for ApiError {
     fn into_response(self) -> Response {
         let status = match self {
             ApiError::Todo(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            ApiError::DbConnAcquire
-            | ApiError::DbTransactionBegin
-            | ApiError::DbTransactionCommit => StatusCode::SERVICE_UNAVAILABLE,
+            ApiError::DbTransactionBegin | ApiError::DbTransactionCommit => StatusCode::SERVICE_UNAVAILABLE,
             ApiError::DbError => StatusCode::INTERNAL_SERVER_ERROR,
             ApiError::UsernameTooShort
             | ApiError::PasswordTooShort

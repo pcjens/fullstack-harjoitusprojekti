@@ -102,9 +102,8 @@ async fn register(
 
 #[derive(serde::Serialize)]
 struct MyInfo {
-    youare: &'static str,
     session_id: UuidString,
 }
 async fn me(session: Session) -> Json<MyInfo> {
-    Json(MyInfo { youare: "logged in!", session_id: session.uuid })
+    Json(MyInfo { session_id: session.uuid })
 }

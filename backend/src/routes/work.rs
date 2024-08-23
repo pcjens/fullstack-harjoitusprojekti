@@ -23,8 +23,7 @@ async fn all(
     State(state): State<Arc<SharedState>>,
     Session { user_id, .. }: Session,
 ) -> Result<Json<Vec<Work>>, ApiError> {
-    let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
-    let works = services::work::get_works(&mut *conn, user_id).await.map_err(|err| {
+    let works = services::work::get_works(&state.db_pool, user_id).await.map_err(|err| {
         tracing::error!("Getting all works for the logged in user failed: {err:?}");
         ApiError::DbError
     })?;
@@ -36,8 +35,7 @@ async fn by_slug(
     Session { user_id, .. }: Session,
     Path(slug): Path<String>,
 ) -> Result<Json<Work>, ApiError> {
-    let mut conn = state.db_pool.acquire().await.map_err(|_| ApiError::DbConnAcquire)?;
-    let work = services::work::get_work(&mut *conn, &slug, user_id)
+    let work = services::work::get_work(&state.db_pool, &slug, user_id)
         .await
         .map_err(|err| {
             tracing::error!("Getting work by slug failed: {err:?}");

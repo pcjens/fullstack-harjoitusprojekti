@@ -3,6 +3,7 @@ use crate::array_string_types::{PasswordKeyString, SaltString, UsernameString, U
 #[derive(Debug, sqlx::FromRow)]
 pub struct User {
     pub id: i32,
+    #[allow(dead_code)]
     pub username: UsernameString,
     #[sqlx(default)]
     pub password_key_base64: Option<PasswordKeyString>,

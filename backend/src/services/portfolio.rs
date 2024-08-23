@@ -82,9 +82,9 @@ where
     Ok(portfolio)
 }
 
-pub async fn get_portfolios<E>(conn: &mut E, user_id: i32) -> Result<Vec<Portfolio>, anyhow::Error>
+pub async fn get_portfolios<E>(conn: &E, user_id: i32) -> Result<Vec<Portfolio>, anyhow::Error>
 where
-    for<'e> &'e mut E: Executor<'e, Database = Any>,
+    for<'e> &'e E: Executor<'e, Database = Any>,
 {
     sqlx::query_as(
         "SELECT * FROM portfolios JOIN portfolio_rights ON (id = portfolio_id) WHERE user_id = ?",
@@ -96,12 +96,12 @@ where
 }
 
 pub async fn get_portfolio<E>(
-    conn: &mut E,
+    conn: &E,
     slug: &str,
     user_id: Option<i32>,
 ) -> Result<Option<Portfolio>, anyhow::Error>
 where
-    for<'e> &'e mut E: Executor<'e, Database = Any>,
+    for<'e> &'e E: Executor<'e, Database = Any>,
 {
     sqlx::query_as("SELECT * FROM portfolios JOIN portfolio_rights ON (id = portfolio_id) WHERE slug = ? and (user_id = ? or published_at is not null)")
         .bind(slug)
