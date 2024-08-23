@@ -1,5 +1,5 @@
 use anyhow::Context;
-use sqlx::{Any, Executor};
+use sqlx::{Any, Executor, QueryBuilder};
 
 use crate::data::work::{Work, WorkAttachment, WorkLink, WorkRow, WorkTag};
 
@@ -174,62 +174,71 @@ where
         .execute(&mut *conn)
         .await
         .context("delete work attachments before insert failed")?;
-    let mut attachments = Vec::with_capacity(new_attachments.len());
-    for attachment in new_attachments {
-        let query = sqlx::query_as(
-            "INSERT INTO work_attachments (work_id, attachment_kind, content_type, filename, title, bytes_base64) \
-            VALUES (?, ?, ?, ? ,?, ?) RETURNING *",
+    let attachments: Vec<WorkAttachment> = if !new_attachments.is_empty() {
+        let mut query = QueryBuilder::new(
+            "INSERT INTO work_attachments (work_id, attachment_kind, content_type, filename, title, bytes_base64) ",
         );
-        let attachment = query
-            .bind(row.id)
-            .bind(&attachment.attachment_kind)
-            .bind(&attachment.content_type)
-            .bind(&attachment.filename)
-            .bind(&attachment.title)
-            .bind(&attachment.bytes_base64)
-            .fetch_one(&mut *conn)
+        query.push_values(new_attachments, |mut query, inserted_values| {
+            query
+                .push_bind(row.id)
+                .push_bind(&inserted_values.attachment_kind)
+                .push_bind(&inserted_values.content_type)
+                .push_bind(&inserted_values.filename)
+                .push_bind(&inserted_values.title)
+                .push_bind(&inserted_values.bytes_base64);
+        });
+        query.push(" RETURNING *");
+        query
+            .build_query_as()
+            .fetch_all(&mut *conn)
             .await
-            .context("insert into work attachments failed")?;
-        attachments.push(attachment);
-    }
+            .context("insert into work attachments failed")?
+    } else {
+        vec![]
+    };
 
     sqlx::query("DELETE FROM work_links WHERE work_id = ?")
         .bind(row.id)
         .execute(&mut *conn)
         .await
         .context("delete work links before insert failed")?;
-    let mut links = Vec::with_capacity(new_links.len());
-    for link in new_links {
-        let query = sqlx::query_as(
-            "INSERT INTO work_links (work_id, title, href) VALUES (?, ?, ?) RETURNING *",
-        );
-        let link = query
-            .bind(row.id)
-            .bind(&link.title)
-            .bind(&link.href)
-            .fetch_one(&mut *conn)
+    let links: Vec<WorkLink> = if !new_links.is_empty() {
+        let mut query = QueryBuilder::new("INSERT INTO work_links (work_id, title, href) ");
+        query.push_values(new_links, |mut query, inserted_values| {
+            query
+                .push_bind(row.id)
+                .push_bind(&inserted_values.title)
+                .push_bind(&inserted_values.href);
+        });
+        query.push(" RETURNING *");
+        query
+            .build_query_as()
+            .fetch_all(&mut *conn)
             .await
-            .context("insert into links attachments failed")?;
-        links.push(link);
-    }
+            .context("insert into work links failed")?
+    } else {
+        vec![]
+    };
 
     sqlx::query("DELETE FROM work_tags WHERE work_id = ?")
         .bind(row.id)
         .execute(&mut *conn)
         .await
         .context("delete work tags before insert failed")?;
-    let mut tags = Vec::with_capacity(new_tags.len());
-    for tag in new_tags {
-        let query =
-            sqlx::query_as("INSERT INTO work_tags (work_id, tag) VALUES (?, ?) RETURNING *");
-        let tag = query
-            .bind(row.id)
-            .bind(&tag.tag)
-            .fetch_one(&mut *conn)
+    let tags: Vec<WorkTag> = if !new_tags.is_empty() {
+        let mut query = QueryBuilder::new("INSERT INTO work_tags (work_id, tag) ");
+        query.push_values(new_tags, |mut query, inserted_values| {
+            query.push_bind(row.id).push_bind(&inserted_values.tag);
+        });
+        query.push(" RETURNING *");
+        query
+            .build_query_as()
+            .fetch_all(&mut *conn)
             .await
-            .context("insert into work tags failed")?;
-        tags.push(tag);
-    }
+            .context("insert into work tags failed")?
+    } else {
+        vec![]
+    };
 
     Ok(Work {
         id: row.id,
