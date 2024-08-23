@@ -2,10 +2,10 @@ import Card from "react-bootstrap/Card";
 import Placeholder from "react-bootstrap/Placeholder";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Work } from ".";
+import { WorkSummary } from ".";
 
 export interface Props {
-    work: "placeholder" | Work,
+    work: "placeholder" | WorkSummary,
 }
 
 export const WorkCard = ({ work: w }: Props) => {

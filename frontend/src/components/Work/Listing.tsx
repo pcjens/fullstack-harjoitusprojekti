@@ -9,14 +9,14 @@ import { useNavigate } from "react-router-dom";
 
 import { useApiFetch } from "../../hooks/useApiFetch";
 import { useTimeout } from "../../hooks/useTimeout";
-import { typecheckWorkArray } from ".";
+import { typecheckWorkSummaryArray } from ".";
 import { WorkCard } from ".";
 
 export const WorkListing = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
 
-    const mapResult = useCallback(typecheckWorkArray, []);
+    const mapResult = useCallback(typecheckWorkSummaryArray, []);
     const { result, loading } = useApiFetch("/work", mapResult);
     const { timedOut } = useTimeout(200);
 

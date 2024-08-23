@@ -84,21 +84,16 @@ where
     Ok(work)
 }
 
-pub async fn get_works<E>(conn: &E, user_id: i32) -> Result<Vec<Work>, anyhow::Error>
+pub async fn get_works<E>(conn: &E, user_id: i32) -> Result<Vec<WorkRow>, anyhow::Error>
 where
     for<'e> &'e E: Executor<'e, Database = Any>,
 {
-    let work_rows: Vec<WorkRow> =
+    let works: Vec<WorkRow> =
         sqlx::query_as("SELECT * FROM works JOIN work_rights ON (id = work_id) WHERE user_id = ?")
             .bind(user_id)
             .fetch_all(conn)
             .await
             .context("get all works failed")?;
-
-    let mut works: Vec<Work> = Vec::with_capacity(work_rows.len());
-    for row in work_rows {
-        works.push(fetch_work_details(conn, row).await?);
-    }
 
     Ok(works)
 }

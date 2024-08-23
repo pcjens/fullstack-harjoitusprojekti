@@ -4,12 +4,15 @@ export { WorkListing } from "./Listing";
 export { WorkCard } from "./Card";
 export { WorkEditor } from "./Edit";
 
-export interface Work {
+export interface WorkSummary {
     id: number,
     slug: string,
     title: string,
     short_description: string,
     long_description: string,
+}
+
+export interface Work extends WorkSummary {
     attachments: {
         id: number,
         work_id: number,
@@ -31,6 +34,16 @@ export interface Work {
         tag: string,
     }[],
 }
+
+export const typecheckWorkSummary: (value: unknown) => WorkSummary = createTypechekerFromExample({
+    id: 0,
+    slug: "",
+    title: "",
+    short_description: "",
+    long_description: "",
+}, "work_summary");
+
+export const typecheckWorkSummaryArray: (value: unknown) => WorkSummary[] = createArrayTypechecker(typecheckWorkSummary, "work_summaries");
 
 export const typecheckWork: (value: unknown) => Work = createTypechekerFromExample({
     id: 0,

@@ -6,7 +6,7 @@ use axum::{Json, Router};
 
 use crate::api_errors::ApiError;
 use crate::data::user::Session;
-use crate::data::work::Work;
+use crate::data::work::{Work, WorkRow};
 use crate::routes::SharedState;
 use crate::services;
 use crate::util::is_unique_constraint_violation;
@@ -22,7 +22,7 @@ pub fn create_router() -> Router<Arc<SharedState>> {
 async fn all(
     State(state): State<Arc<SharedState>>,
     Session { user_id, .. }: Session,
-) -> Result<Json<Vec<Work>>, ApiError> {
+) -> Result<Json<Vec<WorkRow>>, ApiError> {
     let works = services::work::get_works(&state.db_pool, user_id).await.map_err(|err| {
         tracing::error!("Getting all works for the logged in user failed: {err:?}");
         ApiError::DbError
