@@ -46,7 +46,7 @@ työtuntivaatimuksien seuraamista varten.
 | 12.8. | 14.33–16.54 |  2h 21m | 61h 17m | Teoksien muokkaus-endpointtien lisääminen backendiin, frontin korjailua |
 | 16.8. | 15.50–18.21 |  2h 31m | 63h 48m | Teoksien muokkaus mvp valmiiksi (nyt myös tagit, kuvat) |
 | 22.8. | 19.20–20.48 |  1h 28m | 65h 16m | Selkeämmän virheilmoituksen lisääminen tilanteille missä slug on jo käytössä |
-| 23.8. | 15.31–##.## |  #h ##m | ##h ##m |  |
+| 23.8. | 15.31–23.44 |  8h 13m | 73h 29m | Portfolio-kategoriat valmiiksi, eli nyt teoksia voi lisätä portfolioihin |
 
 ## Linkki ja ohjeet
 
