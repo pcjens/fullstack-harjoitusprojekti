@@ -11,12 +11,15 @@ use crate::routes::SharedState;
 use crate::services;
 use crate::util::is_unique_constraint_violation;
 
+mod file;
+
 pub fn create_router() -> Router<Arc<SharedState>> {
     Router::new()
         .route("/", get(all))
         .route("/:slug", get(by_slug))
         .route("/:slug", post(create))
         .route("/:slug", put(edit))
+        .nest("/file", file::create_router())
 }
 
 async fn all(
@@ -32,16 +35,20 @@ async fn all(
 
 async fn by_slug(
     State(state): State<Arc<SharedState>>,
-    Session { user_id, .. }: Session,
+    session: Option<Session>,
     Path(slug): Path<String>,
 ) -> Result<Json<Work>, ApiError> {
-    let work = services::work::get_work(&state.db_pool, &slug, user_id)
-        .await
-        .map_err(|err| {
-            tracing::error!("Getting work by slug failed: {err:?}");
-            ApiError::DbError
-        })?
-        .ok_or(ApiError::NoSuchSlug)?;
+    let work = services::work::get_work(
+        &state.db_pool,
+        &slug,
+        session.map(|Session { user_id, .. }| user_id),
+    )
+    .await
+    .map_err(|err| {
+        tracing::error!("Getting work by slug failed: {err:?}");
+        ApiError::DbError
+    })?
+    .ok_or(ApiError::NoSuchSlug)?;
     Ok(Json(work))
 }
 

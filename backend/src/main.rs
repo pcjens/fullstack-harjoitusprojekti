@@ -6,8 +6,6 @@ use axum::Router;
 use sqlx::AnyPool;
 use tokio::net::TcpListener;
 use tokio::signal;
-use tower_http::compression::CompressionLayer;
-use tower_http::decompression::DecompressionLayer;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::EnvFilter;
 
@@ -62,11 +60,7 @@ async fn main() {
         }
     });
 
-    let app = router
-        .with_state(shared_state)
-        .layer(TraceLayer::new_for_http())
-        .layer(CompressionLayer::new())
-        .layer(DecompressionLayer::new());
+    let app = router.with_state(shared_state).layer(TraceLayer::new_for_http());
     tracing::debug!("Axum app configured.");
 
     let addr = config::http_bind_address();

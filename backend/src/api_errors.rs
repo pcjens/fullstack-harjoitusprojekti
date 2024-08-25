@@ -31,6 +31,7 @@ pub enum ApiError {
     InvalidSession,
     NoSuchSlug,
     SlugTaken,
+    NoSuchFile,
     // NOTE: When changing these (not recommended) or adding new ones, remember
     // to update the localization strings on the frontend as well!
 }
@@ -39,7 +40,9 @@ impl IntoResponse for ApiError {
     fn into_response(self) -> Response {
         let status = match self {
             ApiError::Todo(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            ApiError::DbTransactionBegin | ApiError::DbTransactionCommit => StatusCode::SERVICE_UNAVAILABLE,
+            ApiError::DbTransactionBegin | ApiError::DbTransactionCommit => {
+                StatusCode::SERVICE_UNAVAILABLE
+            }
             ApiError::DbError => StatusCode::INTERNAL_SERVER_ERROR,
             ApiError::UsernameTooShort
             | ApiError::PasswordTooShort
@@ -48,7 +51,7 @@ impl IntoResponse for ApiError {
             | ApiError::UsernameTaken
             | ApiError::SlugTaken => StatusCode::BAD_REQUEST,
             ApiError::MissingSession | ApiError::InvalidSession => StatusCode::FORBIDDEN,
-            ApiError::NoSuchSlug => StatusCode::NOT_FOUND,
+            ApiError::NoSuchSlug | ApiError::NoSuchFile => StatusCode::NOT_FOUND,
         };
         (status, Json(ErrorResponse { error: self })).into_response()
     }

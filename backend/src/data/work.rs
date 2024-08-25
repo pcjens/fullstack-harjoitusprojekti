@@ -1,6 +1,6 @@
 use core::fmt;
 
-use crate::array_string_types::{ContentType, SlugString};
+use crate::array_string_types::{ContentType, SlugString, UuidString};
 
 #[derive(Debug, sqlx::Type, serde::Serialize, serde::Deserialize)]
 #[repr(i32)] // for integer representation in the db, serde will still convert to/from string
@@ -64,6 +64,23 @@ pub struct WorkTag {
     pub tag: String,
 }
 
+#[derive(Debug, sqlx::FromRow)]
+pub struct BigFilePart {
+    pub uuid: UuidString,
+    pub next_uuid: Option<UuidString>,
+    pub whole_file_length: i32,
+    pub filename: String,
+    pub bytes_base64: BytesBase64,
+}
+
+pub struct BigFilePartDecoded {
+    pub uuid: UuidString,
+    pub next_uuid: Option<UuidString>,
+    pub whole_file_length: i32,
+    pub filename: String,
+    pub bytes: Vec<u8>,
+}
+
 #[derive(sqlx::Type, serde::Serialize, serde::Deserialize)]
 #[serde(transparent)]
 #[sqlx(transparent)]
@@ -71,7 +88,8 @@ pub struct BytesBase64(pub String);
 
 impl fmt::Debug for BytesBase64 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let len = self.0.len() / 4 * 3;
-        f.debug_tuple("BytesBase64").field(&format_args!("{} base64-encoded bytes", len)).finish()
+        f.debug_tuple("BytesBase64")
+            .field(&format_args!("{} characters encoded", self.0.len()))
+            .finish()
     }
 }
