@@ -89,10 +89,6 @@ pub struct SaltString(pub ArrayString<16>); // base64 encoded length of a 12-byt
 array_string_newtype_impls!(SaltString);
 
 #[derive(Clone, Copy, serde::Serialize, serde::Deserialize)]
-pub struct AttachmentKind(pub ArrayString<16>);
-array_string_newtype_impls!(AttachmentKind);
-
-#[derive(Clone, Copy, serde::Serialize, serde::Deserialize)]
 pub struct ContentType(pub ArrayString<60>);
 array_string_newtype_impls!(ContentType);
 

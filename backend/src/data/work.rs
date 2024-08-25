@@ -1,6 +1,17 @@
 use core::fmt;
 
-use crate::array_string_types::{AttachmentKind, ContentType, SlugString};
+use crate::array_string_types::{ContentType, SlugString};
+
+#[derive(Debug, sqlx::Type, serde::Serialize, serde::Deserialize)]
+#[repr(i32)] // for integer representation in the db, serde will still convert to/from string
+pub enum AttachmentKind {
+    DownloadWindows = 1,
+    DownloadLinux = 2,
+    DownloadMac = 3,
+    CoverImage = 4,
+    Trailer = 5,
+    Screenshot = 6,
+}
 
 #[derive(Debug, sqlx::FromRow, serde::Serialize, serde::Deserialize)]
 pub struct WorkRow {
