@@ -3,8 +3,8 @@ use sqlx::{Any, Executor};
 
 use crate::data::work::{Work, WorkRow};
 
-mod subtables;
 pub mod big_files;
+mod subtables;
 
 pub async fn create_work<E>(
     conn: &mut E,
@@ -110,10 +110,10 @@ where
     let query = sqlx::query_as(
         "SELECT works.* FROM works \
         JOIN work_rights ON (works.id = work_rights.work_id) \
-        JOIN works_in_categories ON (works_in_categories.work_id = works.id) \
-        JOIN categories ON (categories.id = works_in_categories.category_id) \
-        JOIN portfolios ON (portfolios.id = categories.portfolio_id) \
-        JOIN portfolio_rights ON (portfolio_rights.portfolio_id = categories.portfolio_id) \
+        LEFT JOIN works_in_categories ON (works_in_categories.work_id = works.id) \
+        LEFT JOIN categories ON (categories.id = works_in_categories.category_id) \
+        LEFT JOIN portfolios ON (portfolios.id = categories.portfolio_id) \
+        LEFT JOIN portfolio_rights ON (portfolio_rights.portfolio_id = categories.portfolio_id) \
         WHERE works.slug = ? AND (work_rights.user_id = ? OR portfolio_rights.user_id = ? OR portfolios.published_at IS NOT NULL)",
     );
     let row: Option<WorkRow> = query

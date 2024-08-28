@@ -309,6 +309,7 @@ export const WorkEditor = (props: { slug?: string }) => {
                 </Row>
 
                 <h3>{t("tags")}</h3>
+                <p className="text-danger">TODO: Make tags draggable or sort them alphabetically</p>
                 <div className="d-flex flex-row">
                     {tags.map((tag) => <div key={tag} className="me-1 bg-primary text-light px-2 py-1 d-flex align-items-center" style={{ fontWeight: 600, borderRadius: 5 }}>
                         {tag}
