@@ -101,13 +101,21 @@ where
             .context("work attachment's previous big file part not found")?;
         whole_file_length += prev_whole_file_length as usize;
     } else {
-        // This is the first part, clear out any existing parts (since this would mean the file is being replaced)
+        // This is the first part, so delete any existing parts (since this
+        // would mean the file is being replaced) and make the attachment point
+        // to this part as the first part
         sqlx::query("DELETE FROM big_file_parts WHERE work_attachment_id = ? AND uuid <> ?")
             .bind(work_attachment_id)
             .bind(&new_uuid)
             .execute(&mut *conn)
             .await
             .context("could not clear out previous big file parts for this work attachment")?;
+        sqlx::query("UPDATE work_attachments SET big_file_uuid = ? WHERE id = ?")
+            .bind(&new_uuid)
+            .bind(work_attachment_id)
+            .execute(&mut *conn)
+            .await
+            .context("could not update the parent work attachment with the first file part uuid")?;
     }
 
     // Update file lengths for all parts of this file

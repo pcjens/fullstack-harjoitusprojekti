@@ -43,6 +43,7 @@ pub struct WorkAttachment {
     pub filename: String,
     pub title: Option<String>,
     pub bytes_base64: BytesBase64,
+    pub big_file_uuid: Option<UuidString>,
 }
 
 #[derive(Debug, sqlx::FromRow, serde::Serialize, serde::Deserialize)]

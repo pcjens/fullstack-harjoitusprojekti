@@ -29,6 +29,8 @@ const typecheckCreatedFile = createTypechekerFromExample({
     uuid: "",
 }, "file");
 
+export const BIG_FILE_CHUNK_SIZE = 15000;
+
 enum AttachmentKind {
     DownloadWindows = "DownloadWindows",
     DownloadLinux = "DownloadLinux",
@@ -166,6 +168,7 @@ export const WorkEditor = (props: { slug?: string }) => {
                         title: file.title,
                         content_type: file.content_type,
                         bytes_base64: typeof bytes === "string" ? bytes : "",
+                        big_file_uuid: file.big_file_uuid,
                     })),
                 ],
                 links: [],
@@ -204,6 +207,7 @@ export const WorkEditor = (props: { slug?: string }) => {
                 return;
             }
 
+            // Upload any big attachments using the file upload API (which uploads files in many parts)
             try {
                 const uploadPromises = [];
                 for (let i = 0; i < files.length; i++) {
@@ -212,12 +216,10 @@ export const WorkEditor = (props: { slug?: string }) => {
                     if (typeof file !== "string") {
                         const upload = async () => {
                             const { size: fileSize } = file;
-                            const chunkSize = 1023;
                             let previousPartUuid = null;
-                            let firstPartUuid = null;
                             files[i].uploadProgress = 0;
-                            for (let offset = 0; offset < fileSize; offset += chunkSize) {
-                                const slice = file.slice(offset, Math.min(offset + chunkSize, fileSize), file.type);
+                            for (let offset = 0; offset < fileSize; offset += BIG_FILE_CHUNK_SIZE) {
+                                const slice = file.slice(offset, Math.min(offset + BIG_FILE_CHUNK_SIZE, fileSize), file.type);
                                 const sliceBytesBase64 = await readBlobToBase64(slice);
                                 const uploadResult = await createFile({
                                     body: JSON.stringify({
@@ -230,13 +232,18 @@ export const WorkEditor = (props: { slug?: string }) => {
                                     throw new Error(uploadResult.userError);
                                 }
                                 previousPartUuid = uploadResult.value.uuid;
-                                if (firstPartUuid == null) {
-                                    firstPartUuid = uploadResult.value.uuid;
+                                if (offset === 0) {
+                                    // The big_file_uuid of the attachment is
+                                    // set to the first part's uuid on the
+                                    // server side, replicate here for consistency
+                                    files[i].big_file_uuid = uploadResult.value.uuid;
                                 }
                                 files[i].uploadProgress = (offset + slice.size) / fileSize;
                                 console.log("Part", previousPartUuid, "uploaded (", sliceBytesBase64.length, " base64 characters)");
                             }
                             files[i].uploadProgress = undefined;
+                            files[i].bytes_base64 = "";
+                            console.log("Finished file upload, big_file_uuid:", files[i].big_file_uuid);
                         };
                         uploadPromises.push(upload());
                     }
@@ -259,6 +266,9 @@ export const WorkEditor = (props: { slug?: string }) => {
         };
         void submit();
     };
+
+    const newFilesToUpload = files.find((file) => typeof file.bytes_base64 !== "string") != null;
+    const changesInForm = reqParams.body !== latestSentReqParams.body || newFilesToUpload;
 
     return (
         <Container>
@@ -319,10 +329,10 @@ export const WorkEditor = (props: { slug?: string }) => {
 
                 <Form onSubmit={submitHandler} noValidate>
                     <Form.Group className="py-3">
-                        <Button type="submit" disabled={loading || reqParams.body === latestSentReqParams.body}>
+                        <Button type="submit" disabled={loading || !changesInForm}>
                             {loading && <Spinner size="sm" role="status" aria-hidden="true" style={{ marginRight: 6 }} />}
-                            {isEdit && reqParams.body === latestSentReqParams.body && t("action.edit-work-saved")}
-                            {isEdit && reqParams.body !== latestSentReqParams.body && t("action.edit-work")}
+                            {isEdit && !changesInForm && t("action.edit-work-saved")}
+                            {isEdit && changesInForm && t("action.edit-work")}
                             {!isEdit && t("action.create-work")}
                         </Button>
                     </Form.Group>

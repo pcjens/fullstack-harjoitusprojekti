@@ -9,13 +9,18 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 
 import { validateAttachmentFile, validateAttachmentTitle } from "./validators";
 import { readBlobToBase64 } from "../../../util/fileReader";
+import { BIG_FILE_CHUNK_SIZE } from ".";
 
 export interface Attachment {
     attachment_kind: string,
     content_type: string,
     filename: string,
     title?: string,
+    /** The base64 bytes stored in the attachment, if the file is small enough, or a file that'll get uploaded. */
     bytes_base64: string | File,
+    /** The uuid of the uploaded file (for bigger files that aren't stored in bytes_base64) */
+    big_file_uuid?: string,
+
     uploadProgress?: number,
 }
 
@@ -63,7 +68,7 @@ export const AttachmentInput = (props: AttachmentInputProps) => {
         console.log("updating attachment based on <input> with id", fileInputId);
         const { files } = target;
         for (const file of files) {
-            if (file.size > 1000) {
+            if (file.size > BIG_FILE_CHUNK_SIZE) {
                 setAttachment({
                     ...attachment,
                     content_type: file.type,

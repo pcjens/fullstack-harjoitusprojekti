@@ -21,6 +21,7 @@ export interface Work extends WorkSummary {
         filename: string,
         title?: string,
         bytes_base64: string,
+        big_file_uuid?: string,
     }[],
     links: {
         id: number,
@@ -59,6 +60,7 @@ export const typecheckWork: (value: unknown) => Work = createTypechekerFromExamp
         filename: "",
         title: new OptionalField(""),
         bytes_base64: "",
+        big_file_uuid: new OptionalField(""),
     }],
     links: [{
         id: 0,
