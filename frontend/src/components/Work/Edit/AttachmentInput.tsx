@@ -5,15 +5,18 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import CloseButton from "react-bootstrap/CloseButton";
+import ProgressBar from "react-bootstrap/ProgressBar";
 
 import { validateAttachmentFile, validateAttachmentTitle } from "./validators";
+import { readBlobToBase64 } from "../../../util/fileReader";
 
 export interface Attachment {
     attachment_kind: string,
     content_type: string,
-    bytes_base64: string,
     filename: string,
     title?: string,
+    bytes_base64: string | File,
+    uploadProgress?: number,
 }
 
 interface AttachmentInputProps {
@@ -37,8 +40,9 @@ export const AttachmentInput = (props: AttachmentInputProps) => {
         setAttachments(attachments.filter((_a, i) => i !== props.index));
     };
 
-    // Update the file <input> with  the current attachment's file if it's been
-    // populated (i.e. when editing a work) and the <input> is unset.
+    // Update the file <input> with  the current attachment's files with the
+    // proper filenames if it's already been populated (i.e. when editing a
+    // work) but the <input> is unset.
     const fileInputId = `${attachment.attachment_kind}-${attachment.title ?? ""}FileInput`;
     useEffect(() => {
         if (attachment.content_type === "") {
@@ -46,13 +50,9 @@ export const AttachmentInput = (props: AttachmentInputProps) => {
         }
         const fileInput = document.getElementById(fileInputId);
         if (fileInput != null && "files" in fileInput && fileInput.files instanceof FileList && fileInput.files.length === 0) {
-            const asyncOp = async () => {
-                const attachmentBlob = await (await fetch(`data:${attachment.content_type};base64,${attachment.bytes_base64}`)).blob();
-                const transfer = new DataTransfer();
-                transfer.items.add(new File([attachmentBlob], attachment.filename, { type: attachment.content_type }));
-                fileInput.files = transfer.files;
-            };
-            void asyncOp();
+            const transfer = new DataTransfer();
+            transfer.items.add(new File([new Blob()], attachment.filename, { type: attachment.content_type }));
+            fileInput.files = transfer.files;
         }
     }, [fileInputId, attachment]);
 
@@ -63,18 +63,24 @@ export const AttachmentInput = (props: AttachmentInputProps) => {
         console.log("updating attachment based on <input> with id", fileInputId);
         const { files } = target;
         for (const file of files) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const dataUrl = reader.result as string;
-                const bytes_base64 = dataUrl.split(",", 2)[1];
+            if (file.size > 1000) {
                 setAttachment({
                     ...attachment,
                     content_type: file.type,
-                    bytes_base64,
+                    bytes_base64: file,
                     filename: file.name,
                 });
-            };
-            reader.readAsDataURL(file);
+            } else {
+                void readBlobToBase64(file)
+                    .then((bytes_base64) => {
+                        setAttachment({
+                            ...attachment,
+                            content_type: file.type,
+                            bytes_base64,
+                            filename: file.name,
+                        });
+                    });
+            }
             break;
         }
     };
@@ -107,6 +113,8 @@ export const AttachmentInput = (props: AttachmentInputProps) => {
                             isInvalid={props.shouldValidate && errorFile != null}
                             isValid={props.shouldValidate && errorFile == null}
                             onChange={({ target }) => { updateFile(target); }} />
+                        {attachment.uploadProgress != null &&
+                            <ProgressBar animated now={attachment.uploadProgress * 100} className="my-1" />}
                         {props.shouldValidate && errorFile != null && <Form.Control.Feedback type="invalid">
                             {errorFile}
                         </Form.Control.Feedback>}

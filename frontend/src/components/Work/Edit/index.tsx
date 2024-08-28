@@ -16,10 +16,18 @@ import { ApiError, useApiFetch } from "../../../hooks/useApiFetch";
 import { assert, createTypechekerFromExample } from "../../../util/helpers";
 import { Attachment, AttachmentInput } from "./AttachmentInput";
 import { validateAttachmentFile, validateAttachmentTitle } from "./validators";
+import { readBlobToBase64 } from "../../../util/fileReader";
 
 const typecheckCreatedWork = createTypechekerFromExample({
     slug: "",
+    attachments: [{
+        id: 0,
+    }],
 }, "work");
+
+const typecheckCreatedFile = createTypechekerFromExample({
+    uuid: "",
+}, "file");
 
 enum AttachmentKind {
     DownloadWindows = "DownloadWindows",
@@ -152,13 +160,25 @@ export const WorkEditor = (props: { slug?: string }) => {
                 short_description: shortDesc,
                 long_description: longDesc,
                 attachments: [
-                    ...files,
+                    ...files.map(({ bytes_base64: bytes, ...file }) => ({
+                        attachment_kind: file.attachment_kind,
+                        filename: file.filename,
+                        title: file.title,
+                        content_type: file.content_type,
+                        bytes_base64: typeof bytes === "string" ? bytes : "",
+                    })),
                 ],
                 links: [],
                 tags: tags.map((tag) => ({ tag })),
             }),
         });
     }, [isEdit, slug, title, shortDesc, longDesc, files, tags]);
+
+    const mapFilePostResult = useCallback(typecheckCreatedFile, []);
+    const { refetch: createFile } = useApiFetch("/work/file", mapFilePostResult, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+    }, true);
 
     const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
@@ -181,6 +201,51 @@ export const WorkEditor = (props: { slug?: string }) => {
                     setSlugsInUse(slugsInUse.concat(slug));
                     setServerError("");
                 }
+                return;
+            }
+
+            try {
+                const uploadPromises = [];
+                for (let i = 0; i < files.length; i++) {
+                    const attachmentId = result.value.attachments[i].id;
+                    const file = files[i].bytes_base64;
+                    if (typeof file !== "string") {
+                        const upload = async () => {
+                            const { size: fileSize } = file;
+                            const chunkSize = 1023;
+                            let previousPartUuid = null;
+                            let firstPartUuid = null;
+                            files[i].uploadProgress = 0;
+                            for (let offset = 0; offset < fileSize; offset += chunkSize) {
+                                const slice = file.slice(offset, Math.min(offset + chunkSize, fileSize), file.type);
+                                const sliceBytesBase64 = await readBlobToBase64(slice);
+                                const uploadResult = await createFile({
+                                    body: JSON.stringify({
+                                        work_attachment_id: attachmentId,
+                                        previous_uuid: previousPartUuid,
+                                        part_bytes_base64: sliceBytesBase64,
+                                    }),
+                                });
+                                if ("userError" in uploadResult) {
+                                    throw new Error(uploadResult.userError);
+                                }
+                                previousPartUuid = uploadResult.value.uuid;
+                                if (firstPartUuid == null) {
+                                    firstPartUuid = uploadResult.value.uuid;
+                                }
+                                files[i].uploadProgress = (offset + slice.size) / fileSize;
+                                console.log("Part", previousPartUuid, "uploaded (", sliceBytesBase64.length, " base64 characters)");
+                            }
+                            files[i].uploadProgress = undefined;
+                        };
+                        uploadPromises.push(upload());
+                    }
+                }
+                await Promise.all(uploadPromises);
+            } catch (err) {
+                console.error("File upload error:", err);
+                setLatestSentReqParams({});
+                setServerError(ApiError.FileUpload);
                 return;
             }
 

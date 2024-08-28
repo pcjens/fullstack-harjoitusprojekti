@@ -9,6 +9,7 @@ export enum ApiError {
     NetworkError = "NetworkError",
     UnrecognizedResponse = "UnrecognizedResponse",
     InternalServerError = "InternalServerError",
+    FileUpload = "FileUpload",
     NotFound = "NotFound",
     UsernameTooShort = "UsernameTooShort",
     PasswordTooShort = "PasswordTooShort",
@@ -140,7 +141,7 @@ export const useApiFetch = <T>(
     const [slow, setSlow] = useState(false);
     const [result, setResult] = useState<ApiResponse<T> | null>(null);
 
-    const refetch: () => Promise<ApiResponse<T>> = useCallback(async () => {
+    const refetch: (overrideParams?: RequestInit) => Promise<ApiResponse<T>> = useCallback(async (overrideParams?: RequestInit) => {
         setSlow(false);
         setLoading(true);
 
@@ -148,7 +149,7 @@ export const useApiFetch = <T>(
             setSlow(true);
         }, import.meta.env.VITE_API_SLOW_RESPONSE_THRESHOLD_MILLIS ?? 5000);
 
-        const rawResult = await cachedApiFetch(apiPath, logout, sessionId, reqParams);
+        const rawResult = await cachedApiFetch(apiPath, logout, sessionId, { ...reqParams, ...overrideParams });
 
         clearTimeout(slowTimeoutHandle);
 

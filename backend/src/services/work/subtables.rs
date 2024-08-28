@@ -7,7 +7,6 @@ pub async fn fetch_work_details<E>(conn: &E, row: WorkRow) -> Result<Work, anyho
 where
     for<'e> &'e E: Executor<'e, Database = Any>,
 {
-    // NOTE: no huge_bytes_base64
     let query = sqlx::query_as(
         "SELECT id, work_id, attachment_kind, content_type, filename, title, bytes_base64 FROM work_attachments \
         WHERE work_id = ?",
@@ -58,7 +57,9 @@ where
                 .push_bind(&inserted_values.title)
                 .push_bind(&inserted_values.bytes_base64);
         });
-        query.push(" RETURNING id, work_id, attachment_kind, content_type, title, bytes_base64"); // NOTE: no huge_bytes_base64
+        query.push(
+            " RETURNING id, work_id, attachment_kind, content_type, filename, title, bytes_base64",
+        );
         query
             .build_query_as()
             .fetch_all(&mut *conn)

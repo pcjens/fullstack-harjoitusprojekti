@@ -75,6 +75,7 @@ async fn get_stream_by_uuid(
     let receiver = tokio_stream::wrappers::ReceiverStream::new(receiver);
     Ok(Response::builder()
         .header("Content-Disposition", format!("attachment; filename=\"{filename_ascii}\""))
+        .header("Content-Length", file_part.whole_file_length)
         .body(StreamBody::new(receiver))
         .unwrap())
 }

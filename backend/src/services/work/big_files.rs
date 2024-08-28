@@ -2,7 +2,7 @@ use anyhow::Context;
 use sqlx::{Any, Executor};
 
 use crate::array_string_types::UuidString;
-use crate::data::work::{BigFilePart, BigFilePartDecoded, WorkAttachment};
+use crate::data::work::{BigFilePart, BigFilePartDecoded};
 
 pub async fn get_file_part<E>(
     conn: &E,
