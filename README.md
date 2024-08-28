@@ -48,6 +48,7 @@ työtuntivaatimuksien seuraamista varten.
 | 22.8. | 19.20–20.48 |  1h 28m | 65h 16m | Selkeämmän virheilmoituksen lisääminen tilanteille missä slug on jo käytössä |
 | 23.8. | 15.31–23.44 |  8h 13m | 73h 29m | Portfolio-kategoriat valmiiksi, eli nyt teoksia voi lisätä portfolioihin |
 | 25.8. | 15.07–23.59 |  8h 52m | 82h 21m | Tuki isommille tiedostoille, ja lataus-systeemi joka mahdollistaa isojen tiedostojen lähettämisen palvelimelta ilman hurjaa muistikäyttöä |
+| 28.8. | 14.59–##.## |  #h ##m | 82h 21m |  |
 
 ## Linkki ja ohjeet
 
