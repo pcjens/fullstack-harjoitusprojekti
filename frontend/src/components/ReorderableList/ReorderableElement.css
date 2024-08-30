@@ -1,0 +1,9 @@
+.reordering-handle {
+    cursor: grab;
+    display: inline-flex;
+    align-items: center;
+}
+
+.reordering-handle.grabbed {
+    cursor: grabbing;
+}

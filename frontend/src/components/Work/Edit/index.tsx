@@ -17,6 +17,7 @@ import { assert, createTypechekerFromExample } from "../../../util/helpers";
 import { Attachment, AttachmentInput } from "./AttachmentInput";
 import { validateAttachmentFile, validateAttachmentTitle } from "./validators";
 import { readBlobToBase64 } from "../../../util/fileReader";
+import { ReorderableList } from "../../ReorderableList";
 
 const typecheckCreatedWork = createTypechekerFromExample({
     slug: "",
@@ -310,13 +311,17 @@ export const WorkEditor = (props: { slug?: string }) => {
                 </Row>
 
                 <h3>{t("tags")}</h3>
-                <p className="text-danger">TODO: Make tags draggable or sort them alphabetically</p>
-                <div className="d-flex flex-row">
-                    {tags.map((tag) => <div key={tag} className="me-1 bg-primary text-light px-2 py-1 d-flex align-items-center" style={{ fontWeight: 600, borderRadius: 5 }}>
-                        {tag}
-                        <CloseButton style={{ fontSize: 14, marginLeft: 4 }} onClick={makeTagRemoverFn(tag)} />
-                    </div>)}
-                </div>
+                <ReorderableList className="d-flex flex-row flex-wrap"
+                    elements={tags} setElements={setTags} getKey={(tag) => tag}
+                    Render={({ element: tag }) => {
+                        return (
+                            <div className="me-1 bg-primary text-light px-2 py-1 d-flex align-items-center" style={{ fontWeight: 600, borderRadius: 5 }}>
+                                {tag}
+                                <CloseButton style={{ fontSize: 14, marginLeft: 4 }} onClick={makeTagRemoverFn(tag)} />
+                            </div>
+                        );
+                    }}
+                />
                 <Form onSubmit={(event) => {
                     event.preventDefault();
                     addNewTag();
