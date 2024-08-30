@@ -2,10 +2,12 @@ use core::time::Duration;
 use std::sync::Arc;
 use std::time::SystemTime;
 
+use axum::http::{HeaderName, Method};
 use axum::Router;
 use sqlx::AnyPool;
 use tokio::net::TcpListener;
 use tokio::signal;
+use tower_http::cors::{self, CorsLayer};
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::EnvFilter;
 
@@ -67,7 +69,11 @@ async fn main() {
         }
     });
 
-    let app = router.with_state(shared_state).layer(TraceLayer::new_for_http());
+    let cors_layer = CorsLayer::new()
+        .allow_methods([Method::GET, Method::POST, Method::PUT])
+        .allow_origin(cors::Any)
+        .allow_headers([HeaderName::from_static("authorization"), HeaderName::from_static("content-type")]);
+    let app = router.with_state(shared_state).layer(TraceLayer::new_for_http()).layer(cors_layer);
     tracing::debug!("Axum app configured.");
 
     let addr = config::http_bind_address();

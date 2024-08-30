@@ -17,7 +17,7 @@ serde = "1.0.204"
 sqlx = { version = "0.8.0", default-features = false, features = ["runtime-tokio", "tls-rustls", "any", "sqlite", "postgres", "mysql", "macros", "migrate"] }
 tokio = { version = "1.38.1", features = ["rt-multi-thread", "net", "macros", "signal"] }
 tokio-stream = "0.1.15"
-tower-http = { version = "0.5.2", features = ["trace", "compression-deflate", "compression-gzip", "decompression-deflate", "decompression-gzip"] }
+tower-http = { version = "0.5.2", features = ["trace", "cors"] }
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 uuid = { version = "1.10.0", features = ["v4"] }
