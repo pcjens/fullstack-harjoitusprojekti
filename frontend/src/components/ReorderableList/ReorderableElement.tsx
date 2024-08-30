@@ -13,7 +13,7 @@ interface Props<T> {
     Render: (props: { element: T }) => JSX.Element,
     dragId: string,
     reposition: (dragId: string, insertBeforeDragId: string) => void,
-    indicateReposition: (dragId: string, insertBeforeDragId: string) => void,
+    indicateReposition: (dragId: string, insertBeforeDragId: string | null) => void,
 }
 
 export function ReorderableElement<T>({ element, Render, dragId, reposition, indicateReposition }: Props<T>) {
@@ -21,12 +21,21 @@ export function ReorderableElement<T>({ element, Render, dragId, reposition, ind
         event.dataTransfer.setData("text/plain", `dragId:${dragId}`);
     };
 
-    const dragOver: DragEventHandler<HTMLDivElement> = (event) => {
+    const updateDragTarget: DragEventHandler<HTMLDivElement> = (event) => {
         event.preventDefault();
         const data = event.dataTransfer.getData("text/plain");
         if (data.startsWith("dragId:")) {
             const draggedId = data.split(":", 2)[1];
             indicateReposition(draggedId, dragId);
+        }
+    };
+
+    const clearDragTarget: DragEventHandler<HTMLDivElement> = (event) => {
+        event.preventDefault();
+        const data = event.dataTransfer.getData("text/plain");
+        if (data.startsWith("dragId:")) {
+            const draggedId = data.split(":", 2)[1];
+            indicateReposition(draggedId, null);
         }
     };
 
@@ -40,8 +49,8 @@ export function ReorderableElement<T>({ element, Render, dragId, reposition, ind
     };
 
     return (
-        <div className="d-inline-flex flex-row align-items-center" draggable={true} style={{ flexGrow: 1 }}
-            onDragStart={dragStart} onDrop={drop} onDragEnter={dragOver} onDragOver={dragOver}>
+        <div className="d-inline-flex flex-row m-2 align-items-center" draggable={true} style={{ flexGrow: 1 }}
+            onDragStart={dragStart} onDrop={drop} onDragEnter={updateDragTarget} onDragLeave={clearDragTarget} onDragOver={updateDragTarget}>
             <div className="reordering-handle">
                 <GripVertical />
             </div>

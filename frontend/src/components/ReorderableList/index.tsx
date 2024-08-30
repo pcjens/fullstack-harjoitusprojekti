@@ -14,8 +14,8 @@ interface Props<T> {
 export function ReorderableList<T>({ elements, setElements, getKey, Render, RenderLast, className, elementClassName }: Props<T>) {
     const [hoverTarget, setHoverTarget] = useState<number>(-1);
 
-    const indicateReposition = useCallback((dragId: string, insertBeforeDragId: string) => {
-        if (dragId === insertBeforeDragId) {
+    const indicateReposition = useCallback((dragId: string, insertBeforeDragId: string | null) => {
+        if (dragId === insertBeforeDragId || insertBeforeDragId == null) {
             setHoverTarget(-1);
             return;
         }
@@ -49,7 +49,7 @@ export function ReorderableList<T>({ elements, setElements, getKey, Render, Rend
         <div className={className}>
             {elements.map((element, i) => (
                 <div key={getKey(element)}
-                    className={`d-flex flex-row p-2 ${elementClassName ?? ""}`}
+                    className={`d-flex flex-row ${elementClassName ?? ""}`}
                     style={{
                         borderLeft: "2px solid " + (hoverTarget === i ? "var(--bs-primary)" : "rgba(0, 0, 0, 0)"),
                         borderRight: "2px solid "
@@ -61,8 +61,13 @@ export function ReorderableList<T>({ elements, setElements, getKey, Render, Rend
                 </div>
             ))}
             {RenderLast && (
-                <div className="p-2">
-                    <RenderLast />
+                <div style={{
+                    borderLeft: "2px solid rgba(0,0,0,0)",
+                    borderRight: "2px solid rgba(0,0,0,0)"
+                }}>
+                    <div className="m-2">
+                        <RenderLast />
+                    </div>
                 </div>
             )}
         </div>

@@ -5,7 +5,6 @@ import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import CloseButton from "react-bootstrap/CloseButton";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 
 import { Category } from "..";
 import { typecheckWorkSummaryArray, WorkSummary } from "../../Work";
@@ -124,12 +123,10 @@ export const CategoryEdit = ({ categories, setCategories }: Props) => {
                         elementClassName="col"
                         Render={({ element: work_slug }) => (
                             <Card style={{ flexGrow: 1 }}>
-                                <Card.Body>
+                                <Card.Body style={{ height: 170, overflow: "scroll" }}>
                                     <Card.Title>
                                         <div className="d-flex align-items-center justify-content-between">
-                                            <Link to={"/"}>
-                                                {works[work_slug]?.title}
-                                            </Link>
+                                            {works[work_slug]?.title}
                                             <CloseButton style={{ fontSize: 14, marginLeft: 4 }}
                                                 onClick={makeWorkRemoverFn(category.id, work_slug)} />
                                         </div>
@@ -143,7 +140,7 @@ export const CategoryEdit = ({ categories, setCategories }: Props) => {
                                 {worksError != null && <p className="text-danger p-3">
                                     {t(`error.${worksError}`)}
                                 </p>}
-                                {worksError == null && <Card.Body>
+                                {worksError == null && <Card.Body style={{ height: 170 }}>
                                     <Card.Title>{t("category-editor.add-work-title")}</Card.Title>
                                     <Form onSubmit={addNewWorkFor(category.id)}>
                                         <div className="d-flex flex-column align-items-start gap-2 py-2">
