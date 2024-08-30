@@ -49,6 +49,7 @@ työtuntivaatimuksien seuraamista varten.
 | 23.8. | 15.31–23.44 |  8h 13m | 73h 29m | Portfolio-kategoriat valmiiksi, eli nyt teoksia voi lisätä portfolioihin |
 | 25.8. | 15.07–23.59 |  8h 52m | 82h 21m | Tuki isommille tiedostoille, ja lataus-systeemi joka mahdollistaa isojen tiedostojen lähettämisen palvelimelta ilman hurjaa muistikäyttöä |
 | 28.8. | 14.59–20.48 |  5h 49m | 88h 10m | Isompien tiedostojen viimeistely (uploadit, frontin puoli, yksityiskohtia liittyen teos-liitteiden päivityksiin) |
+| 30.8. | 11.46–##.## |  #h ##m | ##h ##m |  |
 
 ## Linkki ja ohjeet
 

@@ -7,15 +7,68 @@ import Stack from "react-bootstrap/Stack";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { Link } from "react-router-dom";
+import Placeholder from "react-bootstrap/Placeholder";
+import Badge from "react-bootstrap/Badge";
 
 import { Portfolio } from ".";
+import { useApiFetch } from "../../hooks/useApiFetch";
+import { useCallback } from "react";
+import { typecheckWork } from "../Work";
+import { VITE_API_BASE_URL } from "../../util/config";
 
-export interface Props {
-    portfolio: Portfolio,
-}
+import "./StaticPage.css";
 
-export const PortfolioStaticPage = ({ portfolio }: Props) => {
+const Work = ({ portfolioSlug, workSlug }: { portfolioSlug: string, workSlug: string }) => {
+    const mapResult = useCallback(typecheckWork, []);
+    const { result: workResult, loading } = useApiFetch(`/work/${workSlug}`, mapResult);
+
+    if (loading || workResult == null || "userError" in workResult) {
+        return (
+            <Card>
+                <Card.Img variant="top" height={180} />
+                <Card.Body>
+                    <Card.Title>
+                        <a href={`/p/${portfolioSlug}/${workSlug}`}>
+                            <Placeholder xs={4} />
+                        </a>
+                    </Card.Title>
+                    <Card.Text>
+                        <Placeholder xs={10} />
+                        <Placeholder xs={7} />
+                    </Card.Text>
+                </Card.Body>
+            </Card>
+        );
+    }
+
+    const work = workResult.value;
+
+    const coverImageAttachment = work.attachments.find(({ attachment_kind }) => attachment_kind == "CoverImage");
+    let coverImageUrl = null;
+    if (coverImageAttachment?.big_file_uuid) {
+        coverImageUrl = `${VITE_API_BASE_URL}/work/file/${coverImageAttachment.big_file_uuid}`;
+    } else if (coverImageAttachment) {
+        coverImageUrl = `data:${coverImageAttachment.content_type};base64,${coverImageAttachment.bytes_base64}`;
+    }
+
+    return (
+        <Card as="a" href={`/p/${portfolioSlug}/${workSlug}`}
+            className="hoverable-card" style={{ textDecoration: "none" }}>
+            {coverImageUrl != null && <Card.Img variant="top" src={coverImageUrl} />}
+            <Card.Body>
+                <Card.Title>
+                    {work.title}
+                </Card.Title>
+                <Card.Text className="mb-2">
+                    {work.short_description}
+                </Card.Text>
+                {work.tags.map((tag) => <Badge key={tag.id} className="me-1">{tag.tag}</Badge>)}
+            </Card.Body>
+        </Card>
+    );
+};
+
+export const PortfolioStaticPage = ({ portfolio }: { portfolio: Portfolio }) => {
     return (
         <Container className="p-3">
             <Stack>
@@ -23,26 +76,14 @@ export const PortfolioStaticPage = ({ portfolio }: Props) => {
                     <h1>{portfolio.title}</h1>
                     <p className="pf-subtitle"><em>{portfolio.subtitle}</em></p>
                 </div>
-                {[1, 2].map((key) => (
-                    <div key={key}>
-                        <h2>Some category name</h2>
+                {portfolio.categories.map((category) => (
+                    <div key={category.id}>
+                        <h2>{category.title}</h2>
                         <Container>
-                            <Row xs={1} md={2} lg={3} xl={4} xxl={5}>
-                                {[1, 2, 3, 4, 5, 6].map((key) => (
-                                    <Col key={key} className="p-2">
-                                        <Card>
-                                            <Card.Img variant="top" height={180} />
-                                            <Card.Body>
-                                                <Card.Title>
-                                                    <Link to={`/p/${portfolio.slug}/todo-work-slug`}>
-                                                        The Name of a Piece of Art
-                                                    </Link>
-                                                </Card.Title>
-                                                <Card.Text>
-                                                    A short description of The Name of a Piece of Art, which still might contain this much text.
-                                                </Card.Text>
-                                            </Card.Body>
-                                        </Card>
+                            <Row xs={1} md={2} lg={3} xl={3} xxl={4}>
+                                {category.work_slugs.map((workSlug) => (
+                                    <Col key={workSlug} className="p-2">
+                                        <Work portfolioSlug={portfolio.slug} workSlug={workSlug} />
                                     </Col>
                                 ))}
                             </Row>

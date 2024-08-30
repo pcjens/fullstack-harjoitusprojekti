@@ -47,13 +47,20 @@ async fn main() {
         let state = shared_state.clone();
         async move {
             loop {
-                let mut conn = state.db_pool.acquire().await.unwrap();
-                let before_timestamp =
-                    SystemTime::now() - Duration::from_secs(config::session_expiration_seconds());
-                if let Err(err) =
-                    services::user::remove_sessions(&mut *conn, before_timestamp).await
-                {
-                    tracing::warn!("Failed to remove old sessions: {:?}", err);
+                match state.db_pool.acquire().await {
+                    Ok(mut conn) => {
+                        let before_timestamp = SystemTime::now()
+                            - Duration::from_secs(config::session_expiration_seconds());
+                        if let Err(err) =
+                            services::user::remove_sessions(&mut *conn, before_timestamp).await
+                        {
+                            tracing::warn!("Failed to remove old sessions: {:?}", err);
+                        }
+                    }
+                    Err(err) => tracing::warn!(
+                        "Failed to acquire db connection to remove old sessions: {:?}",
+                        err
+                    ),
                 }
                 tokio::time::sleep(Duration::from_secs(60)).await;
             }

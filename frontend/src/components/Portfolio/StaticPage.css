@@ -1,0 +1,3 @@
+.hoverable-card:hover {
+    border-color: var(--bs-body-color);
+}
