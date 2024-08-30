@@ -43,7 +43,7 @@ const PortfolioPageFromPath = () => {
 
 const WorkPageFromPath = () => {
     const params = useParams();
-    return <WorkPage portfolioSlug={params.portfolioSlug ?? ""} workSlug={params.workSlug ?? ""} />;
+    return <WorkPage workSlug={params.workSlug ?? ""} />;
 };
 
 const WorkEditorFromPath = () => {

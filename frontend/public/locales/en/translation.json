@@ -39,6 +39,7 @@
     "input-not-alphadashnumeric": "This field should only contain letters (A-Z), numbers (0-9), and dashes (-).",
     "input-loading": "Loading...",
     "input-file-missing": "File required.",
+    "downloads": "Downloads",
     "portfolio-editor": {
         "slug": {
             "name": "Slug",
@@ -104,11 +105,11 @@
         },
         "Trailer": {
             "name": "Trailer",
-            "help": "A video shown prominently on the work page."
+            "help": "A video shown on the work page."
         },
         "Screenshot": {
             "name": "Screenshot",
-            "help": "An image shown prominently on the work page if the work doesn't have a trailer."
+            "help": "An image shown on the work page."
         },
         "attachment-kind-unset": "Select file kind...",
         "add-attachment": "Add file"
@@ -133,7 +134,8 @@
         "create-work": "Create",
         "edit-work": "Save",
         "edit-work-saved": "Saved",
-        "add-new-tag": "Add"
+        "add-new-tag": "Add",
+        "download": "Download"
     },
     "error": {
         "NetworkError": "Connection failed, please try again later.",

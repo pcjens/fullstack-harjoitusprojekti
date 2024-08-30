@@ -7,7 +7,7 @@ import { Work, typecheckWork } from "..";
 import { useTranslation } from "react-i18next";
 import { WorkStaticPage } from "./StaticPage";
 
-export const WorkPage = ({ portfolioSlug, workSlug }: { portfolioSlug: string, workSlug: string }) => {
+export const WorkPage = ({ workSlug }: { workSlug: string }) => {
     const { t } = useTranslation();
 
     const mapGetResult = useCallback(typecheckWork, []);
@@ -46,6 +46,6 @@ export const WorkPage = ({ portfolioSlug, workSlug }: { portfolioSlug: string, w
     }
 
     return (
-        <WorkStaticPage portfolioSlug={portfolioSlug} work={work} />
+        <WorkStaticPage work={work} />
     );
 };

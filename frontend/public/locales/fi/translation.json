@@ -39,6 +39,7 @@
     "input-not-alphadashnumeric": "Tämän kentän pitäisi sisältää vain kirjaimia (a-z), numeroita (0-9) ja viivoja (-).",
     "input-loading": "Ladataan...",
     "input-file-missing": "Tiedosto puuttuu.",
+    "downloads": "Ladattavat",
     "portfolio-editor": {
         "slug": {
             "name": "Tunnus",
@@ -108,7 +109,7 @@
         },
         "Screenshot": {
             "name": "Kuvakaappaus",
-            "help": "Teosta esittelevä kuva joka näytetään trailerin tilalla mikäli sitä ei ole."
+            "help": "Teosta esittelevä kuva joka näytetään teoksen omalla sivulla."
         },
         "attachment-kind-unset": "Valitse tiedoston tyyppi...",
         "add-attachment": "Lisää tiedosto"
@@ -133,7 +134,8 @@
         "create-work": "Lisää",
         "edit-work": "Tallenna",
         "edit-work-saved": "Tallennettu",
-        "add-new-tag": "Lisää"
+        "add-new-tag": "Lisää",
+        "download": "Lataa"
     },
     "error": {
         "NetworkError": "Yhteyttä ei saatu, kokeile myöhemmin uudelleen.",

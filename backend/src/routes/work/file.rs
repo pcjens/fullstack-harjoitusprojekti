@@ -1,5 +1,4 @@
 use core::convert::Infallible;
-use core::time::Duration;
 use std::sync::Arc;
 
 use axum::body::Bytes;
@@ -41,9 +40,8 @@ async fn get_stream_by_uuid(
         .ok_or(ApiError::NoSuchFile)?;
 
     let (sender, receiver) = tokio::sync::mpsc::channel::<Data>(1);
-    let send_timeout = Duration::from_secs(10); // expose as a config?
     tracing::trace!("Sending the first file part: {}", file_part.uuid.0);
-    sender.send_timeout(Ok(Frame::data(Bytes::from(file_part.bytes))), send_timeout).await.unwrap();
+    sender.send(Ok(Frame::data(Bytes::from(file_part.bytes)))).await.unwrap();
 
     let mut next_uuid = file_part.next_uuid;
     if next_uuid.is_some() && method == Method::GET {
@@ -59,7 +57,13 @@ async fn get_stream_by_uuid(
                     next_uuid = file_part.next_uuid;
                     let bytes = Bytes::from(file_part.bytes);
 
-                    sender.send_timeout(Ok(Frame::data(bytes)), send_timeout).await.unwrap();
+                    if let Err(err) = sender.send(Ok(Frame::data(bytes))).await {
+                        tracing::debug!(
+                            "Error sending file part, client probably disconnected: {:?}",
+                            err
+                        );
+                        break;
+                    }
                 }
             }
             .instrument(logging_span),
@@ -74,7 +78,7 @@ async fn get_stream_by_uuid(
         .collect::<String>();
     let receiver = tokio_stream::wrappers::ReceiverStream::new(receiver);
     Ok(Response::builder()
-        .header("Content-Disposition", format!("attachment; filename=\"{filename_ascii}\""))
+        .header("Content-Disposition", format!("inline; filename=\"{filename_ascii}\""))
         .header("Content-Length", file_part.whole_file_length)
         .body(StreamBody::new(receiver))
         .unwrap())

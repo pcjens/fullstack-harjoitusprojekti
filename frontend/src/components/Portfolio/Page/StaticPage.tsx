@@ -1,7 +1,3 @@
-// The idea is to not import as few things here as possible, since this will be
-// used to render the portfolio, and ideally those pages should be light,
-// relatively JS-free, and renderable ahead of time for static serving.
-
 import Container from "react-bootstrap/Container";
 import Stack from "react-bootstrap/Stack";
 import Card from "react-bootstrap/Card";
@@ -14,9 +10,9 @@ import { Portfolio } from "..";
 import { useApiFetch } from "../../../hooks/useApiFetch";
 import { useCallback } from "react";
 import { typecheckWork } from "../../Work";
-import { VITE_API_BASE_URL } from "../../../util/config";
 
 import "./StaticPage.css";
+import { getAttachmentUrl } from "../../../util/attachments";
 
 const Work = ({ portfolioSlug, workSlug }: { portfolioSlug: string, workSlug: string }) => {
     const mapResult = useCallback(typecheckWork, []);
@@ -44,12 +40,7 @@ const Work = ({ portfolioSlug, workSlug }: { portfolioSlug: string, workSlug: st
     const work = workResult.value;
 
     const coverImageAttachment = work.attachments.find(({ attachment_kind }) => attachment_kind == "CoverImage");
-    let coverImageUrl = null;
-    if (coverImageAttachment?.big_file_uuid) {
-        coverImageUrl = `${VITE_API_BASE_URL}/work/file/${coverImageAttachment.big_file_uuid}`;
-    } else if (coverImageAttachment) {
-        coverImageUrl = `data:${coverImageAttachment.content_type};base64,${coverImageAttachment.bytes_base64}`;
-    }
+    const coverImageUrl = coverImageAttachment != null ? getAttachmentUrl(coverImageAttachment) : null;
 
     return (
         <Card as="a" href={`/p/${portfolioSlug}/${workSlug}`}
