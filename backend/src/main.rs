@@ -2,7 +2,8 @@ use core::time::Duration;
 use std::sync::Arc;
 use std::time::SystemTime;
 
-use axum::http::{HeaderName, Method};
+use axum::http::header::{AUTHORIZATION, CONTENT_TYPE};
+use axum::http::Method;
 use axum::Router;
 use sqlx::AnyPool;
 use tokio::net::TcpListener;
@@ -72,7 +73,7 @@ async fn main() {
     let cors_layer = CorsLayer::new()
         .allow_methods([Method::GET, Method::POST, Method::PUT])
         .allow_origin(cors::Any)
-        .allow_headers([HeaderName::from_static("authorization"), HeaderName::from_static("content-type")]);
+        .allow_headers([AUTHORIZATION, CONTENT_TYPE]);
     let app = router.with_state(shared_state).layer(TraceLayer::new_for_http()).layer(cors_layer);
     tracing::debug!("Axum app configured.");
 

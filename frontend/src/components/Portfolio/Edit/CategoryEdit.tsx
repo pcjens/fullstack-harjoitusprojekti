@@ -3,14 +3,15 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import CloseButton from "react-bootstrap/CloseButton";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+
 import { Category } from "..";
 import { typecheckWorkSummaryArray, WorkSummary } from "../../Work";
 import { useApiFetch } from "../../../hooks/useApiFetch";
 import { ValidatedTextInput } from "../../Forms";
+import { ReorderableList } from "../../ReorderableList";
 
 interface Props {
     categories: Category[],
@@ -67,6 +68,19 @@ export const CategoryEdit = ({ categories, setCategories }: Props) => {
             })));
         };
 
+    const makeWorkRemoverFn = (categoryId: number, workSlug: string) =>
+        () => {
+            setCategories(categories.map((category) => (categoryId !== category.id ? category : {
+                ...category,
+                work_slugs: category.work_slugs.filter((slug) => slug !== workSlug),
+            })));
+        };
+
+    const makeCategoryRemoverFn = (categoryId: number) =>
+        () => {
+            setCategories(categories.filter((category) => (categoryId !== category.id)));
+        };
+
     const mapWorksResult = useCallback(typecheckWorkSummaryArray, []);
     const { result: worksResult, loading } = useApiFetch("/work", mapWorksResult);
 
@@ -95,29 +109,38 @@ export const CategoryEdit = ({ categories, setCategories }: Props) => {
 
             {categories.map((category) => (
                 <Container key={category.id}>
-                    <h4>{category.title}</h4>
-                    <Row xs={1} md={2} lg={3} xl={4} xxl={5} className="align-items-center">
-                        {category.work_slugs
-                            .map((slug) => works[slug])
-                            .filter((work) => work != null)
-                            .map((work) => (
-                                <Col key={work.id} className="p-2">
-                                    <Card>
-                                        <Card.Body>
-                                            <Card.Title>
-                                                <Link to={"/"}>
-                                                    {work.title}
-                                                </Link>
-                                            </Card.Title>
-                                            <Card.Text>{work.short_description}</Card.Text>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            ))}
-
-                        <Col className="p-2">
+                    <div className="d-flex align-items-center justify-content-between">
+                        <h4>{category.title}</h4>
+                        <CloseButton style={{ fontSize: 14, marginLeft: 4 }}
+                            onClick={makeCategoryRemoverFn(category.id)} />
+                    </div>
+                    <ReorderableList elements={category.work_slugs}
+                        setElements={(newSlugs) => {
+                            const work_slugs = Array.isArray(newSlugs) ? newSlugs : newSlugs(category.work_slugs);
+                            setCategories(categories.map((c) => c.id !== category.id ? c : { ...c, work_slugs }));
+                        }}
+                        getKey={(slug) => slug}
+                        className="align-items-center row row-cols-xxl-5 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1"
+                        elementClassName="col"
+                        Render={({ element: work_slug }) => (
+                            <Card style={{ flexGrow: 1 }}>
+                                <Card.Body>
+                                    <Card.Title>
+                                        <div className="d-flex align-items-center justify-content-between">
+                                            <Link to={"/"}>
+                                                {works[work_slug]?.title}
+                                            </Link>
+                                            <CloseButton style={{ fontSize: 14, marginLeft: 4 }}
+                                                onClick={makeWorkRemoverFn(category.id, work_slug)} />
+                                        </div>
+                                    </Card.Title>
+                                    <Card.Text>{works[work_slug]?.short_description ?? ""}</Card.Text>
+                                </Card.Body>
+                            </Card>
+                        )}
+                        RenderLast={() => (
                             <Card>
-                                {worksError != null && <p className="text-danger">
+                                {worksError != null && <p className="text-danger p-3">
                                     {t(`error.${worksError}`)}
                                 </p>}
                                 {worksError == null && <Card.Body>
@@ -138,8 +161,7 @@ export const CategoryEdit = ({ categories, setCategories }: Props) => {
                                     </Form>
                                 </Card.Body>}
                             </Card>
-                        </Col>
-                    </Row>
+                        )} />
                 </Container>
             ))}
 

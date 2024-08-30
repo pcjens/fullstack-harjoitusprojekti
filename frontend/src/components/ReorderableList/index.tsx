@@ -1,29 +1,17 @@
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { ReorderableElement } from "./ReorderableElement";
 
-const DropIndicator = ({ hovering }: { hovering: boolean }) => {
-    return (
-        <div style={{
-            display: "inline-block",
-            position: "relative",
-            top: "8px",
-            height: "32px",
-            borderLeft: "2px solid var(--bs-primary)",
-            opacity: hovering ? 1 : 0,
-        }}>
-        </div>
-    );
-};
-
 interface Props<T> {
     elements: T[],
     setElements: Dispatch<SetStateAction<T[]>>,
     getKey: (element: T) => string,
     Render: (props: { element: T }) => JSX.Element,
-    className: string
+    RenderLast?: () => JSX.Element,
+    className?: string
+    elementClassName?: string,
 }
 
-export function ReorderableList<T>({ elements, setElements, getKey, Render, className }: Props<T>) {
+export function ReorderableList<T>({ elements, setElements, getKey, Render, RenderLast, className, elementClassName }: Props<T>) {
     const [hoverTarget, setHoverTarget] = useState<number>(-1);
 
     const indicateReposition = useCallback((dragId: string, insertBeforeDragId: string) => {
@@ -59,12 +47,24 @@ export function ReorderableList<T>({ elements, setElements, getKey, Render, clas
 
     return (
         <div className={className}>
-            {elements.map((element, i) => <div key={getKey(element)}>
-                <DropIndicator hovering={hoverTarget === i} />
-                <ReorderableElement element={element} Render={Render} dragId={getKey(element)}
-                    reposition={reposition} indicateReposition={indicateReposition} />
-            </div>)}
-            <DropIndicator hovering={hoverTarget === elements.length} />
+            {elements.map((element, i) => (
+                <div key={getKey(element)}
+                    className={`d-flex flex-row p-2 ${elementClassName ?? ""}`}
+                    style={{
+                        borderLeft: "2px solid " + (hoverTarget === i ? "var(--bs-primary)" : "rgba(0, 0, 0, 0)"),
+                        borderRight: "2px solid "
+                            + ((hoverTarget === elements.length && i === elements.length - 1)
+                                ? "var(--bs-primary)" : "rgba(0, 0, 0, 0)"),
+                    }}>
+                    <ReorderableElement element={element} Render={Render} dragId={getKey(element)}
+                        reposition={reposition} indicateReposition={indicateReposition} />
+                </div>
+            ))}
+            {RenderLast && (
+                <div className="p-2">
+                    <RenderLast />
+                </div>
+            )}
         </div>
     );
 }

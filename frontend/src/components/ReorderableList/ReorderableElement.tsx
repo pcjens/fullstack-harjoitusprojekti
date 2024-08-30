@@ -1,4 +1,4 @@
-import { DragEventHandler, useState } from "react";
+import { DragEventHandler } from "react";
 
 import "./ReorderableElement.css";
 
@@ -40,7 +40,7 @@ export function ReorderableElement<T>({ element, Render, dragId, reposition, ind
     };
 
     return (
-        <div className="d-inline-flex flex-row align-items-center" draggable={true}
+        <div className="d-inline-flex flex-row align-items-center" draggable={true} style={{ flexGrow: 1 }}
             onDragStart={dragStart} onDrop={drop} onDragEnter={dragOver} onDragOver={dragOver}>
             <div className="reordering-handle">
                 <GripVertical />

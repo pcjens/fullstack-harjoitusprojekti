@@ -207,7 +207,9 @@ where
         .await
         .context("select slug+id pairs from works while updating works_in_categories failed")?;
 
-    assert_eq!(slug_id_pairs.len(), all_slugs.len());
+    assert!(all_slugs
+        .iter()
+        .all(|slug| slug_id_pairs.iter().map(|(slug, _)| slug).any(|slug_| slug == &slug_)));
     // TODO: return a more user-facing error? or maybe not, this shouldn't be possible to cause with the frontend
 
     // Collect up the (category_id, work_id) pairs to insert, matching categories by title and then translating the slugs into work ids
