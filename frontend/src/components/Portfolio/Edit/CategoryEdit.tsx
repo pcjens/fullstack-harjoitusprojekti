@@ -7,10 +7,10 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Category } from ".";
-import { typecheckWorkSummaryArray, WorkSummary } from "../Work";
-import { useApiFetch } from "../../hooks/useApiFetch";
-import { ValidatedTextInput } from "../Forms";
+import { Category } from "..";
+import { typecheckWorkSummaryArray, WorkSummary } from "../../Work";
+import { useApiFetch } from "../../../hooks/useApiFetch";
+import { ValidatedTextInput } from "../../Forms";
 
 interface Props {
     categories: Category[],

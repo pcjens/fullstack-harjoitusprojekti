@@ -3,6 +3,7 @@ import { createArrayTypechecker, createTypechekerFromExample, OptionalField } fr
 export { WorkListing } from "./Listing";
 export { WorkCard } from "./Card";
 export { WorkEditor } from "./Edit";
+export { WorkPage } from "./Page";
 
 export interface WorkSummary {
     id: number,

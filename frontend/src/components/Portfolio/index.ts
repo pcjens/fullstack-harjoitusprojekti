@@ -1,6 +1,9 @@
 import { createArrayTypechecker, createTypechekerFromExample, OptionalField } from "../../util/helpers";
 
 export { PortfolioCard } from "./Card";
+export { PortfolioPage } from "./Page";
+export { PortfolioListing } from "./Listing";
+export { PortfolioEditor } from "./Edit";
 
 export interface PortfolioSummary {
     id: number,

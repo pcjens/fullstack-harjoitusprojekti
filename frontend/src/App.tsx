@@ -14,11 +14,8 @@ import { LoginStatus, useSession } from "./hooks/useSession";
 import { useTimeout } from "./hooks/useTimeout";
 import { LoginContext, useLogin } from "./hooks/useLogin";
 import { BackendStatus } from "./components/BackendStatus";
-import { PortfolioListing } from "./components/Portfolio/Listing";
-import { PortfolioEditor } from "./components/Portfolio/Edit";
-import { PortfolioPage } from "./components/Portfolio/Page";
-import { WorkListing } from "./components/Work/Listing";
-import { WorkEditor } from "./components/Work";
+import { PortfolioListing, PortfolioEditor, PortfolioPage } from "./components/Portfolio";
+import { WorkListing, WorkEditor, WorkPage } from "./components/Work";
 
 const NotFound = () => {
     const { t } = useTranslation();
@@ -42,6 +39,11 @@ const PortfolioEditorFromPath = () => {
 const PortfolioPageFromPath = () => {
     const params = useParams();
     return <PortfolioPage slug={params.slug ?? ""} />;
+};
+
+const WorkPageFromPath = () => {
+    const params = useParams();
+    return <WorkPage portfolioSlug={params.portfolioSlug ?? ""} workSlug={params.workSlug ?? ""} />;
 };
 
 const WorkEditorFromPath = () => {
@@ -133,6 +135,7 @@ const IndexContent = () => {
                 <Route path="/portfolio/new" element={<NavWrapper element={<PortfolioEditor />} />} />
                 <Route path="/p/:slug/edit" element={<NavWrapper element={<PortfolioEditorFromPath />} />} />
                 <Route path="/p/:slug" element={<NavWrapper hideNavIfLoggedOut={true} element={<PortfolioPageFromPath />} />} />
+                <Route path="/p/:portfolioSlug/:workSlug" element={<NavWrapper hideNavIfLoggedOut={true} element={<WorkPageFromPath />} />} />
                 <Route path="*" element={<NavWrapper element={<NotFound />} />} />
             </Routes>
         </BrowserRouter>

@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Spinner from "react-bootstrap/Spinner";
 
-import { useApiFetch } from "../../hooks/useApiFetch";
-import { Portfolio, typecheckPortfolio } from ".";
+import { useApiFetch } from "../../../hooks/useApiFetch";
+import { Portfolio, typecheckPortfolio } from "..";
 import { useTranslation } from "react-i18next";
 import { PortfolioStaticPage } from "./StaticPage";
 

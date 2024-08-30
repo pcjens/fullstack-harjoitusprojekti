@@ -7,11 +7,10 @@ import Stack from "react-bootstrap/Stack";
 import Spinner from "react-bootstrap/Spinner";
 import { useNavigate } from "react-router-dom";
 
-import { Category, typecheckPortfolio } from ".";
-import { ValidatedTextInput } from "../Forms";
-import { ApiError, useApiFetch } from "../../hooks/useApiFetch";
-import { createTypechekerFromExample } from "../../util/helpers";
-import { ValidatedCheckbox } from "../Forms/ValidatedCheckbox";
+import { Category, typecheckPortfolio } from "..";
+import { ValidatedTextInput, ValidatedCheckbox } from "../../Forms";
+import { ApiError, useApiFetch } from "../../../hooks/useApiFetch";
+import { createTypechekerFromExample } from "../../../util/helpers";
 import { CategoryEdit } from "./CategoryEdit";
 
 const typecheckCreatedPortfolio = createTypechekerFromExample({

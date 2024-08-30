@@ -10,11 +10,11 @@ import Col from "react-bootstrap/Col";
 import Placeholder from "react-bootstrap/Placeholder";
 import Badge from "react-bootstrap/Badge";
 
-import { Portfolio } from ".";
-import { useApiFetch } from "../../hooks/useApiFetch";
+import { Portfolio } from "..";
+import { useApiFetch } from "../../../hooks/useApiFetch";
 import { useCallback } from "react";
-import { typecheckWork } from "../Work";
-import { VITE_API_BASE_URL } from "../../util/config";
+import { typecheckWork } from "../../Work";
+import { VITE_API_BASE_URL } from "../../../util/config";
 
 import "./StaticPage.css";
 
