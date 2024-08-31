@@ -55,7 +55,7 @@ työtuntivaatimuksien seuraamista varten.
 | 25.8. | 15.07–23.59 |  8h 52m |  82h 21min | Tuki isommille tiedostoille, ja lataus-systeemi joka mahdollistaa isojen tiedostojen lähettämisen palvelimelta ilman hurjaa muistikäyttöä |
 | 28.8. | 14.59–20.48 |  5h 49m |  88h 10min | Isompien tiedostojen viimeistely (uploadit, frontin puoli, yksityiskohtia liittyen teos-liitteiden päivityksiin) |
 | 30.8. | 11.46–20.08 |  8h 22m |  96h 32min | Julkisen portfolio-sivun ja teos-sivun tekoa, muokkausnäkymien parantelua, testaamista ja bugien korjausta |
-| 31.8. | 13.52–00.02 | 10h 10m | 106h 42min |  |
+| 31.8. | 13.52–00.02 | 10h 10m | 106h 42min | PostgreSQL-yhteensopivuusongelmien korjausta, backendin ja frontendin siivoamista, tuotanto-Dockerfilejen ja composen luomista, CI ja fly.io deploymentin pystyttämistä, ohjeiden ja dokumentaation kirjoittamista |
 
 ## Linkki ja ohjeet
 
