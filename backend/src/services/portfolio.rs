@@ -1,7 +1,7 @@
 use std::time::SystemTime;
 
 use anyhow::Context;
-use sqlx::{Any, Executor, QueryBuilder};
+use sqlx::{Any, Executor};
 
 use crate::array_string_types::SlugString;
 use crate::data::portfolio::{Portfolio, PortfolioCategory, PortfolioCategoryRow, PortfolioRow};
@@ -180,38 +180,33 @@ where
         .context("delete portfolio categories before insert failed")?;
 
     // Insert the categories themselves
-    let category_rows: Vec<PortfolioCategoryRow> = if !input_categories.is_empty() {
-        let mut query = QueryBuilder::new("INSERT INTO categories (portfolio_id, title) ");
-        query.push_values(input_categories, |mut query, inserted_values| {
-            query.push_bind(row.id).push_bind(&inserted_values.row.title);
-        });
-        query.push(" RETURNING *");
-        query
-            .build_query_as()
-            .fetch_all(&mut *conn)
+    let mut category_rows: Vec<PortfolioCategoryRow> = Vec::with_capacity(input_categories.len());
+    for input in input_categories {
+        let query = sqlx::query_as(
+            "INSERT INTO categories (portfolio_id, title) \
+            VALUES ($1, $2) RETURNING *",
+        );
+        let new_category = query
+            .bind(row.id)
+            .bind(&input.row.title)
+            .fetch_one(&mut *conn)
             .await
-            .context("insert into categories failed")?
-    } else {
-        vec![]
-    };
+            .context("insert into categories failed")?;
+        category_rows.push(new_category);
+    }
 
     // Collect all the slugs referenced by the client and get their respective ids
     let all_slugs: Vec<&SlugString> =
         input_categories.iter().flat_map(|c| c.work_slugs.iter()).collect();
-    let mut query = QueryBuilder::new("SELECT slug, id FROM works WHERE (slug) in ");
-    query.push_tuples(&all_slugs, |mut query, slug| {
-        query.push_bind(slug);
-    });
-    let slug_id_pairs: Vec<(SlugString, i32)> = query
-        .build_query_as()
-        .fetch_all(&mut *conn)
-        .await
-        .context("select slug+id pairs from works while updating works_in_categories failed")?;
-
-    assert!(all_slugs
-        .iter()
-        .all(|slug| slug_id_pairs.iter().map(|(slug, _)| slug).any(|slug_| slug == &slug_)));
-    // TODO: return a more user-facing error? or maybe not, this shouldn't be possible to cause with the frontend
+    let mut slug_id_pairs = Vec::with_capacity(all_slugs.len());
+    for slug in all_slugs {
+        let (id,): (i32,) = sqlx::query_as("SELECT id FROM works WHERE slug = $1")
+            .bind(slug)
+            .fetch_one(&mut *conn)
+            .await
+            .context("get work id by slug failed")?;
+        slug_id_pairs.push((*slug, id));
+    }
 
     // Collect up the (category_id, work_id) pairs to insert, matching categories by title and then translating the slugs into work ids
     let mut category_work_pairs: Vec<(i32, i32)> = Vec::with_capacity(slug_id_pairs.len());
@@ -225,21 +220,14 @@ where
     }
 
     // Insert the category work pairs
-    let category_work_pairs: Vec<(i32, i32)> = if !category_work_pairs.is_empty() {
-        let mut query =
-            QueryBuilder::new("INSERT INTO works_in_categories (category_id, work_id) ");
-        query.push_values(category_work_pairs, |mut query, (category_id, work_id)| {
-            query.push_bind(category_id).push_bind(work_id);
-        });
-        query.push(" RETURNING category_id, work_id");
-        query
-            .build_query_as()
-            .fetch_all(&mut *conn)
+    for (category_id, work_id) in &category_work_pairs {
+        sqlx::query("INSERT INTO works_in_categories (category_id, work_id) VALUES ($1, $2)")
+            .bind(category_id)
+            .bind(work_id)
+            .execute(&mut *conn)
             .await
-            .context("insert into works_in_categories failed")?
-    } else {
-        vec![]
-    };
+            .context("insert into works_in_categories failed")?;
+    }
 
     // Finally, reconstruct the category array based on values we've gotten back from the db via `returning` clauses
     let categories: Vec<PortfolioCategory> = category_rows
