@@ -26,12 +26,10 @@ type ResponseBody = StreamBody<ReceiverStream<Data>>;
 
 async fn get_stream_by_uuid(
     State(state): State<Arc<SharedState>>,
-    session: Option<Session>,
     method: Method,
     Path(uuid): Path<String>,
 ) -> Result<Response<ResponseBody>, ApiError> {
-    let user_id = session.map(|Session { user_id, .. }| user_id);
-    let file_part = services::work::big_files::get_file_part(&state.db_pool, &uuid, user_id)
+    let file_part = services::work::big_files::get_file_part(&state.db_pool, &uuid)
         .await
         .map_err(|err| {
             tracing::error!("Getting file by uuid failed: {err:?}");
@@ -51,7 +49,7 @@ async fn get_stream_by_uuid(
             async move {
                 while let Some(uuid) = next_uuid {
                     let file_part =
-                        services::work::big_files::get_file_part(&state.db_pool, &uuid.0, user_id);
+                        services::work::big_files::get_file_part(&state.db_pool, &uuid.0);
                     // Unwrap, since returning an error mid-stream is hard. Shouldn't really happen anyway.
                     let file_part = file_part.await.unwrap().unwrap();
                     next_uuid = file_part.next_uuid;
