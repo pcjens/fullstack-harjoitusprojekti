@@ -38,11 +38,14 @@ async fn main() {
 
     let conn_str = config::database_url();
     sqlx::any::install_default_drivers();
-    let db_pool = AnyPool::connect(&conn_str).await.expect("DATABASE_URL should be connectable");
+    let mut db_pool =
+        AnyPool::connect(&conn_str).await.expect("DATABASE_URL should be connectable");
     tracing::info!("Connected to the database.");
 
     sqlx::migrate!().run(&db_pool).await.expect("migrations should run");
     tracing::info!("Migrations done.");
+
+    services::patch_postgres_primary_keys(&mut db_pool).await;
 
     let shared_state = Arc::new(SharedState { db_pool });
 
