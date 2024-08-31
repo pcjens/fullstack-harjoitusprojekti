@@ -9,18 +9,18 @@ where
 {
     let query = sqlx::query_as(
         "SELECT id, work_id, attachment_kind, content_type, filename, title, bytes_base64, big_file_uuid FROM work_attachments \
-        WHERE work_id = ?",
+        WHERE work_id = $1",
     );
     let attachments =
         query.bind(row.id).fetch_all(conn).await.context("get work attachments failed")?;
 
-    let links = sqlx::query_as("SELECT * FROM work_links WHERE work_id = ?")
+    let links = sqlx::query_as("SELECT * FROM work_links WHERE work_id = $1")
         .bind(row.id)
         .fetch_all(conn)
         .await
         .context("get work links failed")?;
 
-    let tags = sqlx::query_as("SELECT * FROM work_tags WHERE work_id = ?")
+    let tags = sqlx::query_as("SELECT * FROM work_tags WHERE work_id = $1")
         .bind(row.id)
         .fetch_all(conn)
         .await
@@ -70,8 +70,8 @@ where
     for inserted_attachment in &attachments {
         if let Some(uuid) = inserted_attachment.big_file_uuid.as_ref() {
             let query = sqlx::query(
-                "UPDATE big_file_parts SET work_attachment_id = ? \
-                WHERE work_attachment_id = (SELECT work_attachment_id FROM big_file_parts WHERE uuid = ?)"
+                "UPDATE big_file_parts SET work_attachment_id = $1 \
+                WHERE work_attachment_id = (SELECT work_attachment_id FROM big_file_parts WHERE uuid = $2)"
             );
             query
                 .bind(inserted_attachment.id)
@@ -93,7 +93,7 @@ where
     query.build().execute(&mut *conn).await.context("delete old work attachments failed")?;
 
     // Delete the old links, add in new ones
-    sqlx::query("DELETE FROM work_links WHERE work_id = ?")
+    sqlx::query("DELETE FROM work_links WHERE work_id = $1")
         .bind(row.id)
         .execute(&mut *conn)
         .await
@@ -117,7 +117,7 @@ where
     };
 
     // Delete the old tags, add in new ones
-    sqlx::query("DELETE FROM work_tags WHERE work_id = ?")
+    sqlx::query("DELETE FROM work_tags WHERE work_id = $1")
         .bind(row.id)
         .execute(&mut *conn)
         .await

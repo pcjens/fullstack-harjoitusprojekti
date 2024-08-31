@@ -19,7 +19,8 @@ where
     let current_time =
         SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs() as i64;
     let query = sqlx::query_as(
-        "INSERT INTO portfolios (created_at, published_at, slug, title, subtitle, author) VALUES (?, ?, ?, ?, ?, ?) \
+        "INSERT INTO portfolios (created_at, published_at, slug, title, subtitle, author) \
+        VALUES                  ($1,         $2,           $3,   $4,    $5,       $6) \
         RETURNING *",
     );
     let row: PortfolioRow = query
@@ -33,7 +34,7 @@ where
         .await
         .context("portfolios insert failed")?;
 
-    let query = sqlx::query("INSERT INTO portfolio_rights (portfolio_id, user_id) VALUES (?, ?)");
+    let query = sqlx::query("INSERT INTO portfolio_rights (portfolio_id, user_id) VALUES ($1, $2)");
     let result = query
         .bind(row.id)
         .bind(user_id)
@@ -61,8 +62,8 @@ where
     let current_time =
         SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs() as i64;
     let query = sqlx::query_as(
-        "UPDATE portfolios SET published_at = ?, slug = ?, title = ?, subtitle = ?, author = ? \
-        WHERE slug = ? AND id IN ( select portfolio_id from portfolio_rights where user_id = ? ) \
+        "UPDATE portfolios SET published_at = $1, slug = $2, title = $3, subtitle = $4, author = $5 \
+        WHERE slug = $6 AND id IN ( select portfolio_id from portfolio_rights where user_id = $7 ) \
         RETURNING *",
     );
     let row: PortfolioRow = query
@@ -87,7 +88,7 @@ where
     for<'e> &'e E: Executor<'e, Database = Any>,
 {
     sqlx::query_as(
-        "SELECT * FROM portfolios JOIN portfolio_rights ON (id = portfolio_id) WHERE user_id = ?",
+        "SELECT * FROM portfolios JOIN portfolio_rights ON (id = portfolio_id) WHERE user_id = $1",
     )
     .bind(user_id)
     .fetch_all(conn)
@@ -106,7 +107,7 @@ where
     let query = sqlx::query_as(
         "SELECT * FROM portfolios \
         JOIN portfolio_rights ON (id = portfolio_id) \
-        WHERE slug = ? and (user_id = ? or published_at is not null)",
+        WHERE slug = $1 and (user_id = $2 or published_at is not null)",
     );
     let row: Option<PortfolioRow> = query
         .bind(slug)
@@ -128,7 +129,7 @@ where
     for<'e> &'e E: Executor<'e, Database = Any>,
 {
     let categories: Vec<PortfolioCategoryRow> =
-        sqlx::query_as("SELECT * FROM categories WHERE portfolio_id = ?")
+        sqlx::query_as("SELECT * FROM categories WHERE portfolio_id = $1")
             .bind(row.id)
             .fetch_all(conn)
             .await
@@ -138,7 +139,7 @@ where
         "SELECT categories.id, works.slug FROM works \
         JOIN works_in_categories ON (works.id = works_in_categories.work_id) \
         JOIN categories ON (works_in_categories.category_id = categories.id) \
-        WHERE categories.portfolio_id = ?",
+        WHERE categories.portfolio_id = $1",
     );
     let all_work_slugs: Vec<(i32, SlugString)> = query
         .bind(row.id)
@@ -172,7 +173,7 @@ async fn update_portfolio_details<E>(
 where
     for<'e> &'e mut E: Executor<'e, Database = Any>,
 {
-    sqlx::query("DELETE FROM categories WHERE portfolio_id = ?")
+    sqlx::query("DELETE FROM categories WHERE portfolio_id = $1")
         .bind(row.id)
         .execute(&mut *conn)
         .await

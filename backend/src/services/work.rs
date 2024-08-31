@@ -16,7 +16,9 @@ where
     for<'e> &'e mut E: Executor<'e, Database = Any>,
 {
     let query = sqlx::query_as(
-        "INSERT INTO works (slug, title, short_description, long_description) VALUES (?, ?, ?, ?) RETURNING *",
+        "INSERT INTO works (slug, title, short_description, long_description) \
+        VALUES ($1, $2, $3, $4) \
+        RETURNING *",
     );
     let row: WorkRow = query
         .bind(slug)
@@ -27,7 +29,7 @@ where
         .await
         .context("work insert failed")?;
 
-    sqlx::query("INSERT INTO work_rights (user_id, work_id) VALUES (?, ?)")
+    sqlx::query("INSERT INTO work_rights (user_id, work_id) VALUES ($1, $2)")
         .bind(user_id)
         .bind(row.id)
         .execute(&mut *conn)
@@ -57,8 +59,8 @@ where
     for<'e> &'e mut E: Executor<'e, Database = Any>,
 {
     let query = sqlx::query_as(
-        "UPDATE works SET slug = ?, title = ?, short_description = ?, long_description = ? \
-        WHERE slug = ? AND id IN ( select work_id from work_rights where user_id = ? ) \
+        "UPDATE works SET slug = $1, title = $2, short_description = $3, long_description = $4 \
+        WHERE slug = $5 AND id IN ( select work_id from work_rights where user_id = $6 ) \
         RETURNING *",
     );
     let row: WorkRow = query
@@ -90,7 +92,7 @@ where
     for<'e> &'e E: Executor<'e, Database = Any>,
 {
     let works: Vec<WorkRow> =
-        sqlx::query_as("SELECT * FROM works JOIN work_rights ON (id = work_id) WHERE user_id = ?")
+        sqlx::query_as("SELECT * FROM works JOIN work_rights ON (id = work_id) WHERE user_id = $1")
             .bind(user_id)
             .fetch_all(conn)
             .await
@@ -114,7 +116,7 @@ where
         LEFT JOIN categories ON (categories.id = works_in_categories.category_id) \
         LEFT JOIN portfolios ON (portfolios.id = categories.portfolio_id) \
         LEFT JOIN portfolio_rights ON (portfolio_rights.portfolio_id = categories.portfolio_id) \
-        WHERE works.slug = ? AND (work_rights.user_id = ? OR portfolio_rights.user_id = ? OR portfolios.published_at IS NOT NULL)",
+        WHERE works.slug = $1 AND (work_rights.user_id = $2 OR portfolio_rights.user_id = $3 OR portfolios.published_at IS NOT NULL)",
     );
     let row: Option<WorkRow> = query
         .bind(work_slug)

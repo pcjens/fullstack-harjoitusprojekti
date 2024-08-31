@@ -44,7 +44,11 @@ where
     let username: &str = username.0.as_str();
     let password_key_base64: String = BASE64.encode(&password_key_bytes);
     let db_salt_base64: String = BASE64.encode(&db_salt_bytes);
-    let result = sqlx::query("INSERT INTO users (username, password_key_base64, pbkdf2_iterations, salt_base64) VALUES (?, ?, ?, ?)")
+    let query = sqlx::query(
+        "INSERT INTO users (username, password_key_base64, pbkdf2_iterations, salt_base64) \
+        VALUES ($1, $2, $3, $4)",
+    );
+    let result = query
         .bind(username)
         .bind(password_key_base64)
         .bind(pbkdf2_iterations.get() as i32)
@@ -65,7 +69,7 @@ pub async fn login<E>(
 where
     for<'e> &'e mut E: Executor<'e, Database = Any>,
 {
-    let user: Option<User> = sqlx::query_as("SELECT * FROM users WHERE username = ?")
+    let user: Option<User> = sqlx::query_as("SELECT * FROM users WHERE username = $1")
         .bind(username.0.as_str())
         .fetch_optional(&mut *conn)
         .await
@@ -107,13 +111,14 @@ where
         created_at: seconds_since_unix_epoch as i64,
     };
 
-    let result = sqlx::query("INSERT INTO sessions (uuid, user_id, created_at) VALUES (?, ?, ?)")
-        .bind(&session.uuid)
-        .bind(session.user_id)
-        .bind(session.created_at)
-        .execute(&mut *conn)
-        .await
-        .context("session creation on login failed")?;
+    let result =
+        sqlx::query("INSERT INTO sessions (uuid, user_id, created_at) VALUES ($1, $2, $3)")
+            .bind(&session.uuid)
+            .bind(session.user_id)
+            .bind(session.created_at)
+            .execute(&mut *conn)
+            .await
+            .context("session creation on login failed")?;
     assert_eq!(1, result.rows_affected());
 
     Ok(Some(session))
@@ -126,7 +131,7 @@ pub async fn is_username_taken<E>(
 where
     for<'e> &'e mut E: Executor<'e, Database = Any>,
 {
-    let user: Option<User> = sqlx::query_as("SELECT * FROM users WHERE username = ?")
+    let user: Option<User> = sqlx::query_as("SELECT * FROM users WHERE username = $1")
         .bind(username.0.as_str())
         .fetch_optional(conn)
         .await
@@ -141,7 +146,7 @@ pub async fn get_session<E>(
 where
     for<'e> &'e E: Executor<'e, Database = Any>,
 {
-    sqlx::query_as("SELECT * FROM sessions WHERE uuid = ?")
+    sqlx::query_as("SELECT * FROM sessions WHERE uuid = $1")
         .bind(&session_id)
         .fetch_optional(conn)
         .await
@@ -158,7 +163,7 @@ where
     let before_timestamp =
         before_timestamp.duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs() as i64;
     tracing::trace!("Clearing sessions before {before_timestamp:?}.");
-    sqlx::query("DELETE FROM sessions WHERE created_at < ?")
+    sqlx::query("DELETE FROM sessions WHERE created_at < $1")
         .bind(before_timestamp)
         .execute(conn)
         .await

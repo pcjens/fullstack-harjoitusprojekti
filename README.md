@@ -50,6 +50,7 @@ työtuntivaatimuksien seuraamista varten.
 | 25.8. | 15.07–23.59 |  8h 52m | 82h 21m | Tuki isommille tiedostoille, ja lataus-systeemi joka mahdollistaa isojen tiedostojen lähettämisen palvelimelta ilman hurjaa muistikäyttöä |
 | 28.8. | 14.59–20.48 |  5h 49m | 88h 10m | Isompien tiedostojen viimeistely (uploadit, frontin puoli, yksityiskohtia liittyen teos-liitteiden päivityksiin) |
 | 30.8. | 11.46–20.08 |  8h 22m | 96h 32m | Julkisen portfolio-sivun ja teos-sivun tekoa, muokkausnäkymien parantelua, testaamista ja bugien korjausta |
+| 31.8. | 13.52–##.## |  #h ##m | ##h ##m |  |
 
 ## Linkki ja ohjeet
 
@@ -61,10 +62,9 @@ työtuntivaatimuksien seuraamista varten.
 
 #### Tietokantayhteydet
 
-Tämän sovelluksen backend voi käyttää MySQL, PostgreSQL, tai SQLite
--tietokantaa. Käytetty tietokanta riippuu backendin saamasta DATABASE_URL
+Tämän sovelluksen backend voi käyttää PostgreSQL tai SQLite -tietokantaa.
+Käytetty tietokanta riippuu backendin saamasta DATABASE_URL
 ympäristömuuttujasta, jonka muodostamiseen löytyy ohjeet seuraavista linkeistä:
-[MySQL](https://docs.rs/sqlx/latest/sqlx/mysql/struct.MySqlConnectOptions.html),
 [PostgreSQL](https://docs.rs/sqlx/latest/sqlx/postgres/struct.PgConnectOptions.html),
 [SQLite](https://docs.rs/sqlx/latest/sqlx/sqlite/struct.SqliteConnectOptions.html).
 

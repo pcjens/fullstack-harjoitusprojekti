@@ -21,12 +21,11 @@ where
             JOIN portfolios ON (portfolios.id = categories.portfolio_id) \
             JOIN portfolio_rights ON (portfolio_rights.portfolio_id = categories.portfolio_id) \
             JOIN work_rights ON (work_rights.work_id = works.id) \
-        WHERE big_file_parts.uuid = ? \
-            AND (work_rights.user_id = ? OR portfolio_rights.user_id = ? OR portfolios.published_at IS NOT NULL)",
+        WHERE big_file_parts.uuid = $1 \
+            AND (work_rights.user_id = $2 OR portfolio_rights.user_id = $2 OR portfolios.published_at IS NOT NULL)",
     );
     let part: Option<BigFilePart> = query
         .bind(file_uuid)
-        .bind(user_id)
         .bind(user_id)
         .fetch_optional(conn)
         .await
@@ -56,7 +55,7 @@ where
         "SELECT work_attachments.id FROM work_attachments \
             JOIN works ON (works.id = work_attachments.work_id) \
             JOIN work_rights ON (work_rights.work_id = works.id) \
-        WHERE work_attachments.id = ? AND work_rights.user_id = ?",
+        WHERE work_attachments.id = $1 AND work_rights.user_id = $2",
     );
     query
         .bind(work_attachment_id)
@@ -69,7 +68,7 @@ where
     let new_uuid = UuidString::generate();
     let query = sqlx::query(
         "INSERT INTO big_file_parts (uuid, work_attachment_id, whole_file_length, bytes_base64) \
-        VALUES (?, ?, 0, ?)
+        VALUES ($1, $2, 0, $3)
         RETURNING uuid",
     );
     query
@@ -88,8 +87,8 @@ where
     if let Some(previous_uuid) = previous_uuid {
         // Update the previous part's next_uuid and add the length so far to the whole
         let query = sqlx::query_as(
-            "UPDATE big_file_parts SET next_uuid = ? \
-            WHERE work_attachment_id = ? AND uuid = ?
+            "UPDATE big_file_parts SET next_uuid = $1 \
+            WHERE work_attachment_id = $2 AND uuid = $3
             RETURNING whole_file_length",
         );
         let (prev_whole_file_length,): (i32,) = query
@@ -104,13 +103,13 @@ where
         // This is the first part, so delete any existing parts (since this
         // would mean the file is being replaced) and make the attachment point
         // to this part as the first part
-        sqlx::query("DELETE FROM big_file_parts WHERE work_attachment_id = ? AND uuid <> ?")
+        sqlx::query("DELETE FROM big_file_parts WHERE work_attachment_id = $1 AND uuid <> $2")
             .bind(work_attachment_id)
             .bind(&new_uuid)
             .execute(&mut *conn)
             .await
             .context("could not clear out previous big file parts for this work attachment")?;
-        sqlx::query("UPDATE work_attachments SET big_file_uuid = ? WHERE id = ?")
+        sqlx::query("UPDATE work_attachments SET big_file_uuid = $1 WHERE id = $2")
             .bind(&new_uuid)
             .bind(work_attachment_id)
             .execute(&mut *conn)
@@ -120,8 +119,8 @@ where
 
     // Update file lengths for all parts of this file
     let query = sqlx::query(
-        "UPDATE big_file_parts SET whole_file_length = ? \
-        WHERE work_attachment_id = ?",
+        "UPDATE big_file_parts SET whole_file_length = $1 \
+        WHERE work_attachment_id = $2",
     );
     query
         .bind(whole_file_length as i32)
