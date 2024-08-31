@@ -1,0 +1,22 @@
+# fly.toml app configuration file generated for portfolio-app-frontend-7287 on 2024-08-31T20:08:10+03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'portfolio-app-frontend-7287'
+primary_region = 'arn'
+
+[build]
+[build.args]
+  VITE_API_BASE_URL = 'https://portfolio-app-backend-1898.fly.dev'
+
+[http_service]
+  internal_port = 80
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  size = 'shared-cpu-1x'
