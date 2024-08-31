@@ -284,7 +284,7 @@ export const WorkEditor = (props: { slug?: string }) => {
                     input={title} setInput={setTitle} validate={validateTitle} showPlaceholder={isEdit && originalWorkLoading} />
                 <ValidatedTextInput pfx={"work-editor"} name={"short-description"} shouldValidate={shouldValidate}
                     input={shortDesc} setInput={setShortDesc} validate={validateShortDesc} showPlaceholder={isEdit && originalWorkLoading} />
-                <ValidatedTextInput textarea pfx={"work-editor"} name={"long-description"} shouldValidate={shouldValidate}
+                <ValidatedTextInput textarea rows={10} pfx={"work-editor"} name={"long-description"} shouldValidate={shouldValidate}
                     input={longDesc} setInput={setLongDesc} validate={validateLongDesc} showPlaceholder={isEdit && originalWorkLoading} />
 
                 <h3>{t("attachments")}</h3>

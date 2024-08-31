@@ -17,6 +17,8 @@ import { BackendStatus } from "./components/BackendStatus";
 import { PortfolioListing, PortfolioEditor, PortfolioPage } from "./components/Portfolio";
 import { WorkListing, WorkEditor, WorkPage } from "./components/Work";
 
+import favicon from "../public/icon.svg";
+
 const NotFound = () => {
     const { t } = useTranslation();
 
@@ -85,7 +87,7 @@ const NavWrapper = (props: { element: JSX.Element, hideNavIfLoggedOut?: boolean 
                 <Container>
                     <Navbar.Brand as={Link} to="/">
                         <img
-                            src="/public/icon.svg"
+                            src={favicon}
                             width="30"
                             height="30"
                             className="d-inline-block align-top"
