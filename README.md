@@ -61,6 +61,9 @@ työtuntivaatimuksien seuraamista varten.
 
 Websovellus löytyy seuraavasta osoitteesta: <https://portfolio-app-frontend-7287.fly.dev>
 
+Esimerkkiportfoliona omani, jonka tällä sovelluksella tein:
+<https://portfolio-app-frontend-7287.fly.dev/p/jp>
+
 ### Käyttöohjeet
 
 Lähtökohtaisesti olen pyrkinyt tekemään sovelluksesta suoraviivaisen ja selkeän,
