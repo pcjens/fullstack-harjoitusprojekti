@@ -54,9 +54,77 @@ työtuntivaatimuksien seuraamista varten.
 
 ## Linkki ja ohjeet
 
-*TODO: Linkki deployattuun versioon*
+Websovellus löytyy seuraavasta osoitteesta: <https://portfolio-app-frontend-7287.fly.dev>
 
-*TODO: Perus käyttöohjeet testaamista varten*
+### Käyttöohjeet
+
+Lähtökohtaisesti olen pyrkinyt tekemään sovelluksesta suoraviivaisen ja selkeän,
+ja esimerkiksi kaikissa lomakkeiden kentissä on mukana lyhyt selitys niiden
+tarkoituksista. Tässä kuitenkin lyhyet kuvaukset sovelluksen pääominaisuuksista.
+
+#### Kieli
+
+Sovellus on käännetty sekä englanniksi että suomeksi. Oletuksena käytetään
+selaimen kieltä, mutta tämän voi muuttaa navigaatiopalkin Kieli/Language
+-valikosta.
+
+#### Käyttäjätilit
+
+Lukuunottamatta julkaistujen portfolioiden katselua, kaikki toiminnallisuudet
+tässä sovelluksessa vaativat kirjautumisen, ja kirjautumatta minkä vaan sivun
+avaaminen tuokin esille kirjautumis/rekisteröitymissivun.
+
+Luo siis alkuun tili osoitteessa: <https://portfolio-app-frontend-7287.fly.dev>
+
+#### Portfoliot
+
+Portfoliot ovat koko sovelluksen ydin, niitä tällä on tarkoitus luoda, ylläpitää
+ja esitellä. Käyttäjät voivat selata ja luoda useampia portfolioita sovelluksen
+etusivulla.
+
+Muokkausnäkymä aukeaa kun avaa olemassaolevan portfolion "Muokkaa" linkin, tai
+kun luo uuden portfolion. Tässä näkymässä portfoliolle voi täyttää monia
+tietoja, joilla lopulta portfolion varsinainen esittelysivu täytetään.
+"Julkaise"-vivulla portfolion voi piilottaa julkiselta selaamiselta, ja
+vastaavasti laittaa sen julkisesti esille (ilman kirjautumista).
+
+Portfoliot sisältävät "kategorioita" jotka muodostavat portfoliosivulla
+erilliset osiot, missä teoksia esitellään. Jokainen kategoria koostuu yhdestä
+tai useammasta teoksesta, ja sama teos voi kuulua useampaan kategoriaan.
+Kategorioita voi lisätä muokkausnäkymässä "Uusi kategoria" kentän avulla, ja
+kategorioihin voi lisätä teoksia "Lisää teos" valikkojen avulla.
+
+#### Teokset
+
+Portfolioiden tarkoitus on esitellä mitä portfolion esittelijä on saanut aikaan,
+joten toinen puolikas sovelluksesta on omistettu näille aikaansaannoksille,
+joita sovelluksessa kutsutaan "teoksiksi".
+
+Teoksilla on samanlainen listaus kuin portfolioillakin, ja sinne pääsee
+navigaatiopalkin "Teokset" linkistä. Uusien luominen ja muokkaaminen tapahtuu
+samaan tapaan kuin portfolioiden kanssa.
+
+Teoksille voi mm. sisällyttää "tageja" jotka näkyy sinisinä, helposti
+eroteltavina elementteinä, kun teoksia listataan portfolionäkymässä. Esimerkiksi
+ohjelmointiprojekteista koostuva portfolio voisi merkitä ohjelmointikieliä ja
+tärkeitä kirjastoja tageina.
+
+Viimeisenä nostona, teoksille voi lisätä liitetiedostoja. Erityisesti "Kansi"
+tyyppinen liitetiedosto kannattaa lisätä, sillä kyseinen kuva näytetään teoksen
+ohessa portfolionäkymässä. Kuvista koostuva portfolio on mukavampaa katsottavaa
+kuin pelkkä teksti!
+
+#### Liitetiedostot
+
+Liitetiedostoja tallentaessa teoksiin on hyvä huomioida, että jos tiedoston
+tallentaminen jää kesken, voi puolikas tiedosto jäädä käyttäjälle ladattavaksi.
+Tässä tapauksessa kannattaa joko poistaa liitetiedosto, tai yrittää tallentaa se
+uudestaan loppuun asti, ettei portfolion selailijat turhaan joudu lataamaan
+korruptoitunutta tiedostoa.
+
+Latauspalkit seuraavat tiedoston todellista latausta n. 20 kilotavun
+tarkkuudella, joten mikäli palkki täyttyy loppuun asti ja katoaa, voi tiedoston
+melko hyvin luottaa tallentuneen kokonaisuudessaan.
 
 ### Ylläpitohuomioita
 
@@ -74,7 +142,10 @@ joka tallentuu bind-mountattuun tiedostoon
 
 ## Kuvakaappauksia
 
-*TODO: Kuvia sovelluksen käyttöliittymästä ja sillä luodusta portfoliosivusta, kunhan nämä on valmiita*
+| | |
+|:--:|:--:|
+| ![](screenshots/pf-screenshot-3.png) | ![](screenshots/pf-screenshot-2.png)|
+| ![](screenshots/pf-screenshot-4.png) | ![](screenshots/pf-screenshot-5.png) |
 
 ## Lisenssi
 
