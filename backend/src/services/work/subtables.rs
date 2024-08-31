@@ -20,11 +20,12 @@ where
         .await
         .context("get work links failed")?;
 
-    let tags = sqlx::query_as("SELECT * FROM work_tags WHERE work_id = $1")
-        .bind(row.id)
-        .fetch_all(conn)
-        .await
-        .context("get work tags failed")?;
+    let tags =
+        sqlx::query_as("SELECT * FROM work_tags WHERE work_id = $1 ORDER BY order_number ASC")
+            .bind(row.id)
+            .fetch_all(conn)
+            .await
+            .context("get work tags failed")?;
 
     Ok(Work { row, attachments, links, tags })
 }
@@ -123,14 +124,15 @@ where
         .await
         .context("delete work tags before insert failed")?;
     let mut tags: Vec<WorkTag> = Vec::with_capacity(new_tags.len());
-    for input in new_tags {
+    for (i, input) in new_tags.iter().enumerate() {
         let query = sqlx::query_as(
-            "INSERT INTO work_tags (work_id, tag) \
-            VALUES ($1, $2) RETURNING *",
+            "INSERT INTO work_tags (work_id, tag, order_number) \
+            VALUES ($1, $2, $3) RETURNING *",
         );
         let new_tag = query
             .bind(row.id)
             .bind(&input.tag)
+            .bind(i as i32)
             .fetch_one(&mut *conn)
             .await
             .context("insert into work tags failed")?;

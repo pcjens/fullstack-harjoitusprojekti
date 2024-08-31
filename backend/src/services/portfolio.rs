@@ -139,7 +139,8 @@ where
         "SELECT categories.id, works.slug FROM works \
         JOIN works_in_categories ON (works.id = works_in_categories.work_id) \
         JOIN categories ON (works_in_categories.category_id = categories.id) \
-        WHERE categories.portfolio_id = $1",
+        WHERE categories.portfolio_id = $1 \
+        ORDER BY order_number ASC",
     );
     let all_work_slugs: Vec<(i32, SlugString)> = query
         .bind(row.id)
@@ -220,10 +221,11 @@ where
     }
 
     // Insert the category work pairs
-    for (category_id, work_id) in &category_work_pairs {
-        sqlx::query("INSERT INTO works_in_categories (category_id, work_id) VALUES ($1, $2)")
+    for (i, (category_id, work_id)) in category_work_pairs.iter().enumerate() {
+        sqlx::query("INSERT INTO works_in_categories (category_id, work_id, order_number) VALUES ($1, $2, $3)")
             .bind(category_id)
             .bind(work_id)
+            .bind(i as i32)
             .execute(&mut *conn)
             .await
             .context("insert into works_in_categories failed")?;
