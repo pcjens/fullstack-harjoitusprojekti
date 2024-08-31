@@ -9,7 +9,6 @@ use crate::data::portfolio::{Portfolio, PortfolioRow};
 use crate::data::user::Session;
 use crate::routes::SharedState;
 use crate::services;
-use crate::util::is_unique_constraint_violation;
 
 pub fn create_router() -> Router<Arc<SharedState>> {
     Router::new()
@@ -73,7 +72,7 @@ async fn create(
     .await
     .map_err(|err| {
         tracing::error!("Creating a new portfolio failed: {err:?}");
-        if is_unique_constraint_violation(err.root_cause()) {
+        if services::is_unique_constraint_violation(err.root_cause()) {
             return ApiError::SlugTaken;
         }
         ApiError::DbError
@@ -107,7 +106,7 @@ async fn edit(
     .await
     .map_err(|err| {
         tracing::error!("Updating the {slug} portfolio failed: {err:?}");
-        if is_unique_constraint_violation(err.root_cause()) {
+        if services::is_unique_constraint_violation(err.root_cause()) {
             return ApiError::SlugTaken;
         }
         ApiError::DbError

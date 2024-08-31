@@ -126,29 +126,23 @@ const NavWrapper = (props: { element: JSX.Element, hideNavIfLoggedOut?: boolean 
     );
 };
 
-const IndexContent = () => {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<NavWrapper element={<PortfolioListing />} />} />
-                <Route path="/works" element={<NavWrapper element={<WorkListing />} />} />
-                <Route path="/works/:slug/edit" element={<NavWrapper element={<WorkEditorFromPath />} />} />
-                <Route path="/works/new" element={<NavWrapper element={<WorkEditor />} />} />
-                <Route path="/portfolio/new" element={<NavWrapper element={<PortfolioEditor />} />} />
-                <Route path="/p/:slug/edit" element={<NavWrapper element={<PortfolioEditorFromPath />} />} />
-                <Route path="/p/:slug" element={<NavWrapper hideNavIfLoggedOut={true} element={<PortfolioPageFromPath />} />} />
-                <Route path="/p/:portfolioSlug/:workSlug" element={<NavWrapper hideNavIfLoggedOut={true} element={<WorkPageFromPath />} />} />
-                <Route path="*" element={<NavWrapper element={<NotFound />} />} />
-            </Routes>
-        </BrowserRouter>
-    );
-};
-
 const App = () => {
     const { contextObject } = useLogin();
     return (
         <LoginContext.Provider value={contextObject}>
-            <IndexContent />
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<NavWrapper element={<PortfolioListing />} />} />
+                    <Route path="/works" element={<NavWrapper element={<WorkListing />} />} />
+                    <Route path="/works/:slug/edit" element={<NavWrapper element={<WorkEditorFromPath />} />} />
+                    <Route path="/works/new" element={<NavWrapper element={<WorkEditor />} />} />
+                    <Route path="/portfolio/new" element={<NavWrapper element={<PortfolioEditor />} />} />
+                    <Route path="/p/:slug/edit" element={<NavWrapper element={<PortfolioEditorFromPath />} />} />
+                    <Route path="/p/:slug" element={<NavWrapper hideNavIfLoggedOut={true} element={<PortfolioPageFromPath />} />} />
+                    <Route path="/p/:portfolioSlug/:workSlug" element={<NavWrapper hideNavIfLoggedOut={true} element={<WorkPageFromPath />} />} />
+                    <Route path="*" element={<NavWrapper element={<NotFound />} />} />
+                </Routes>
+            </BrowserRouter>
         </LoginContext.Provider>
     );
 };
