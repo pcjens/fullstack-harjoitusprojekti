@@ -1,0 +1,5 @@
+*
+!migrations
+!src
+!Cargo.toml
+!Cargo.lock

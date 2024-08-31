@@ -1,0 +1,29 @@
+volumes:
+  postgres-data:
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=portfolioapp
+      - POSTGRES_PASSWORD=foobar
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      - HTTP_BIND_ADDRESS=0.0.0.0:3000
+      - RUST_LOG=info
+      - DATABASE_URL=postgresql://portfolioapp:foobar@db/portfolioapp
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+      args:
+        - VITE_API_BASE_URL=http://localhost:3000
+    ports:
+      - 8080:80
